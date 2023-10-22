@@ -1,28 +1,17 @@
 from urllib.parse import urlparse
 
 from flask import flash, redirect, render_template, request, url_for
-from flask_login import current_user, login_required, login_user, logout_user
+from flask_login import current_user, login_user, logout_user
 
-from ziho import app, db
-from ziho.forms import LoginForm, RegistrationForm
+from ziho import db
+from ziho.auth import bp
+from ziho.auth.forms import LoginForm, RegistrationForm
 from ziho.models import User
 
-
-@app.route("/")
-@app.route("/home")
-@login_required
-def home():
-    decks = [
-        {"user": {"username": "John"}, "name": "Operating System"},
-        {"user": {"username": "Susan"}, "name": "System Design"},
-    ]
-    return render_template("home.html", title="Home", decks=decks)
-
-
-@app.route("/login", methods=["GET", "POST"])
+@bp.route("/login", methods=["GET", "POST"])
 def login():
     if current_user.is_authenticated:
-        return redirect(url_for("home"))
+        return redirect(url_for("main.home"))
     form = LoginForm()
     if form.validate_on_submit():
         user = db.session.execute(
@@ -30,25 +19,25 @@ def login():
         ).scalar_one_or_none()
         if user is None or not user.check_password(form.password.data):
             flash("Invalid username or password")
-            return redirect(url_for("login"))
+            return redirect(url_for("auth.login"))
         login_user(user, remember=form.remember_me.data)
         next = request.args.get("next")
         if not next or urlparse(next).netloc != "":
-            next = url_for("home")
+            next = url_for("main.home")
         return redirect(next)
-    return render_template("login.html", title="Sign In", form=form)
+    return render_template("auth/login.html", title="Sign In", form=form)
 
 
-@app.route("/logout")
+@bp.route("/logout")
 def logout():
     logout_user()
-    return redirect(url_for("home"))
+    return redirect(url_for("main.home"))
 
 
-@app.route("/register", methods=["GET", "POST"])
+@bp.route("/register", methods=["GET", "POST"])
 def register():
     if current_user.is_authenticated:
-        return redirect(url_for("home"))
+        return redirect(url_for("main.home"))
     form = RegistrationForm()
     if form.validate_on_submit():
         user = User(username=form.username.data, email=form.email.data)
@@ -56,5 +45,5 @@ def register():
         db.session.add(user)
         db.session.commit()
         flash("Congratulations, you are now a registered user!")
-        return redirect(url_for("login"))
-    return render_template("register.html", title="Register", form=form)
+        return redirect(url_for("auth.login"))
+    return render_template("auth/register.html", title="Register", form=form)

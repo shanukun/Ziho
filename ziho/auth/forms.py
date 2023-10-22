@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms import BooleanField, PasswordField, StringField, SubmitField
-from wtforms.validators import DataRequired, Email, EqualTo, ValidationError
+from wtforms import BooleanField, PasswordField, StringField, SubmitField, TextAreaField
+from wtforms.validators import DataRequired, Email, EqualTo, ValidationError, Length
 
 from ziho import db
 from ziho.models import User
@@ -35,3 +35,5 @@ class RegistrationForm(FlaskForm):
         ).scalar_one_or_none()
         if user is not None:
             raise ValidationError("Please use a different email address.")
+
+

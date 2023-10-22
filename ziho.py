@@ -1,5 +1,7 @@
-from ziho import app, db
+from ziho import create_app, db
 from ziho.models import Deck, User
+
+app = create_app()
 
 
 @app.shell_context_processor
