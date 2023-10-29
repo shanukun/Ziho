@@ -1,11 +1,21 @@
 {% extends "base.html" %}
 {% block content %}
     <h1>Hi, {{ current_user.username }}!</h1>
-    {% for deck in decks %}
-        <div>
-            <p>
-                {{ deck.user.username }} created: <b>{{ deck.name }}</b>
-            </p>
-        </div>
-    {% endfor %}
-{% endblock %}
+    <button type="button"
+            class="btn btn-primary"
+            data-bs-toggle="modal"
+            data-bs-target="#create-deck-overlay">Create Deck</button>
+    <hr />
+    <table>
+        {% for deck in decks %}
+            <tr>
+                <td>{{ deck.name }}</td>
+                <td>
+                    <button type="button" class="btn btn-primary" data-deck_id={{ deck.id }} data-bs-toggle="modal" data-bs-target="#create-card-overlay">Add Card
+                    </button>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+    {% include "modals/_create-deck-modal.html" %}
+{% endblock content %}

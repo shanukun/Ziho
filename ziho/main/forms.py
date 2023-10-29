@@ -5,6 +5,11 @@ from wtforms.validators import DataRequired, ValidationError, Length
 from ziho.auth.actions import get_user_by_username
 
 
+class DeckForm(FlaskForm):
+    deck_name = StringField("Deck Name", validators=[DataRequired()])
+    submit = SubmitField("Create Deck")
+
+
 class EditProfileForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
     about_me = TextAreaField('About me', validators=[Length(min=0, max=140)])

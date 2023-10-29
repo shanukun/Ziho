@@ -1,37 +1,46 @@
-from urllib.parse import urlparse
-
 from flask import flash, redirect, render_template, request, url_for
-from flask_login import current_user, login_required, login_user, logout_user
+from flask_login import current_user, login_required
 
 from ziho import db
+from ziho.auth.actions import get_user_or_404
 from ziho.main import bp
-from ziho.main.forms import EditProfileForm
-from ziho.models import User
+from ziho.main.actions import create_card, create_deck, get_decks_by_user
+from ziho.main.forms import CardForm, CardResponseForm, DeckForm, EditProfileForm
 
 
 @bp.route("/")
 @bp.route("/home")
 @login_required
 def home():
-    decks = [
-        {"user": {"username": "John"}, "name": "Operating System"},
-        {"user": {"username": "Susan"}, "name": "System Design"},
-    ]
-    return render_template("home.html", title="Home", decks=decks)
+    decks = get_decks_by_user(current_user.id)
+
+    deck_form = DeckForm()
+    card_form = CardForm()
+    card_form.deck.choices = [(deck.id, deck.name) for deck in decks]
+
+    return render_template(
+        "home.html", title="Home", decks=decks, deck_form=deck_form, card_form=card_form
+    )
 
 
 @bp.route("/user/<username>")
 @login_required
 def user(username):
-    user = db.one_or_404(db.select(User).filter_by(username=username))
-    decks = [
-        {"user": user, "name": "Operating System"},
-        {"user": user, "name": "System Design"},
-    ]
+    user = get_user_or_404(username)
+    decks = get_decks_by_user(user.id)
     return render_template("user.html", user=user, decks=decks)
 
 
-@bp.route('/edit_profile', methods=['GET', 'POST'])
+@bp.route("/deck", methods=["POST"])
+@login_required
+def deck():
+    form = DeckForm()
+    if form.validate_on_submit():
+        create_deck(form.deck_name.data, current_user.id)
+        return redirect(url_for("main.home"))
+
+
+@bp.route("/edit_profile", methods=["GET", "POST"])
 @login_required
 def edit_profile():
     form = EditProfileForm(current_user.username)
@@ -39,11 +48,9 @@ def edit_profile():
         current_user.username = form.username.data
         current_user.about_me = form.about_me.data
         db.session.commit()
-        flash('Your changes have been saved.')
-        return redirect(url_for('main.edit_profile'))
-    elif request.method == 'GET':
+        flash("Your changes have been saved.")
+        return redirect(url_for("main.edit_profile"))
+    elif request.method == "GET":
         form.username.data = current_user.username
         form.about_me.data = current_user.about_me
-    return render_template('edit_profile.html', title='Edit Profile',
-                           form=form)
-
+    return render_template("edit_profile.html", title="Edit Profile", form=form)

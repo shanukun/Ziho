@@ -1,0 +1,21 @@
+<!-- Modal -->
+<div class="modal fade"
+     id="create-deck-overlay"
+     tabindex="-1"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content p-2">
+            <form action="deck" method="post">
+                {{ deck_form.hidden_tag() }}
+                <p>
+                    {{ deck_form.deck_name.label(class="form-label") }}
+                    <br>
+                    {{ deck_form.deck_name(size=32, class="form-control") }}
+                    <br>
+                    {% for error in deck_form.deck_name.errors %}<span style="color: red;">[{{ error }}]</span>{% endfor %}
+                </p>
+                <p>{{ deck_form.submit(class="btn btn-primary") }}</p>
+            </form>
+        </div>
+    </div>
+</div>
