@@ -18,7 +18,7 @@ class User(UserMixin, db.Model):
     email: Mapped[str] = mapped_column(String(120), unique=True, index=True)
     password_hash: Mapped[str] = mapped_column(String(128))
     about_me: Mapped[str] = mapped_column(String(140), nullable=True)
-    decks: Mapped[List["Deck"]] = relationship(back_populates="user", lazy="dynamic")
+    decks: Mapped[List["Deck"]] = relationship(back_populates="creator", lazy="dynamic")
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -44,8 +44,8 @@ class Deck(db.Model):
     created_at: Mapped[datetime] = mapped_column(
         DateTime, index=True, default=datetime.utcnow
     )
-    user_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
-    user: Mapped["User"] = relationship(back_populates="decks")
+    creator_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
+    creator: Mapped["User"] = relationship(back_populates="decks")
 
     def __repr__(self):
         return "<Deck {}>".format(self.name)
