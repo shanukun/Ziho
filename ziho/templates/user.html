@@ -8,15 +8,20 @@
             <td>
                 <h1>User: {{ user.username }}</h1>
                 {% if user.about_me %}<p>{{ user.about_me }}</p>{% endif %}
-                 {% if user == current_user %}
-                <p><a href="{{ url_for('main.edit_profile') }}">Edit your profile</a></p>
+                {% if user == current_user %}
+                    <p>
+                        <a href="{{ url_for("main.edit_profile") }}">Edit your profile</a>
+                    </p>
                 {% endif %}
-
             </td>
         </tr>
     </table>
     <hr />
-    {% for deck in decks %}
-        {% include '_post.html' %}
-    {% endfor %}
-{% endblock %}
+    <table>
+        {% for deck in decks %}
+            <tr>
+                <td>{{ deck.name }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock content %}
