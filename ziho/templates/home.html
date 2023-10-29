@@ -18,4 +18,13 @@
         {% endfor %}
     </table>
     {% include "modals/_create-deck-modal.html" %}
+    {% include "modals/_create-card-modal.html" %}
 {% endblock content %}
+{% block script %}
+    <script>
+        getEl("#create-card-overlay").addEventListener("show.bs.modal", (e) => {
+            deck_id = e.relatedTarget.dataset.deck_id;
+            getEl("#deck-select").value = deck_id;
+        });
+    </script>
+{% endblock script %}

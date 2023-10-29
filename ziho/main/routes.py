@@ -40,6 +40,16 @@ def deck():
         return redirect(url_for("main.home"))
 
 
+@bp.route("/card", methods=["POST"])
+@login_required
+def card():
+    form = CardResponseForm()
+    if form.validate_on_submit():
+        create_card(form.deck.data, form.front.data, form.back.data)
+        return "<h1>Passed</h1>"
+    return "<h1>Failed</h1>"
+
+
 @bp.route("/edit_profile", methods=["GET", "POST"])
 @login_required
 def edit_profile():

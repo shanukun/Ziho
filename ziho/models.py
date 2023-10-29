@@ -36,6 +36,11 @@ class User(UserMixin, db.Model):
         )
 
 
+@login_manager.user_loader
+def load_user(id):
+    return db.session.execute(db.select(User).filter_by(id=id)).scalar_one_or_none()
+
+
 class Deck(db.Model):
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     name: Mapped[str] = mapped_column(
@@ -46,11 +51,19 @@ class Deck(db.Model):
     )
     creator_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
     creator: Mapped["User"] = relationship(back_populates="decks")
+    parent_id: Mapped[int] = mapped_column(ForeignKey("deck.id"), nullable=True)
+    cards: Mapped[List["Card"]] = relationship(
+        back_populates="parent_deck", lazy="dynamic"
+    )
+    parent = relationship("Deck")
 
     def __repr__(self):
         return "<Deck {}>".format(self.name)
 
 
-@login_manager.user_loader
-def load_user(id):
-    return db.session.execute(db.select(User).filter_by(id=id)).scalar_one_or_none()
+class Card(db.Model):
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    front: Mapped[str] = mapped_column(String(200), nullable=False)
+    back: Mapped[str] = mapped_column(String(500))
+    deck_id: Mapped[int] = mapped_column(ForeignKey("deck.id"))
+    parent_deck: Mapped["Deck"] = relationship(back_populates="cards")
