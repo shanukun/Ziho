@@ -25,3 +25,4 @@ def create_user(username: str, email: str, password: str):
     user.set_password(password)
     db.session.add(user)
     db.session.commit()
+    return user.id
