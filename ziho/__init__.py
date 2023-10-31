@@ -23,7 +23,8 @@ login_manager = LoginManager()
 
 def create_app(config_class=Config):
     app = Flask(__name__)
-    app.config.from_object(Config)
+    app.config.from_object(config_class)
+
     db.init_app(app)
     migrate.init_app(app, db, render_as_batch=True)
     login_manager.init_app(app)
@@ -41,7 +42,7 @@ def create_app(config_class=Config):
 
     app.register_blueprint(main_bp)
 
-    if not app.debug:
+    if not app.debug and not app.testing:
         if not os.path.exists("logs"):
             os.mkdir("logs")
         file_handler = RotatingFileHandler(
