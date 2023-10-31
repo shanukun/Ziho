@@ -31,18 +31,19 @@ def user(username):
     return render_template("user.html", user=user, decks=decks)
 
 
-@bp.route("/deck", methods=["POST"])
+@bp.route("/create_deck", methods=["POST"])
 @login_required
-def deck():
+def create_deck_route():
     form = DeckForm()
     if form.validate_on_submit():
         create_deck(form.deck_name.data, current_user.id)
         return redirect(url_for("main.home"))
+    return "<h1>Failed</h1>"
 
 
-@bp.route("/card", methods=["POST"])
+@bp.route("/create_card", methods=["POST"])
 @login_required
-def card():
+def create_card_route():
     form = CardResponseForm()
     if form.validate_on_submit():
         create_card(form.deck.data, form.front.data, form.back.data)

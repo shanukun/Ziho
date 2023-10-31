@@ -5,7 +5,7 @@
      aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content p-2">
-            <form action="deck" method="post">
+            <form action="{{ url_for("main.create_deck_route") }}" method="post">
                 {{ deck_form.hidden_tag() }}
                 <p>
                     {{ deck_form.deck_name.label(class="form-label") }}
