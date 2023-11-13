@@ -59,7 +59,7 @@ def create_deck_route():
 def create_card_route():
     form = CardResponseForm()
     if form.validate_on_submit():
-        create_card(form.deck.data, form.front.data, form.back.data)
+        create_card(form.deck.data, form.front.data, form.back.data, current_user.id)
         return "<h1>Passed</h1>"
     return "<h1>Failed</h1>"
 
@@ -75,6 +75,29 @@ def get_cards():
         }
     print(form.errors)
     return {"status": False, "msg": "Invalid deck id."}
+
+
+# TODO change to update card info
+@bp.route("/save-card", methods=["POST"])
+@login_required
+def save_card():
+    form = CardInfoForm()
+    if form.validate_on_submit():
+        # add func to forms
+        card_info_dict = dict()
+        for k in dict(form._fields):
+            card_info_dict[k] = form._fields[k].data
+        update_card_info(card_info_dict)
+        return {"msg": "Valid deck id and card id."}
+
+    # TODO not a valid method
+    error_string = ""
+    for k in form.errors:
+        if k is not None:
+            for emsg in form.errors[k]:
+                error_string += k + ": " + emsg + "\n"
+    # TODO use abort for api errors
+    return {"msg": error_string}
 
 
 @bp.route("/edit_profile", methods=["GET", "POST"])

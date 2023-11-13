@@ -81,14 +81,39 @@ def get_decks_by_user(user_id: int):
     return [deck for (deck,) in decks_row]
 
 
-def create_card(deck_id: int, front: str, back: str):
-    card = Card(front=front, back=back, deck_id=deck_id)
-    db.session.add(card)
+def get_card_info_by_id(card_info_id: int, card_id: int, deck_id: int):
+    return db.session.execute(
+        db.select(CardInfo.id)
+        .join(CardInfo.parent_card)
+        .join(Card.parent_deck)
+        .where(Card.id == card_id)
+        .where(Card.deck_id == deck_id)
+        .where(CardInfo.id == card_info_id)
+    ).scalar_one_or_none()
+
+
 def get_deck_by_id(deck_id: int):
     return db.session.execute(
         db.select(Deck).where(Deck.id == deck_id)
     ).scalar_one_or_none()
 
 
+def update_card_info(card_info_dict: dict):
+    stmt = (
+        db.update(CardInfo)
+        .where(CardInfo.id == card_info_dict["card_info_id"])
+        .where(CardInfo.card_id == card_info_dict["card_id"])
+        .values(
+            difficulty=card_info_dict["difficulty"],
+            due=card_info_dict["due"],
+            elapsed_days=card_info_dict["elapsed_days"],
+            lapses=card_info_dict["lapses"],
+            last_review=card_info_dict["last_review"],
+            reps=card_info_dict["reps"],
+            scheduled_days=card_info_dict["scheduled_days"],
+            stability=card_info_dict["stability"],
+            state=card_info_dict["state"],
+        )
+    )
+    db.session.execute(stmt)
     db.session.commit()
-    return card.id

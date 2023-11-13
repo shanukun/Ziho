@@ -84,3 +84,16 @@ def test_get_card(client, auth):
         resp = client.post("/get-cards", data={"deck_id": 100})
 
         assert resp.json["status"] == False
+
+
+def test_save_card(client, auth):
+    auth.login()
+    with client:
+        resp = client.post("/get-cards", data={"deck_id": 1})
+        assert resp.json["status"] == True
+
+        card = resp.json["result"][0]
+        card["card_info"]["scheduled_days"] = 6
+        resp = client.post("/save-card", data=card)
+
+        assert resp.status_code == 200

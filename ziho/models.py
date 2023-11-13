@@ -18,7 +18,7 @@ class User(UserMixin, db.Model):
     email: Mapped[str] = mapped_column(String(120), unique=True, index=True)
     password_hash: Mapped[str] = mapped_column(String(128))
     about_me: Mapped[str] = mapped_column(String(140), nullable=True)
-    decks: Mapped[List["Deck"]] = relationship(back_populates="creator", lazy="dynamic")
+    decks: Mapped[List["Deck"]] = relationship(back_populates="creator")
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -43,18 +43,18 @@ def load_user(id):
 
 class Deck(db.Model):
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
-    name: Mapped[str] = mapped_column(
-        String(64), unique=True, nullable=False, index=True
-    )
+
     created_at: Mapped[datetime] = mapped_column(
         DateTime, index=True, default=datetime.utcnow
     )
+    name: Mapped[str] = mapped_column(
+        String(64), unique=True, nullable=False, index=True
+    )
+
     creator_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
     creator: Mapped["User"] = relationship(back_populates="decks")
     parent_id: Mapped[int] = mapped_column(ForeignKey("deck.id"), nullable=True)
-    cards: Mapped[List["Card"]] = relationship(
-        back_populates="parent_deck", lazy="dynamic"
-    )
+    cards: Mapped[List["Card"]] = relationship(back_populates="parent_deck")
     parent = relationship("Deck")
 
     def __repr__(self):
@@ -63,8 +63,10 @@ class Deck(db.Model):
 
 class Card(db.Model):
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
-    front: Mapped[str] = mapped_column(String(200), nullable=False)
+
     back: Mapped[str] = mapped_column(String(500))
+    front: Mapped[str] = mapped_column(String(200), nullable=False)
+
     deck_id: Mapped[int] = mapped_column(ForeignKey("deck.id"))
     parent_deck: Mapped["Deck"] = relationship(back_populates="cards")
     card_info: Mapped["CardInfo"] = relationship(back_populates="parent_card")

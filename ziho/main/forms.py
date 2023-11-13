@@ -19,6 +19,39 @@ class DeckForm(FlaskForm):
     submit = SubmitField("Create Deck")
 
 
+class CardInfoForm(FlaskForm):
+    class Meta:
+        csrf = False
+
+    deck_id = IntegerField("deck_id", validators=[DataRequired()])
+    card_id = IntegerField("card_id", validators=[DataRequired()])
+    card_info_id = IntegerField("card_info_id", validators=[DataRequired()])
+
+    difficulty = FloatField("difficulty", validators=[InputRequired()])
+    due = DateTimeField(
+        "due", validators=[InputRequired()], format="%Y-%m-%dT%H:%M:%S.%f%z"
+    )
+    elapsed_days = FloatField("elapsed_days", validators=[InputRequired()])
+    lapses = IntegerField("lapses", validators=[InputRequired()])
+    last_review = DateTimeField(
+        "last_review", validators=[InputRequired()], format="%Y-%m-%dT%H:%M:%S.%f%z"
+    )
+    reps = IntegerField("reps", validators=[InputRequired()])
+    scheduled_days = IntegerField("scheduled_days", validators=[InputRequired()])
+    stability = FloatField("stability", validators=[InputRequired()])
+    state = IntegerField("state", validators=[InputRequired()])
+
+    def validate(self, extra_validators=None):
+        rv = FlaskForm.validate(self)
+        if not rv:
+            return False
+        card_info = get_card_info_by_id(
+            self.card_info_id.data, self.card_id.data, self.deck_id.data
+        )
+        print("[card info]: ", card_info)
+        if card_info is None:
+            raise ValidationError("Please use a valid card id.")
+        return True
 
 
 class GetCardReqForm(FlaskForm):
