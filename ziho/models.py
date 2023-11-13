@@ -3,7 +3,7 @@ from hashlib import md5
 from typing import List
 
 from flask_login import UserMixin
-from sqlalchemy import DateTime, ForeignKey, Integer, String
+from sqlalchemy import DateTime, Float, ForeignKey, Integer, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from werkzeug.security import check_password_hash, generate_password_hash
 
@@ -67,3 +67,22 @@ class Card(db.Model):
     back: Mapped[str] = mapped_column(String(500))
     deck_id: Mapped[int] = mapped_column(ForeignKey("deck.id"))
     parent_deck: Mapped["Deck"] = relationship(back_populates="cards")
+    card_info: Mapped["CardInfo"] = relationship(back_populates="parent_card")
+
+
+class CardInfo(db.Model):
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+
+    difficulty: Mapped[float] = mapped_column(Float, default=0)
+    due: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+    elapsed_days: Mapped[float] = mapped_column(Float, default=0)
+    lapses: Mapped[int] = mapped_column(Integer, default=0)
+    last_review: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+    reps: Mapped[int] = mapped_column(Integer, default=0)
+    scheduled_days: Mapped[int] = mapped_column(Integer, default=0)
+    stability: Mapped[float] = mapped_column(Float, default=0)
+    state: Mapped[int] = mapped_column(Integer, default=0)
+
+    user_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
+    card_id: Mapped[int] = mapped_column(ForeignKey("card.id"))
+    parent_card: Mapped["Card"] = relationship(back_populates="card_info")

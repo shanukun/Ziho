@@ -66,3 +66,21 @@ def test_create_card(client, auth):
             },
         )
         assert resp.status_code == 200
+
+
+def test_get_card(client, auth):
+    resp = client.post("/get-cards", data={"deck_id": 1})
+
+    # redirected to login page
+    assert resp.status_code == 302
+
+    auth.login()
+    with client:
+        resp = client.post("/get-cards", data={"deck_id": 1})
+
+        assert resp.status_code == 200
+        assert resp.json["status"] == True
+
+        resp = client.post("/get-cards", data={"deck_id": 100})
+
+        assert resp.json["status"] == False

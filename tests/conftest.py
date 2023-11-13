@@ -5,7 +5,7 @@ import pytest
 from config import TestingConfig
 from ziho import create_app, db
 from ziho.auth.actions import create_user
-from ziho.main.actions import create_deck
+from ziho.main.actions import create_card, create_deck
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
@@ -17,6 +17,7 @@ test_user_yumi = {
 }
 
 test_deck = {"name": "Test Deck 1"}
+test_card = {"deck": 1, "front": "Front", "back": "back"}
 
 
 @pytest.fixture()
@@ -31,6 +32,7 @@ def app():
             test_user_yumi["password"],
         )
         create_deck(test_deck["name"], user_id)
+        create_card(test_card["deck"], test_card["front"], test_card["back"], user_id)
 
     yield app
 

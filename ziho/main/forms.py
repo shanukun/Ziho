@@ -1,13 +1,36 @@
 from flask_wtf import FlaskForm
-from wtforms import IntegerField, SelectField, StringField, SubmitField, TextAreaField
-from wtforms.validators import DataRequired, Length, ValidationError
+from wtforms import (
+    DateTimeField,
+    FloatField,
+    IntegerField,
+    SelectField,
+    StringField,
+    SubmitField,
+    TextAreaField,
+)
+from wtforms.validators import DataRequired, InputRequired, Length, ValidationError
 
 from ziho.auth.actions import get_user_by_username
+from ziho.main.actions import get_card_info_by_id, get_deck_by_id
 
 
 class DeckForm(FlaskForm):
     deck_name = StringField("Deck Name", validators=[DataRequired()])
     submit = SubmitField("Create Deck")
+
+
+
+
+class GetCardReqForm(FlaskForm):
+    class Meta:
+        csrf = False
+
+    deck_id = IntegerField("DeckId", validators=[DataRequired()])
+
+    def validate_deck_id(self, deck_id):
+        deck = get_deck_by_id(deck_id.data)
+        if deck is None:
+            raise ValidationError("Please use a valid deck id.")
 
 
 class CardForm(FlaskForm):

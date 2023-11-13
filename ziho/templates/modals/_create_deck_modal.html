@@ -12,9 +12,13 @@
                     <br>
                     {{ deck_form.deck_name(size=32, class="form-control") }}
                     <br>
-                    {% for error in deck_form.deck_name.errors %}<span style="color: red;">[{{ error }}]</span>{% endfor %}
+                    {% for error in deck_form.deck_name.errors %}
+                        <span style="color: red">[{{ error }}]</span>
+                    {% endfor %}
                 </p>
-                <p>{{ deck_form.submit(class="btn btn-primary") }}</p>
+                <p>
+                    {{ deck_form.submit(class="btn btn-primary") }}
+                </p>
             </form>
         </div>
     </div>

@@ -8,7 +8,7 @@
             <form id="create-card-form" method="post" enctype="multipart/form-data">
                 {{ card_form.hidden_tag() }}
                 <p>
-                    {{ card_form.deck.label(class="form-label") }}
+                    {{ card_form.deck.label(class="form-label", for="deck-select") }}
                     <br>
                     {{ card_form.deck(id="deck-select", class="form-control") }}
                     <br>
@@ -20,12 +20,16 @@
                     <br>
                     {{ card_form.back(class="form-control") }}
                     <br>
-                    {% for error in card_form.front.errors %}<span style="color: red;">[{{ error }}]</span>{% endfor %}
+                    {% for error in card_form.front.errors %}
+                        <span style="color: red">[{{ error }}]</span>
+                    {% endfor %}
                 </p>
                 <p>
                     <button type="button"
-                            class="btn btn-primary"
-                            onclick="create_card('{{ url_for("main.create_card_route") }}')">Create Card</button>
+                            class="btn btn-sm btn-primary"
+                            onclick="create_card('{{ url_for("main.create_card_route") }}')">
+                        Create Card
+                    </button>
                 </p>
             </form>
         </div>

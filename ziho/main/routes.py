@@ -4,8 +4,21 @@ from flask_login import current_user, login_required
 from ziho import db
 from ziho.auth.actions import get_user_or_404
 from ziho.main import bp
-from ziho.main.actions import create_card, create_deck, get_decks_by_user
-from ziho.main.forms import CardForm, CardResponseForm, DeckForm, EditProfileForm
+from ziho.main.actions import (
+    create_card,
+    create_deck,
+    get_cards_for_deck,
+    get_decks_by_user,
+    update_card_info,
+)
+from ziho.main.forms import (
+    CardForm,
+    CardInfoForm,
+    CardResponseForm,
+    DeckForm,
+    EditProfileForm,
+    GetCardReqForm,
+)
 
 
 @bp.route("/")
@@ -49,6 +62,19 @@ def create_card_route():
         create_card(form.deck.data, form.front.data, form.back.data)
         return "<h1>Passed</h1>"
     return "<h1>Failed</h1>"
+
+
+@bp.route("/get-cards", methods=["POST"])
+@login_required
+def get_cards():
+    form = GetCardReqForm()
+    if form.validate_on_submit():
+        return {
+            "status": True,
+            "result": get_cards_for_deck(form.deck_id.data, current_user.id),
+        }
+    print(form.errors)
+    return {"status": False, "msg": "Invalid deck id."}
 
 
 @bp.route("/edit_profile", methods=["GET", "POST"])

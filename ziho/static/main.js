@@ -32,4 +32,29 @@ function create_card(url) {
     });
 }
 
+function get_cards(url, deck_id) {
+    let form_data = new FormData();
+    form_data.append("deck_id", deck_id);
 
+    $.ajax({
+        type: "POST",
+        url: url,
+        data: form_data,
+        headers: {
+            "X-CSRFTOKEN": csrf_token,
+        },
+        success: function (resp) {
+            console.log(resp);
+            if (!resp.status) {
+                console.log("Failed");
+                return;
+            }
+
+            const displayer = new Displayer();
+            displayer.fill_queue(resp.result);
+            displayer.show_card();
+        },
+        contentType: false,
+        processData: false,
+    });
+}
