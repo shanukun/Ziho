@@ -106,4 +106,3 @@ def test_logout(client, auth):
         resp = client.get("/auth/logout")
         assert resp.status_code == 302
         assert resp.headers["Location"] == "/home"
-

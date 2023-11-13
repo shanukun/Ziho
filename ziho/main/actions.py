@@ -77,7 +77,9 @@ def get_cards_for_deck(deck_id: int, user_id: int):
 
 
 def get_decks_by_user(user_id: int):
-    decks_row = db.session.execute(db.select(Deck).filter_by(creator_id=user_id)).all()
+    decks_row = db.session.execute(
+        db.select(Deck).where(Deck.creator_id == user_id)
+    ).all()
     return [deck for (deck,) in decks_row]
 
 
