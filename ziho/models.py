@@ -18,7 +18,7 @@ class User(UserMixin, db.Model):
     email: Mapped[str] = mapped_column(String(120), unique=True, index=True)
     password_hash: Mapped[str] = mapped_column(String(128))
     about_me: Mapped[str] = mapped_column(String(140), nullable=True)
-    decks: Mapped[List["Deck"]] = relationship(back_populates="creator")
+    decks: Mapped[List["Deck"]] = relationship(back_populates="creator", cascade="all, delete", passive_deletes=True)
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -51,11 +51,15 @@ class Deck(db.Model):
         String(64), unique=True, nullable=False, index=True
     )
 
-    creator_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
+    creator_id: Mapped[int] = mapped_column(ForeignKey("user.id", ondelete="CASCADE"))
     creator: Mapped["User"] = relationship(back_populates="decks")
-    parent_id: Mapped[int] = mapped_column(ForeignKey("deck.id"), nullable=True)
-    cards: Mapped[List["Card"]] = relationship(back_populates="parent_deck")
-    parent = relationship("Deck")
+
+    # Deck is a parent and also a child at the same time.
+    # FK for the parent and a relationship refering back to another deck.
+    # parent_id: Mapped[int] = mapped_column(ForeignKey("deck.id", ondelete="CASCADE"), nullable=True)
+    # child = relationship(back_populates="child", cascade="all, delete", passive_deletes=True)
+
+    cards: Mapped[List["Card"]] = relationship(back_populates="parent_deck", cascade="all, delete", passive_deletes=True)
 
     def __repr__(self):
         return "<Deck {}>".format(self.name)
@@ -68,9 +72,9 @@ class Card(db.Model):
     front: Mapped[str] = mapped_column(String(200), nullable=False)
     image_path: Mapped[str] = mapped_column(String(500), nullable=True)
 
-    deck_id: Mapped[int] = mapped_column(ForeignKey("deck.id"))
+    deck_id: Mapped[int] = mapped_column(ForeignKey("deck.id", ondelete="CASCADE"))
     parent_deck: Mapped["Deck"] = relationship(back_populates="cards")
-    card_info: Mapped["CardInfo"] = relationship(back_populates="parent_card")
+    card_info: Mapped["CardInfo"] = relationship(back_populates="parent_card", cascade="all, delete-orphan")
 
 
 class CardInfo(db.Model):
@@ -86,6 +90,6 @@ class CardInfo(db.Model):
     stability: Mapped[float] = mapped_column(Float, default=0)
     state: Mapped[int] = mapped_column(Integer, default=0)
 
-    user_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
-    card_id: Mapped[int] = mapped_column(ForeignKey("card.id"))
+    user_id: Mapped[int] = mapped_column(ForeignKey("user.id", ondelete="CASCADE"))
+    card_id: Mapped[int] = mapped_column(ForeignKey("card.id", ondelete="CASCADE"))
     parent_card: Mapped["Card"] = relationship(back_populates="card_info")
