@@ -7,6 +7,8 @@ from ziho.models import Card, CardInfo, Deck
 
 
 def create_deck(deck_name: str | None, user_id: int):
+    # TODO a decorator for removing whitespaces from all string
+    deck_name = deck_name.strip()
     deck = Deck(name=deck_name, creator_id=user_id)
     db.session.add(deck)
     db.session.commit()

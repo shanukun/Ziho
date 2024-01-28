@@ -35,7 +35,7 @@ from ziho.main.forms import (
     CardUpdateForm,
     DeckForm,
     EditProfileForm,
-    GetCardReqForm,
+    GetCardsRequestForm,
 )
 
 
@@ -62,7 +62,7 @@ def user(username):
     return render_template("user.html", user=user, decks=decks)
 
 
-@bp.route("/create_deck", methods=["POST"])
+@bp.route("/create-deck", methods=["POST"])
 @login_required
 def create_deck_route():
     form = DeckForm()
@@ -129,11 +129,11 @@ def add_card_route():
 @bp.route("/get-cards", methods=["POST"])
 @login_required
 def get_cards():
-    form = GetCardReqForm()
+    form = GetCardsRequestForm(meta={"csrf": False})
     if form.validate_on_submit():
         return {
             "status": True,
-            "result": get_cards_for_deck(form.deck_id.data, current_user.id),
+            "result": get_cards_for_study(form.deck_id.data, current_user.id),
         }
     print(form.errors)
     return {"status": False, "msg": "Invalid deck id."}
@@ -195,7 +195,10 @@ def update_card_info_route():
         card_info_dict = dict()
         for k in dict(form._fields):
             card_info_dict[k] = form._fields[k].data
-        update_card_info(card_info_dict)
+        if card_info_dict:
+            # TODO make a decorator which ensure none of the argument is None, if any of them is
+            # throw error and handle the error.
+            update_card_info(card_info_dict)
         return {"msg": "Valid deck id and card id."}
 
     # TODO not a valid method
@@ -208,7 +211,7 @@ def update_card_info_route():
     return {"msg": error_string}
 
 
-@bp.route("/edit_profile", methods=["GET", "POST"])
+@bp.route("/edit-profile", methods=["GET", "POST"])
 @login_required
 def edit_profile():
     form = EditProfileForm(current_user.username)

@@ -23,7 +23,7 @@ def login():
         if not next or urlparse(next).netloc != "":
             next = url_for("main.home")
         return redirect(next)
-    return render_template("auth/login.html", title="Sign In", form=form)
+    return render_template("auth/login.html", title="Login", form=form)
 
 
 @bp.route("/logout")

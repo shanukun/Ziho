@@ -28,7 +28,7 @@ def test_home(client, auth):
 
 def test_create_deck(client, auth):
     resp = client.post(
-        "/create_deck",
+        "/create-deck",
         data={
             "name": "Deck Test 1",
         },
@@ -38,7 +38,7 @@ def test_create_deck(client, auth):
     auth.login()
     with client:
         resp = client.post(
-            "/create_deck",
+            "/create-deck",
             data={
                 "name": "Deck Test 1",
             },
@@ -46,9 +46,9 @@ def test_create_deck(client, auth):
         assert resp.status_code == 200
 
 
-def test_create_card(client, auth):
+def test_add_card(client, auth):
     resp = client.post(
-        "/create_card",
+        "/add-card",
         data={
             "name": "Deck Test 1",
         },
@@ -58,7 +58,7 @@ def test_create_card(client, auth):
     auth.login()
     with client:
         resp = client.post(
-            "/create_card",
+            "/add-card",
             data={
                 "deck": 1,
                 "front": " Test Card Front 1",
@@ -86,7 +86,7 @@ def test_get_card(client, auth):
         assert resp.json["status"] == False
 
 
-def test_save_card(client, auth):
+def test_update_card_info(client, auth):
     auth.login()
     with client:
         resp = client.post("/get-cards", data={"deck_id": 1})
@@ -94,6 +94,6 @@ def test_save_card(client, auth):
 
         card = resp.json["result"][0]
         card["card_info"]["scheduled_days"] = 6
-        resp = client.post("/save-card", data=card)
+        resp = client.post("/update-card-info", data=card)
 
         assert resp.status_code == 200

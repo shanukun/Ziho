@@ -17,14 +17,11 @@ from ziho.main.actions import get_card_info_by_id, get_deck_by_id
 
 
 class DeckForm(FlaskForm):
-    deck_name = StringField("Deck Name", validators=[DataRequired()])
-    submit = SubmitField("Create Deck")
+    deck_name = TextAreaField("Deck Name", validators=[DataRequired()])
+    submit = SubmitField("Create")
 
 
 class CardInfoForm(FlaskForm):
-    class Meta:
-        csrf = False
-
     deck_id = IntegerField("deck_id", validators=[DataRequired()])
     card_id = IntegerField("card_id", validators=[DataRequired()])
     card_info_id = IntegerField("card_info_id", validators=[DataRequired()])
@@ -44,7 +41,7 @@ class CardInfoForm(FlaskForm):
     state = IntegerField("state", validators=[InputRequired()])
 
     def validate(self, extra_validators=None):
-        rv = FlaskForm.validate(self)
+        rv = FlaskForm.validate(self, extra_validators)
         if not rv:
             return False
         card_info = get_card_info_by_id(
@@ -56,10 +53,8 @@ class CardInfoForm(FlaskForm):
         return True
 
 
-class GetCardReqForm(FlaskForm):
-    class Meta:
-        csrf = False
-
+# TODO check if user is author of deck.
+class GetCardsRequestForm(FlaskForm):
     deck_id = IntegerField("DeckId", validators=[DataRequired()])
 
     def validate_deck_id(self, deck_id):
