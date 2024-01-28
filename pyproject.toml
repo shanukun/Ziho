@@ -1,0 +1,16 @@
+[tool.djlint]
+profile="jinja"
+use_gitignore=true
+line_break_after_multiline_tag=true
+max_line_length=100
+max_attribute_length=100
+ignore="H006,H013,H021"
+
+[tool.isort]
+group_by_package = true
+skip_gitignore = true
+
+[tool.black]
+line-length = 88
+
+

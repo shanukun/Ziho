@@ -1,6 +1,0 @@
-#!/bin/bash
-
-path=$(pwd)
-isort --gitignore $path
-black --exclude \.env $path
-djlint $path --lint --reformat --quiet --format-css --format-js --profile=django
