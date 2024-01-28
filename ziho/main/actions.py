@@ -24,7 +24,12 @@ def create_card(
     return card.id
 
 
-def get_cards_for_deck(deck_id: int, user_id: int):
+def get_cards_for_deck(deck_id: int, type: str | None = None):
+    stmt = db.select(Card).where(Card.deck_id == deck_id)
+    cards = db.session.execute(stmt).all()
+    if type == "dict":
+        return {card.id: card for (card,) in cards}
+    return [card for (card,) in cards]
 
 
 def get_cards_for_study(deck_id: int, user_id: int):
@@ -82,10 +87,12 @@ def get_cards_for_study(deck_id: int, user_id: int):
     return due_cards
 
 
-def get_decks_by_user(user_id: int):
+def get_decks_by_user(user_id: int, type: str | None = None):
     decks_row = db.session.execute(
         db.select(Deck).where(Deck.creator_id == user_id)
     ).all()
+    if type == "dict":
+        return {deck.id: deck for (deck,) in decks_row}
     return [deck for (deck,) in decks_row]
 
 

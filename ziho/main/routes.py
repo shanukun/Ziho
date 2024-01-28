@@ -20,6 +20,8 @@ from ziho.main.actions import (
     create_card,
     create_deck,
     get_cards_for_deck,
+    get_cards_for_study,
+    get_deck_by_id,
     get_decks_by_user,
     update_card_info,
 )
@@ -65,6 +67,30 @@ def create_deck_route():
         create_deck(form.deck_name.data, current_user.id)
         return redirect(url_for("main.home"))
     return "<h1>Failed</h1>"
+
+
+@bp.route("/view-deck", methods=["GET"])
+@bp.route("/view-deck/<int:deck_id>", methods=["GET"])
+@login_required
+def view_deck(deck_id=None):
+    card_form = CardForm()
+    card_delete_form = CardDeleteForm()
+    decks = get_decks_by_user(current_user.id, "dict")
+    if not deck_id:
+        deck_id = next(iter(decks))
+    elif not get_deck_by_id(deck_id):
+        abort(404)
+
+    cards = get_cards_for_deck(deck_id)
+    return render_template(
+        "view_deck.html",
+        deck_id=deck_id,
+        user=user,
+        decks=decks,
+        cards=cards,
+        card_form=card_form,
+        cd_form=card_delete_form,
+    )
 
 
 # TODO temp sol, use more robust approach for saving images
