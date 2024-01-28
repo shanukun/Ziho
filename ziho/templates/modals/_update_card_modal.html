@@ -1,0 +1,74 @@
+<!-- Modal -->
+<div class="modal fade px-0"
+     id="update-card-overlay"
+     tabindex="-1"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl modal-fullscreen-sm-down">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    Add Card
+                </h5>
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close">
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="update-card-form"
+                      method="post"
+                      enctype="multipart/form-data"
+                      onsubmit="return false;">
+                    {{ card_form.hidden_tag() }}
+                    <input id="card_id"
+                           name="card_id"
+                           type="hidden">
+                    <div class="row gy-3 p-2">
+                        <div class="form-floating col-12 gx-1">
+                            {{ card_form.deck(id="update-card-deck-select", class="form-control text-break;", placeholder="Choose Deck") }}
+                            {{ card_form.deck.label(class="form-label", for="update-card-deck-select") }}
+                        </div>
+                        <div class="form-floating col-12 gx-1">
+                            {{ card_form.front(class="form-control", placeholder="Fill front card", id="update-card-front", required=True) }}
+                            {{ card_form.front.label(class="form-label") }}
+                        </div>
+                        <!-- TODO size of textarea is increased using js, make sure it gets reset after submitting -->
+                        <div class="form-floating col-9 gx-1">
+                            {{ card_form.back(class="form-control card-back", placeholder="Fill back card", id="update-card-back", required=True) }}
+                            {{ card_form.back.label(class="form-label") }}
+                        </div>
+                        <div id="update-card-back-image"
+                             class="col-3 gx-2 rounded d-flex overflow-hidden px-0 card-back-image">
+                            <img src=""
+                                 class="d-none"
+                                 id="uploaded-image-preview" />
+                            {{ card_form.image(class="d-none", accept="image/*", id="upload-post-image") }}
+                            <label for="upload-post-image"
+                                   class="upload-image-label">
+                                <i class="bi bi-image"></i> Update Img
+                            </label>
+                        </div>
+                        <div class="col-12 gx-1">
+                            <!-- TODO use macros for these -->
+                            {% for error in card_form.front.errors %}
+                                <span style="color: red">[{{ error }}]</span>
+                            {% endfor %}
+                        </div>
+                        <div class="col-12 gx-1">
+                            <div class="row gx-1">
+                                <div class="col-auto ms-auto">
+                                    <button type="submit"
+                                            class="btn btn-primary"
+                                            onclick="update_card('{{ url_for("main.update_card_route") }}')">
+                                        Update Card
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

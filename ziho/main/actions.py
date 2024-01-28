@@ -113,6 +113,37 @@ def get_deck_by_id(deck_id: int):
     ).scalar_one_or_none()
 
 
+def update_card(
+    deck_id: int,
+    card_id: int,
+    front: str,
+    back: str,
+    user_id: int,
+    image_path: str | None = None,
+):
+    base_stmt = (
+        db.update(Card)
+        .where(Card.deck_id == deck_id)
+        .where(Card.id == card_id)
+        .where(
+            user_id
+            == db.select(Deck.creator_id).where(Deck.id == deck_id).scalar_subquery()
+        )
+    )
+
+    data_stmt = base_stmt.values(
+        front=front,
+        back=back,
+    )
+
+    if image_path:
+        image_stmt = base_stmt.values(image_path=image_path)
+        db.session.execute(image_stmt)
+
+    db.session.execute(data_stmt)
+    db.session.commit()
+
+
 def update_card_info(card_info_dict: dict):
     stmt = (
         db.update(CardInfo)

@@ -22,6 +22,43 @@ $("textarea")
         this.style.height = this.scrollHeight + "px";
     });
 
+function update_card(url) {
+    let form = getEl("#update-card-form");
+    let form_data = new FormData(form);
+
+    // Only send image if it's updated.
+    if (
+        typeof $("#upload-post-image").data("prev_image_path") !== "undefined"
+    ) {
+        if (
+            form_data.get("image") ===
+            $("#upload-post-image").data("prev_image_path")
+        ) {
+            form_data.set("image", null);
+        }
+    }
+
+    for (const pair of form_data.entries()) {
+        console.log(`${pair[0]}, ${pair[1]}`);
+    }
+
+    $.ajax({
+        type: "POST",
+        url: url,
+        data: form_data,
+        headers: {
+            "X-CSRFTOKEN": csrf_token,
+        },
+        // TODO handle fail case
+        success: function (resp) {
+            location.reload();
+            console.log(resp);
+        },
+        contentType: false,
+        processData: false,
+    });
+}
+
 function add_card(url) {
     let form = getEl("#add-card-form");
     let form_data = new FormData(form);

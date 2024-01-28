@@ -23,13 +23,14 @@ from ziho.main.actions import (
     get_cards_for_study,
     get_deck_by_id,
     get_decks_by_user,
+    update_card,
     update_card_info,
 )
 from ziho.main.forms import (
     CardCreationForm,
     CardForm,
     CardInfoForm,
-    CardResponseForm,
+    CardUpdateForm,
     DeckForm,
     EditProfileForm,
     GetCardReqForm,
@@ -136,11 +137,42 @@ def get_cards():
     return {"status": False, "msg": "Invalid deck id."}
 
 
-# TODO change to update card info
-@bp.route("/save-card", methods=["POST"])
 @login_required
-def save_card():
-    form = CardInfoForm()
+
+
+# TODO need to handle case where user want to delete the image.
+@bp.route("/update-card", methods=["POST"])
+@login_required
+def update_card_route():
+    form = CardUpdateForm()
+    if form.validate_on_submit():
+        image_path = None
+        if form.image and form.image.data:
+            image_path = save_image(form.image.data)
+        update_card(
+            form.deck.data,
+            form.card_id.data,
+            form.front.data,
+            form.back.data,
+            current_user.id,
+            image_path,
+        )
+        return {"msg": "Valid deck id and card id."}
+
+    # TODO not a valid method
+    error_string = ""
+    for k in form.errors:
+        if k is not None:
+            for emsg in form.errors[k]:
+                error_string += k + ": " + emsg + "\n"
+    # TODO use abort for api errors
+    return {"msg": error_string}
+
+
+@bp.route("/update-card-info", methods=["POST"])
+@login_required
+def update_card_info_route():
+    form = CardInfoForm(meta={"csrf": False})
     if form.validate_on_submit():
         # add func to forms
         card_info_dict = dict()
