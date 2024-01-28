@@ -66,6 +66,7 @@ class Card(db.Model):
 
     back: Mapped[str] = mapped_column(String(500))
     front: Mapped[str] = mapped_column(String(200), nullable=False)
+    image_path: Mapped[str] = mapped_column(String(500), nullable=True)
 
     deck_id: Mapped[int] = mapped_column(ForeignKey("deck.id"))
     parent_deck: Mapped["Deck"] = relationship(back_populates="cards")

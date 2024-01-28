@@ -1,5 +1,17 @@
-from flask import flash, redirect, render_template, request, url_for
+import os
+
+from flask import (
+    abort,
+    current_app,
+    flash,
+    redirect,
+    render_template,
+    request,
+    send_from_directory,
+    url_for,
+)
 from flask_login import current_user, login_required
+from werkzeug.utils import secure_filename
 
 from ziho import db
 from ziho.auth.actions import get_user_or_404
@@ -12,6 +24,7 @@ from ziho.main.actions import (
     update_card_info,
 )
 from ziho.main.forms import (
+    CardCreationForm,
     CardForm,
     CardInfoForm,
     CardResponseForm,
@@ -54,14 +67,34 @@ def create_deck_route():
     return "<h1>Failed</h1>"
 
 
-@bp.route("/create_card", methods=["POST"])
+# TODO temp sol, use more robust approach for saving images
+def save_image(image_data):
+    filename = secure_filename(image_data.filename)
+    full_path = os.path.join(current_app.config["UPLOAD_PATH"], filename)
+    image_data.save(full_path)
+    return url_for("main.show_image", image_name=filename, _external=True)
+
+
+@bp.route("/ziho_uploads/<image_name>")
 @login_required
-def create_card_route():
-    form = CardResponseForm()
+def show_image(image_name):
+    return send_from_directory(current_app.config["UPLOAD_FOLDER"], image_name)
+
+
+@bp.route("/add-card", methods=["POST"])
+@login_required
+def add_card_route():
+    form = CardCreationForm()
     if form.validate_on_submit():
-        create_card(form.deck.data, form.front.data, form.back.data, current_user.id)
+        image_path = None
+        if form.image and form.image.data:
+            image_path = save_image(form.image.data)
+        create_card(
+            form.deck.data, form.front.data, form.back.data, current_user.id, image_path
+        )
         return "<h1>Passed</h1>"
     return "<h1>Failed</h1>"
+    # TODO generate better response with error and confirmation message
 
 
 @bp.route("/get-cards", methods=["POST"])

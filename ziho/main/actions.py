@@ -13,8 +13,10 @@ def create_deck(deck_name: str | None, user_id: int):
     return deck.id
 
 
-def create_card(deck_id: int, front: str, back: str, user_id: int):
-    card = Card(front=front, back=back, deck_id=deck_id)
+def create_card(
+    deck_id: int, front: str, back: str, user_id: int, image_path: str | None = None
+):
+    card = Card(front=front, back=back, deck_id=deck_id, image_path=image_path)
     card_info = CardInfo(parent_card=card, user_id=user_id)
     db.session.add(card)
     db.session.add(card_info)
@@ -23,10 +25,13 @@ def create_card(deck_id: int, front: str, back: str, user_id: int):
 
 
 def get_cards_for_deck(deck_id: int, user_id: int):
+
+
+def get_cards_for_study(deck_id: int, user_id: int):
     stmt = (
         db.select(
             Bundle("deck", Deck.id),
-            Bundle("card", Card.id, Card.front, Card.back),
+            Bundle("card", Card.id, Card.front, Card.back, Card.image_path),
             Bundle(
                 "card_info",
                 CardInfo.id,
@@ -58,6 +63,7 @@ def get_cards_for_deck(deck_id: int, user_id: int):
                 "card_id": card.card.id_1,
                 "front": card.card.front,
                 "back": card.card.back,
+                "image_path": card.card.image_path,
                 "card_info": {
                     "card_info_id": card.card_info.id_2,
                     "difficulty": card.card_info.difficulty,

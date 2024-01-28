@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
@@ -11,6 +12,8 @@ class Config:
         "DATABASE_URL"
     ) or "sqlite:///" + os.path.join(basedir, "app.db")
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    UPLOAD_FOLDER = Path("ziho_uploads")
+    UPLOAD_PATH = Path(basedir) / "ziho" / UPLOAD_FOLDER
 
     TESTING = False
 

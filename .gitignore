@@ -1,2 +1,8 @@
 __pycache__/
 .env/
+logs/
+
+/ziho/static/css/*
+/ziho/ziho_uploads/
+
+node_modules/

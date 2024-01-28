@@ -9,9 +9,24 @@ function go_to_url(url) {
     window.location.href = url;
 }
 
-function create_card(url) {
-    let form = getEl("#create-card-form");
+// increase textarea height depending on the length of the text
+$("textarea")
+    .each(function () {
+        this.setAttribute(
+            "style",
+            "height:" + this.scrollHeight + "px;overflow-y:hidden;",
+        );
+    })
+    .on("focus input", function () {
+        this.style.height = 0;
+        this.style.height = this.scrollHeight + "px";
+    });
+
+function add_card(url) {
+    let form = getEl("#add-card-form");
     let form_data = new FormData(form);
+
+    let selected = getEl("#add-card-deck-select").value;
 
     $.ajax({
         type: "POST",
@@ -20,9 +35,11 @@ function create_card(url) {
         headers: {
             "X-CSRFTOKEN": csrf_token,
         },
+        // TODO handle fail case
         success: function (resp) {
             form.reset();
-            getEl("#deck-select").value;
+            getEl("#add-card-deck-select").value = selected;
+            getEl("#uploaded-image-preview").classList.toggle("d-none");
             console.log(resp);
         },
         contentType: false,
@@ -56,9 +73,11 @@ function save_card(card) {
     });
 }
 
-function get_cards(url, deck_id) {
+function get_cards(url, deck_id, deck_name) {
+    $("#study-card-title").html = deck_name;
     let form_data = new FormData();
     form_data.append("deck_id", deck_id);
+    form_data.append("csrf_token", csrf_token);
 
     $.ajax({
         type: "POST",
@@ -74,11 +93,32 @@ function get_cards(url, deck_id) {
                 return;
             }
 
-            const displayer = new Displayer();
+            const displayer = new Displayer(deck_name);
             displayer.fill_queue(resp.result);
             displayer.show_card();
         },
         contentType: false,
         processData: false,
     });
+}
+
+function show_uploaded_image(el, image) {
+    el.setAttribute("src", image);
+    el.classList.add("d-flex");
+    el.classList.remove("d-none");
+}
+
+function change_preview_image(input) {
+    let reader;
+    let preview = getEl("#uploaded-image-preview");
+
+    if (input.files && input.files[0]) {
+        reader = new FileReader();
+
+        reader.onload = function (e) {
+            show_uploaded_image(preview, e.target.result);
+        };
+
+        reader.readAsDataURL(input.files[0]);
+    }
 }

@@ -1,6 +1,8 @@
 from flask_wtf import FlaskForm
+from flask_wtf.file import FileAllowed
 from wtforms import (
     DateTimeField,
+    FileField,
     FloatField,
     IntegerField,
     SelectField,
@@ -66,10 +68,25 @@ class GetCardReqForm(FlaskForm):
             raise ValidationError("Please use a valid deck id.")
 
 
+IMAGES = "jpg jpe jpeg png gif svg bmp webp".split()
+
+
 class CardForm(FlaskForm):
     deck = SelectField("Deck", coerce=int)
-    front = StringField("Front", validators=[DataRequired()])
-    back = TextAreaField("Back", validators=[Length(min=1, max=500)])
+    front = TextAreaField("Front", validators=[DataRequired()])
+    back = TextAreaField("Back", validators=[DataRequired()])
+    image = FileField("image", validators=[FileAllowed(IMAGES)])
+
+
+class CardCreationForm(CardForm):
+    deck = IntegerField("Deck", validators=[DataRequired()])
+
+
+class CardUpdateForm(CardCreationForm):
+    card_id = IntegerField("Card", validators=[DataRequired()])
+
+    def validate_card_id(self, card_id):
+        pass
 
 
 class CardResponseForm(CardForm):
