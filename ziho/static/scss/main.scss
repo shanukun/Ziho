@@ -1,0 +1,166 @@
+@use "base";
+
+main {
+    background: base.$greys-100;
+}
+
+#top-hero-hint {
+    height: 5px;
+    background-color: base.$primary-600;
+}
+
+.sidebar {
+    z-index: 1;
+    background: base.$white;
+
+    .ziho-logo {
+        font-family: Recog;
+        color: base.$primary-600;
+        font-size: 2rem;
+    }
+
+    .nav-link {
+        color: base.$greys-600;
+        font-size: 20px;
+        padding-left: 20px;
+        font-weight: 500;
+        border-radius: 7px;
+
+        &.active {
+            background-color: base.$primary-100;
+            color: base.$primary-500;
+        }
+
+        &:hover {
+            color: base.$primary-600;
+        }
+    }
+}
+
+.topbar {
+    background: base.$white;
+}
+
+@media (min-width: 768px) {
+    .sidebar .offcanvas-lg {
+        position: -webkit-sticky;
+        position: sticky;
+        top: 48px;
+    }
+}
+
+.deck-item {
+    .card {
+        border-width: 0;
+    }
+    .card-title {
+        color: base.$greys-800;
+        font-weight: 600;
+        font-size: 24px;
+        min-width: 0px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    .btn-group {
+        .btn {
+            font-weight: 500;
+            background-color: base.$greys-100;
+            color: base.$greys-600;
+
+            &:hover {
+                background-color: base.$greys-400;
+                color: base.$greys-150;
+            }
+        }
+    }
+}
+
+#add-card-form,
+#update-card-form {
+    .card-back {
+        min-height: 150px;
+    }
+
+    .card-back-image {
+        border: 3px dashed base.$border-color;
+        position: relative;
+        color: base.$border-color;
+        font-size: 15px;
+        height: 150px;
+
+        img {
+            width: 100%;
+            height: 100%;
+        }
+
+        .upload-image-label {
+            background: rgb(0, 0, 0);
+            background: rgba(0, 0, 0, 0.5);
+            color: #f1f1f1;
+            bottom: 0;
+            color: base.$white;
+            cursor: pointer;
+            padding: 10px;
+            position: absolute;
+            text-align: center;
+            width: 100%;
+        }
+    }
+}
+
+#study-deck-modal-content {
+    > div {
+        height: 100%;
+        background-color: base.$white;
+        box-shadow: 0 0.5rem 1rem base.$shadow-with-opacity;
+
+        div {
+            padding: 10px;
+        }
+
+        #card-back-image {
+            cursor: zoom-in;
+            border-radius: 7px;
+            max-width: 100%;
+            height: auto;
+            max-height: 376px;
+            transition: 0.3s;
+        }
+    }
+}
+
+#zoomed-image-modal {
+    display: none;
+    position: fixed;
+    z-index: 1056;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgb(0, 0, 0);
+
+    #zoomed-image {
+        cursor: zoom-out;
+        display: block;
+        width: 80%;
+    }
+}
+
+.view-deck-card {
+    .card-text {
+        color: base.$greys-700;
+        font-size: 17px;
+    }
+    .card-header {
+        border-bottom: 1px dashed base.$greys-200;
+    }
+    .card-header .card-text {
+        font-weight: 470;
+        padding: 12px 12px 12px 16px;
+        font-size: 19px;
+        margin: 0;
+    }
+}

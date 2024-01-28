@@ -1,47 +1,92 @@
 {% extends "base.html" %}
+{% set active_page = "Home" %}
+<!-- macro for card progress count badges -->
+{% macro card_progress_badge(title='New', value='-', type='primary', size=20) -%}
+    <div class="col-auto me-2 mt-md-1 text-{{ type }}-emphasis bg-{{ type }}-subtle rounded-1 px-3 py-1">
+        <p class="mb-0">
+            {{ value }}
+        </p>
+        <p class="mb-0 fw-bold"
+           style="font-size: 12px">
+            {{ title }}
+        </p>
+    </div>
+{%- endmacro %}
+{% block header %}
+    Home
+{% endblock header %}
 {% block content %}
-    <h1>
-        Hi, {{ current_user.username }}!
-    </h1>
-    <button type="button"
-            class="btn btn-primary btn-sm"
-            data-bs-toggle="modal"
-            data-bs-target="#create-deck-overlay">
-        Create Deck
-    </button>
-    <hr />
-    <table>
-        {% for deck in decks %}
-            <tr>
-                <td>
-                    {{ deck.name }}
-                </td>
-                <td>
-                    <button type="button" class="btn btn-primary btn-sm" data-deck_id={{ deck.id }} data-bs-toggle="modal" data-bs-target="#create-card-overlay">
-                        Add Card
-                    </button>
-                </td>
-                <td>
-                    <button type="button"
-                            class="btn btn-primary btn-sm"
-                            onclick="get_cards('{{ url_for("main.get_cards") }}', {{ deck.id }})"
-                            data-bs-toggle="modal"
-                            data-bs-target="#study-deck-overlay">
-                        Study
-                    </button>
-                </td>
-            </tr>
-        {% endfor %}
-    </table>
+    <div class="col">
+        <div class="row">
+            <div class="col">
+                <h3>
+                    Decks
+                </h3>
+            </div>
+            <div class="col-auto">
+                <button type="button"
+                        class="btn btn-primary fw-bold"
+                        data-bs-toggle="modal"
+                        data-bs-target="#create-deck-overlay">
+                    <i class="bi bi-plus"></i>
+                    Create Deck
+                </button>
+            </div>
+        </div>
+        <div class="row mt-3 row-cols-md-2 row-cols-lg-3 row-cols-xl-4">
+            {% for deck in decks %}
+                <div class="col-md deck-item mb-2 border-0">
+                    <div class="card overflow-hidden">
+                        <div class="card-body px-3">
+                            <h5 class="card-title pb-2">
+                                {{ deck.name|truncate(30, True) }}
+                            </h5>
+                            <div class="row m-auto">
+                                {{ card_progress_badge(title="New", value=20, type="info") }}
+                                {{ card_progress_badge(title="Learn", value=3, type="danger") }}
+                                {{ card_progress_badge(title="Due", value=108, type="success") }}
+                            </div>
+                            <!-- TODO 1 row for tags -->
+                        </div>
+                        <div class="btn-group w-100 px-3 pb-3 m-auto"
+                             role="group">
+                            <a type="button"
+                               class="btn btn-light"
+                               href="{{ url_for("main.view_deck", deck_id=deck.id) }}">
+                                View
+                            </a>
+                            <button type="button" class="btn btn-light" data-deck_id={{ deck.id }} data-bs-toggle="modal" data-bs-target="#add-card-overlay">Add Card
+                            </button>
+                            <button type="button"
+                                    class="btn btn-light"
+                                    onclick="get_cards('{{ url_for("main.get_cards") }}', {{ deck.id }}, '{{ deck.name }}')"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#study-deck-overlay">
+                                Study
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
     {% include "modals/_create_deck_modal.html" %}
-    {% include "modals/_create_card_modal.html" %}
+    {% include "modals/_add_card_modal.html" %}
     {% include "modals/_study_deck_modal.html" %}
 {% endblock content %}
 {% block script %}
     <script>
-        getEl("#create-card-overlay").addEventListener("show.bs.modal", (e) => {
-            deck_id = e.relatedTarget.dataset.deck_id;
-            getEl("#deck-select").value = deck_id;
+        getEl("#add-card-overlay").addEventListener("show.bs.modal", (e) => {
+            let deck_id = e.relatedTarget.dataset.deck_id;
+            getEl("#add-card-deck-select").value = deck_id;
+        });
+
+        getEl("#upload-post-image").addEventListener("change", function() {
+            change_preview_image(this);
+        });
+
+        getEl("#zoomed-image-modal").addEventListener("click", function() {
+            getEl("#zoomed-image-modal").style.display = "none";
         });
     </script>
 {% endblock script %}

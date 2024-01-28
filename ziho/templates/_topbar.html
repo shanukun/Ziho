@@ -1,0 +1,37 @@
+<div class="col p-2 ps-3">
+    <h3>
+        {% block header %}
+        {% endblock header %}
+    </h3>
+</div>
+{% if current_user.is_anonymous %}
+    <div class="col-auto p-2">
+        <a href="{{ url_for("auth.login") }}"
+           class="active">Login</a>
+    </div>
+{% else %}
+    <div class="col-auto p-2 m-auto">
+        <button class="btn btn-light">
+            <i class="bi bi-bell"></i>
+        </button>
+    </div>
+    <div class="col-auto p-2">
+        <!-- image -->
+        <!-- name -->
+        <!-- dropdown -->
+        <div class="dropdown">
+            <button class="btn btn-light dropdown-toggle"
+                    type="button"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false">
+                {{ current_user.username }}
+            </button>
+            <ul class="dropdown-menu">
+                <li>
+                    <a href="{{ url_for("auth.logout") }}"
+                       class="dropdown-item">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+{% endif %}

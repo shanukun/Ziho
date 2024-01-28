@@ -1,0 +1,59 @@
+<div class="sidebar col-md-auto col-lg-2 p-0">
+    <div class="d-md-none d-flex">
+        <button class="nav-link px-1 d-md-none"
+                type="button"
+                data-bs-toggle="offcanvas"
+                data-bs-target="#sidebarMenu"
+                aria-controls="sidebarMenu"
+                aria-expanded="false"
+                aria-label="Toggle navigation">
+            <i class="bi bi-list"></i>
+        </button>
+        <div class="h2 py-1 m-auto ziho-logo">
+            ziho
+        </div>
+    </div>
+    <div class="offcanvas-md offcanvas-start min-vh-100"
+         tabindex="-1"
+         id="sidebarMenu"
+         aria-labelledby="sidebarMenuLabel">
+        <div class="offcanvas-header">
+            <button type="button"
+                    class="btn-close"
+                    data-bs-dismiss="offcanvas"
+                    data-bs-target="#sidebarMenu"
+                    aria-label="Close">
+            </button>
+        </div>
+        <div class="offcanvas-body d-md-flex flex-column p-0 pt-3 px-3 overflow-y-auto">
+            <div class="h2 px-1 pb-3 ziho-logo">
+                ziho
+            </div>
+            <ul class="nav flex-column">
+                {% if current_user.is_anonymous %}
+                    <li class="nav-item">
+                        <a href="{{ url_for("auth.login") }}"
+                           class="nav-link d-flex align-items-center gap-2 {% if active_page == 'Login' %} active{% endif %}">Login</a>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a href="{{ url_for("main.home") }}"
+                           class="nav-link d-flex align-items-center gap-2 {% if active_page == 'Home' %} active{% endif %}"><i class="bi bi-grid"></i> Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ url_for("main.view_deck") }}"
+                           class="nav-link d-flex align-items-center gap-2 {% if active_page == 'Deck' %} active{% endif %}"><i class="bi bi-layers"></i> View Deck</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#"
+                           class="nav-link"><i class="bi bi-compass"></i> Explore</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ url_for('main.user', username=current_user.username) }}"
+                           class="nav-link d-flex align-items-center gap-2 {% if active_page == 'Profile' %} active{% endif %}"><i class="bi bi-person"></i> Profile</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</div>

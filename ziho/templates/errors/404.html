@@ -1,9 +1,9 @@
 {% extends "base.html" %}
+{% block header %}
+    Error
+{% endblock header %}
 {% block content %}
     <h1>
         Url Not Found
     </h1>
-    <p>
-        <a href="{{ url_for("main.home") }}">Back</a>
-    </p>
 {% endblock content %}

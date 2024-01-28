@@ -1,0 +1,110 @@
+// fonts
+@font-face {
+    font-family: "Satoshi-Variable";
+    src:
+        url("../fonts/Satoshi-Variable.woff2") format("woff2"),
+        url("../fonts/Satoshi-Variable.woff") format("woff"),
+        url("../fonts/Satoshi-Variable.ttf") format("truetype");
+    font-weight: 100 900;
+    font-display: swap;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: Recog;
+    src: url("../fonts/Recog.otf") format("opentype");
+    font-weight: 100 900;
+    font-display: swap;
+    font-style: normal;
+}
+
+$primary-100: hsl(219, 100%, 95%);
+$primary-200: hsl(219, 100%, 86%);
+$primary-300: hsl(219, 100%, 77%);
+$primary-400: hsl(219, 100%, 68%);
+$primary-500: hsl(219, 100%, 60%);
+$primary-600: hsl(219, 100%, 51%);
+$primary-700: hsl(219, 100%, 42%);
+$primary-800: hsl(219, 100%, 33%);
+$primary-900: hsl(219, 100%, 25%);
+
+$greys-100: hsl(219, 25%, 97%);
+$greys-150: hsl(219, 25%, 94%);
+$greys-200: hsl(219, 25%, 88%);
+$greys-300: hsl(219, 25%, 79%);
+$greys-400: hsl(219, 25%, 70%);
+$greys-500: hsl(219, 25%, 62%);
+$greys-600: hsl(219, 25%, 53%);
+$greys-700: hsl(219, 25%, 44%);
+$greys-800: hsl(219, 25%, 35%);
+$greys-900: hsl(219, 25%, 27%);
+
+$new-100: #e6fefe;
+$new-200: #a8efea;
+$new-300: #6ed7d3;
+$new-400: #3daea2;
+$new-500: #2a9187;
+$new-600: #1b645f;
+$new-700: #124544;
+
+$success-100: #e3fded;
+$success-200: #a9efc1;
+$success-300: #74d99f;
+$success-400: #38c073;
+$success-500: #249c58;
+$success-600: #197741;
+$success-700: #145239;
+
+$warning-100: #fffdf5;
+$warning-200: #fdf3d7;
+$warning-300: #fae29f;
+$warning-400: #f4cb65;
+$warning-500: #cba53c;
+$warning-600: #8c6c1e;
+$warning-700: #5d4913;
+
+$danger-100: #fde9e8;
+$danger-200: #f5aaaa;
+$danger-300: #e56564;
+$danger-400: #dd3130;
+$danger-500: #b92021;
+$danger-600: #881b1a;
+$danger-700: #611818;
+
+$content-bg: hsl(0, 0%, 98%);
+
+$border-color: #dee2e6;
+$overlay-color: #00000014;
+
+$shadow-with-opacity: #2e385614;
+
+$white: #ffffff;
+$dark: #000;
+
+$breakp-sm: 576px;
+$breakp-md: 768px;
+
+$card-img-max-width-md: 376px;
+
+body {
+    font-family: "Satoshi-Variable";
+}
+
+textarea {
+    overflow: auto;
+    resize: none;
+}
+
+.btn-primary {
+    color: $primary-100;
+    background-color: $primary-600;
+}
+
+.btn-outline-primary {
+    border-color: $primary-600;
+}
+
+.btn-link {
+    cursor: pointer;
+    text-decoration: none;
+}
