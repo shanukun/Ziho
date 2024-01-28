@@ -25,9 +25,11 @@ from ziho.main.actions import (
     get_decks_by_user,
     update_card,
     update_card_info,
+    delete_card,
 )
 from ziho.main.forms import (
     CardCreationForm,
+    CardDeleteForm,
     CardForm,
     CardInfoForm,
     CardUpdateForm,
@@ -137,7 +139,22 @@ def get_cards():
     return {"status": False, "msg": "Invalid deck id."}
 
 
+@bp.route("/delete-card", methods=["POST"])
 @login_required
+def delete_card_route():
+    form = CardDeleteForm()
+    if form.validate_on_submit():
+        delete_card(form.deck.data, form.card_id.data, current_user.id)
+        return {"msg": "Card deleted."}
+
+    # TODO not a valid method
+    error_string = ""
+    for k in form.errors:
+        if k is not None:
+            for emsg in form.errors[k]:
+                error_string += k + ": " + emsg + "\n"
+    # TODO use abort for api errors
+    return {"msg": error_string}
 
 
 # TODO need to handle case where user want to delete the image.

@@ -144,6 +144,20 @@ def update_card(
     db.session.commit()
 
 
+def delete_card(deck_id: int, card_id: int, user_id: int):
+    card = db.session.execute(
+        db.select(Card)
+        .where(Card.deck_id == deck_id)
+        .where(Card.id == card_id)
+        .where(
+            user_id
+            == db.select(Deck.creator_id).where(Deck.id == deck_id).scalar_subquery()
+        )
+    ).scalar_one_or_none()
+    db.session.delete(card)
+    db.session.commit()
+
+
 def update_card_info(card_info_dict: dict):
     stmt = (
         db.update(CardInfo)

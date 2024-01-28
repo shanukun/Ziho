@@ -75,6 +75,17 @@
 {% endblock content %}
 {% block script %}
     <script>
+        getEl("#delete-card-modal").addEventListener("show.bs.modal", (e) => {
+            let ds = e.relatedTarget.dataset;
+
+            let card_id = ds.card_id;
+            let card_front = ds.card_front;
+
+            getEl("#delete-card-modal .modal-body h4").innerHTML = card_front;
+            getEl("#delete-card-modal .modal-footer #card_id").value =  card_id;
+            getEl("#delete-card-modal .modal-footer #deck").value = {{ deck_id }};
+
+        });
 
         getEl("#update-card-overlay").addEventListener("show.bs.modal", (e) => {
             let ds = e.relatedTarget.dataset;

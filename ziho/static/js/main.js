@@ -22,6 +22,28 @@ $("textarea")
         this.style.height = this.scrollHeight + "px";
     });
 
+function delete_card(url) {
+    let form = getEl("#delete-card-form");
+    let form_data = new FormData(form);
+
+    $.ajax({
+        type: "POST",
+        url: url,
+        data: form_data,
+        headers: {
+            "X-CSRFTOKEN": csrf_token,
+        },
+        // TODO handle fail case
+        success: function (resp) {
+            // location.reload();
+            console.log(resp);
+        },
+        contentType: false,
+        processData: false,
+    });
+
+}
+
 function update_card(url) {
     let form = getEl("#update-card-form");
     let form_data = new FormData(form);

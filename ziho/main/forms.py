@@ -89,8 +89,9 @@ class CardUpdateForm(CardCreationForm):
         pass
 
 
-class CardResponseForm(CardForm):
-    deck = IntegerField("Deck")
+class CardDeleteForm(FlaskForm):
+    deck = IntegerField("Deck", validators=[DataRequired()])
+    card_id = IntegerField("Card", validators=[DataRequired()])
 
 
 class EditProfileForm(FlaskForm):
