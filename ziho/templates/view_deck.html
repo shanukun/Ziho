@@ -23,20 +23,28 @@
                     </div>
                     <div class="card-body">
                         {% if card.image_path %}
-                            <img style="height: 120px;
-                                        width: 120px"
-                                 class="float-start me-3 card-image"
-                                 src="{{ card.image_path }}" />
+                            <img style="height: 120px; width: 120px" class="float-start me-3 card-image" src="{{ card.image_path }}" />
                         {% endif %}
                         <p class="card-text">
                             {{ card.back }}
                         </p>
                     </div>
                     <div class="row mt-2 mb-3 me-3 ms-auto">
-                        <button class="col-auto btn btn-light" type="button" data-bs-toggle="modal" data-card_id={{ card.id }} data-card_front="{{ card.front }}" data-card_back="{{ card.back }}" {% if card.image_path %}data-card_image_path="{{ card.image_path }}"{% endif %} data-bs-target="#update-card-overlay">
+                        <button class="col-auto btn btn-light"
+                                type="button"
+                                data-bs-toggle="modal"
+                                data-card_id="{{ card.id }}"
+                                data-card_front="{{ card.front }}"
+                                data-card_back="{{ card.back }}"
+                                {% if card.image_path %}data-card_image_path="{{ card.image_path }}"{% endif %}
+                                data-bs-target="#update-card-overlay">
                             <i class="bi bi-pencil"></i> Edit
                         </button>
-                        <button class="col-auto btn btn-light ms-2" data-bs-toggle="modal" data-bs-target="#delete-card-modal" data-card_id={{ card.id }} data-card_front="{{ card.front }}">
+                        <button class="col-auto btn btn-light ms-2"
+                                data-bs-toggle="modal"
+                                data-bs-target="#delete-card-modal"
+                                data-card_id="{{ card.id }}"
+                                data-card_front="{{ card.front }}">
                             <i class="bi bi-trash"></i> Delete
                         </button>
                     </div>
@@ -57,14 +65,18 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <h4></h4>
+                    <h4>
+                        <i>select a card</i>
+                    </h4>
                 </div>
                 <div class="modal-footer">
                     <form id="delete-card-form" method="post">
                         {{ cd_form.hidden_tag() }}
                         {{ cd_form.deck(type="hidden") }}
                         {{ cd_form.card_id(type="hidden") }}
-                        <button type="button" class="btn btn-danger" onclick="delete_card('{{ url_for("main.delete_card_route") }}')">
+                        <button type="button"
+                                class="btn btn-danger"
+                                onclick="delete_card('{{ url_for("main.delete_card_route") }}')">
                             Delete
                         </button>
                     </form>

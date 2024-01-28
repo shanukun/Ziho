@@ -6,8 +6,7 @@
         <p class="mb-0">
             {{ value }}
         </p>
-        <p class="mb-0 fw-bold"
-           style="font-size: 12px">
+        <p class="mb-0 fw-bold" style="font-size: 12px">
             {{ title }}
         </p>
     </div>
@@ -48,14 +47,16 @@
                             </div>
                             <!-- TODO 1 row for tags -->
                         </div>
-                        <div class="btn-group w-100 px-3 pb-3 m-auto"
-                             role="group">
-                            <a type="button"
-                               class="btn btn-light"
-                               href="{{ url_for("main.view_deck", deck_id=deck.id) }}">
+                        <div class="btn-group w-100 px-3 pb-3 m-auto" role="group">
+                            <a type="button" class="btn btn-light" href="{{ url_for("main.view_deck", deck_id=deck.id) }}">
                                 View
                             </a>
-                            <button type="button" class="btn btn-light" data-deck_id={{ deck.id }} data-bs-toggle="modal" data-bs-target="#add-card-overlay">Add Card
+                            <button type="button"
+                                    class="btn btn-light"
+                                    data-deck_id="{{ deck.id }}"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#add-card-overlay">
+                                Add Card
                             </button>
                             <button type="button"
                                     class="btn btn-light"

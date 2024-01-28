@@ -18,7 +18,9 @@ class User(UserMixin, db.Model):
     email: Mapped[str] = mapped_column(String(120), unique=True, index=True)
     password_hash: Mapped[str] = mapped_column(String(128))
     about_me: Mapped[str] = mapped_column(String(140), nullable=True)
-    decks: Mapped[List["Deck"]] = relationship(back_populates="creator", cascade="all, delete", passive_deletes=True)
+    decks: Mapped[List["Deck"]] = relationship(
+        back_populates="creator", cascade="all, delete", passive_deletes=True
+    )
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -59,7 +61,9 @@ class Deck(db.Model):
     # parent_id: Mapped[int] = mapped_column(ForeignKey("deck.id", ondelete="CASCADE"), nullable=True)
     # child = relationship(back_populates="child", cascade="all, delete", passive_deletes=True)
 
-    cards: Mapped[List["Card"]] = relationship(back_populates="parent_deck", cascade="all, delete", passive_deletes=True)
+    cards: Mapped[List["Card"]] = relationship(
+        back_populates="parent_deck", cascade="all, delete", passive_deletes=True
+    )
 
     def __repr__(self):
         return "<Deck {}>".format(self.name)
@@ -74,7 +78,9 @@ class Card(db.Model):
 
     deck_id: Mapped[int] = mapped_column(ForeignKey("deck.id", ondelete="CASCADE"))
     parent_deck: Mapped["Deck"] = relationship(back_populates="cards")
-    card_info: Mapped["CardInfo"] = relationship(back_populates="parent_card", cascade="all, delete-orphan")
+    card_info: Mapped["CardInfo"] = relationship(
+        back_populates="parent_card", cascade="all, delete-orphan"
+    )
 
 
 class CardInfo(db.Model):

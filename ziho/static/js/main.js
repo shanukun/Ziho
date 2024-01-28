@@ -41,7 +41,6 @@ function delete_card(url) {
         contentType: false,
         processData: false,
     });
-
 }
 
 function update_card(url) {

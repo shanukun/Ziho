@@ -19,13 +19,13 @@ from ziho.main import bp
 from ziho.main.actions import (
     create_card,
     create_deck,
+    delete_card,
     get_cards_for_deck,
     get_cards_for_study,
     get_deck_by_id,
     get_decks_by_user,
     update_card,
     update_card_info,
-    delete_card,
 )
 from ziho.main.forms import (
     CardCreationForm,

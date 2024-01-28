@@ -10,78 +10,49 @@
                 <h5 class="modal-title mx-auto">
                     Deck: <span id="study-deck-title"></span>
                 </h5>
-                <button type="button"
-                        class="btn-close border rounded m-0"
-                        data-bs-dismiss="modal"
-                        aria-label="Close">
+                <button type="button" class="btn-close border rounded m-0" data-bs-dismiss="modal" aria-label="Close">
                 </button>
             </div>
-            <div id="study-deck-modal-content"
-                 class="modal-body bg-body-tertiary">
+            <div id="study-deck-modal-content" class="modal-body bg-body-tertiary">
             </div>
         </div>
     </div>
 </div>
-<input type="hidden"
-       id="save-card-url"
-       data-url="{{ url_for("main.update_card_info_route") }}" />
-<div id="zoomed-image-modal"
-     class="modal">
-    <img src=""
-         id="zoomed-image"
-         class="mx-auto my-auto pt-5" />
+<input type="hidden" id="save-card-url" data-url="{{ url_for("main.update_card_info_route") }}" />
+<div id="zoomed-image-modal" class="modal">
+    <img src="" id="zoomed-image" class="mx-auto my-auto pt-5" />
 </div>
 <!-- template for the modal -->
 <template id="study-deck-template">
     <div class="d-flex rounded mx-2 mx-md-5 overflow-auto">
-        <div id="show-fb-card"
-             class="flex-fill">
+        <div id="show-fb-card" class="flex-fill">
             <div class="d-block">
-                <span id="show-f-text"
-                      class="fw-bold fs-2 overflow-y-auto text-break"></span>
+                <span id="show-f-text" class="fw-bold fs-2 overflow-y-auto text-break"></span>
             </div>
         </div>
-        <div id="fb-card"
-             class="d-flex flex-column w-100">
+        <div id="fb-card" class="d-flex flex-column w-100">
             <div class="d-block">
-                <span id="card-front"
-                      class="fw-bold fs-5 overflow-y-auto text-break">
+                <span id="card-front" class="fw-bold fs-5 overflow-y-auto text-break">
                 </span>
             </div>
             <!-- TODO change id to something else -->
             <div class="d-flex overflow-y-auto flex-column flex-fill">
-                <!-- <img id="card-back-image"
-      class="d-none pb-4 mx-auto"
-      src="" /> -->
-                <img id="card-back-image"
-                     class="d-flex pb-4 mx-auto"
-                     src="" />
-                <span id="card-back"
-                      class="fs-4 text-break"></span>
+                <!-- <img id="card-back-image" class="d-none pb-4 mx-auto" src="" /> -->
+                <img id="card-back-image" class="d-flex pb-4 mx-auto" src="" />
+                <span id="card-back" class="fs-4 text-break"></span>
             </div>
             <div class="d-block p-0 pt-3">
-                <div id="record-resp-table"
-                     class="btn-group w-100 p-0 m-auto"
-                     role="group"
-                     aria-label="Action Group">
-                    <button id="again-card"
-                            class="btn btn-outline-danger bg-danger-subtle"
-                            data-rating="1">
+                <div id="record-resp-table" class="btn-group w-100 p-0 m-auto" role="group" aria-label="Action Group">
+                    <button id="again-card" class="btn btn-outline-danger bg-danger-subtle" data-rating="1">
                         Again
                     </button>
-                    <button id="hard-card"
-                            class="btn btn-outline-dark bg-dark-subtle"
-                            data-rating="2">
+                    <button id="hard-card" class="btn btn-outline-dark bg-dark-subtle" data-rating="2">
                         Hard
                     </button>
-                    <button id="good-card"
-                            class="btn btn-outline-primary bg-primary-subtle"
-                            data-rating="3">
+                    <button id="good-card" class="btn btn-outline-primary bg-primary-subtle" data-rating="3">
                         Good
                     </button>
-                    <button id="easy-card"
-                            class="btn btn-outline-success bg-success-subtle"
-                            data-rating="4">
+                    <button id="easy-card" class="btn btn-outline-success bg-success-subtle" data-rating="4">
                         Easy
                     </button>
                 </div>

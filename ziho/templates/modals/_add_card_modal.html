@@ -1,25 +1,16 @@
 <!-- Modal -->
-<div class="modal fade px-0"
-     id="add-card-overlay"
-     tabindex="-1"
-     aria-hidden="true">
+<div class="modal fade px-0" id="add-card-overlay" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-xl modal-fullscreen-sm-down">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">
                     Add Card
                 </h5>
-                <button type="button"
-                        class="btn-close"
-                        data-bs-dismiss="modal"
-                        aria-label="Close">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                 </button>
             </div>
             <div class="modal-body">
-                <form id="add-card-form"
-                      method="post"
-                      enctype="multipart/form-data"
-                      onsubmit="return false;">
+                <form id="add-card-form" method="post" enctype="multipart/form-data" onsubmit="return false;">
                     {{ card_form.hidden_tag() }}
                     <div class="row gy-3 p-2">
                         <div class="form-floating col-12 gx-1">
@@ -35,14 +26,10 @@
                             {{ card_form.back(class="form-control card-back", placeholder="Fill back card", required=True) }}
                             {{ card_form.back.label(class="form-label") }}
                         </div>
-                        <div id="add-card-back-image"
-                             class="col-3 gx-2 rounded d-flex overflow-hidden px-0 card-back-image">
-                            <img src=""
-                                 class="d-none"
-                                 id="uploaded-image-preview" />
+                        <div id="add-card-back-image" class="col-3 gx-2 rounded d-flex overflow-hidden px-0 card-back-image">
+                            <img src="" class="d-none" id="uploaded-image-preview" />
                             {{ card_form.image(class="d-none", accept="image/*", id="upload-post-image") }}
-                            <label for="upload-post-image"
-                                   class="upload-image-label">
+                            <label for="upload-post-image" class="upload-image-label">
                                 <i class="bi bi-image"></i> Add Img
                             </label>
                         </div>
@@ -55,9 +42,7 @@
                         <div class="col-12 gx-1">
                             <div class="row gx-1">
                                 <div class="col-auto ms-auto">
-                                    <button type="submit"
-                                            class="btn btn-primary"
-                                            onclick="add_card('{{ url_for("main.add_card_route") }}')">
+                                    <button type="submit" class="btn btn-primary" onclick="add_card('{{ url_for("main.add_card_route") }}')">
                                         Add Card
                                     </button>
                                 </div>
