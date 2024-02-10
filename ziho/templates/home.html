@@ -60,7 +60,7 @@
                             </button>
                             <button type="button"
                                     class="btn btn-light"
-                                    onclick="get_cards('{{ url_for("main.get_cards") }}', {{ deck.id }}, '{{ deck.name }}')"
+                                    onclick="get_cards('{{ url_for("ajax.get_cards") }}', {{ deck.id }}, '{{ deck.name }}')"
                                     data-bs-toggle="modal"
                                     data-bs-target="#study-deck-overlay">
                                 Study

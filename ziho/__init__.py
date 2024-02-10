@@ -42,6 +42,10 @@ def create_app(config_class=Config):
 
     app.register_blueprint(main_bp)
 
+    from ziho.ajax import bp as ajax_bp
+
+    app.register_blueprint(ajax_bp, url_prefix="/ajax")
+
     if not app.debug and not app.testing:
         if not os.path.exists("logs"):
             os.mkdir("logs")
@@ -60,6 +64,3 @@ def create_app(config_class=Config):
         app.logger.info("Ziho startup")
 
     return app
-
-
-from ziho import models
