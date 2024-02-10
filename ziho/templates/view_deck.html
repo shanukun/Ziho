@@ -72,7 +72,7 @@
                 <div class="modal-footer">
                     <form id="delete-card-form" method="post">
                         {{ cd_form.hidden_tag() }}
-                        {{ cd_form.deck(type="hidden") }}
+                        {{ cd_form.deck_id(type="hidden") }}
                         {{ cd_form.card_id(type="hidden") }}
                         <button type="button"
                                 class="btn btn-danger"
@@ -95,7 +95,7 @@
 
             getEl("#delete-card-modal .modal-body h4").innerHTML = card_front;
             getEl("#delete-card-modal .modal-footer #card_id").value =  card_id;
-            getEl("#delete-card-modal .modal-footer #deck").value = {{ deck_id }};
+            getEl("#delete-card-modal .modal-footer #deck_id").value = {{ deck_id }};
 
         });
 

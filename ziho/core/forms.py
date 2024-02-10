@@ -12,19 +12,38 @@ from wtforms import (
 )
 from wtforms.validators import DataRequired, InputRequired, Length, ValidationError
 
-from ziho.auth.actions import get_user_by_username
-from ziho.main.actions import get_card_info_by_id, get_deck_by_id
+from ziho.auth.handlers import get_user_by_username
+from ziho.main.handlers import get_card_info_by_id, get_deck_by_id
 
 
-class DeckForm(FlaskForm):
-    deck_name = TextAreaField("Deck Name", validators=[DataRequired()])
+class ZihoForm(FlaskForm):
+    def get_data(self, **kwargs):
+        data = self.data
+        data.pop("csrf_token", None)
+        data.pop("submit", None)
+        if kwargs:
+            data.update(kwargs)
+        return data
+
+
+class ZihoDataRequired(DataRequired):
+    def __init__(self):
+        super().__init__(message="field is required.")
+
+
+class DeckForm(ZihoForm):
+    deck_name = TextAreaField("Deck Name", validators=[ZihoDataRequired()])
     submit = SubmitField("Create")
 
+    def filter_deck_name(self, field):
+        if field:
+            return field.strip()
 
-class CardInfoForm(FlaskForm):
-    deck_id = IntegerField("deck_id", validators=[DataRequired()])
-    card_id = IntegerField("card_id", validators=[DataRequired()])
-    card_info_id = IntegerField("card_info_id", validators=[DataRequired()])
+
+class CardInfoForm(ZihoForm):
+    deck_id = IntegerField("deck_id", validators=[ZihoDataRequired()])
+    card_id = IntegerField("card_id", validators=[ZihoDataRequired()])
+    card_info_id = IntegerField("card_info_id", validators=[ZihoDataRequired()])
 
     difficulty = FloatField("difficulty", validators=[InputRequired()])
     due = DateTimeField(
@@ -54,8 +73,8 @@ class CardInfoForm(FlaskForm):
 
 
 # TODO check if user is author of deck.
-class GetCardsRequestForm(FlaskForm):
-    deck_id = IntegerField("DeckId", validators=[DataRequired()])
+class GetCardsRequestForm(ZihoForm):
+    deck_id = IntegerField("DeckId", validators=[ZihoDataRequired()])
 
     def validate_deck_id(self, deck_id):
         deck = get_deck_by_id(deck_id.data)
@@ -66,31 +85,43 @@ class GetCardsRequestForm(FlaskForm):
 IMAGES = "jpg jpe jpeg png gif svg bmp webp".split()
 
 
-class CardForm(FlaskForm):
-    deck = SelectField("Deck", coerce=int)
-    front = TextAreaField("Front", validators=[DataRequired()])
-    back = TextAreaField("Back", validators=[DataRequired()])
-    image = FileField("image", validators=[FileAllowed(IMAGES)])
+class CardForm(ZihoForm):
+    deck_id = SelectField("Deck", coerce=int)
+    front = TextAreaField("Front", validators=[ZihoDataRequired()])
+    back = TextAreaField("Back", validators=[ZihoDataRequired()])
+    card_image = FileField(
+        "Card Image",
+        validators=[
+            FileAllowed(
+                IMAGES, message=f"Image extensions allowed are: {(', ').join(IMAGES)}"
+            ),
+        ],
+    )
+
+
+class AddCardForm(CardForm):
+    def add_choices(self, decks):
+        self.deck_id.choices = [(deck.id, deck.name) for deck in decks]
 
 
 class CardCreationForm(CardForm):
-    deck = IntegerField("Deck", validators=[DataRequired()])
+    deck_id = IntegerField("Deck", validators=[ZihoDataRequired()])
 
 
 class CardUpdateForm(CardCreationForm):
-    card_id = IntegerField("Card", validators=[DataRequired()])
+    card_id = IntegerField("Card", validators=[ZihoDataRequired()])
 
     def validate_card_id(self, card_id):
         pass
 
 
-class CardDeleteForm(FlaskForm):
-    deck = IntegerField("Deck", validators=[DataRequired()])
-    card_id = IntegerField("Card", validators=[DataRequired()])
+class CardDeleteForm(ZihoForm):
+    deck_id = IntegerField("Deck", validators=[ZihoDataRequired()])
+    card_id = IntegerField("Card", validators=[ZihoDataRequired()])
 
 
-class EditProfileForm(FlaskForm):
-    username = StringField("Username", validators=[DataRequired()])
+class EditProfileForm(ZihoForm):
+    username = StringField("Username", validators=[ZihoDataRequired()])
     about_me = TextAreaField("About me", validators=[Length(min=0, max=440)])
     submit = SubmitField("Submit")
 

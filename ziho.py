@@ -1,5 +1,5 @@
 from ziho import create_app, db
-from ziho.models import Deck, User
+from ziho.core.models import Deck, User
 
 app = create_app()
 
