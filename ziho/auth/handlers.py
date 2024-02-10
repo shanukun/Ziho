@@ -1,7 +1,8 @@
 from typing import Any
 
 from ziho import db
-from ziho.models import User
+from ziho.core.models import User
+from ziho.utils.db import try_commit
 
 
 def get_user_by_username(username: str) -> User | None:
@@ -24,5 +25,4 @@ def create_user(username: str, email: str, password: str):
     user = User(username=username, email=email)
     user.set_password(password)
     db.session.add(user)
-    db.session.commit()
-    return user.id
+    try_commit(db.session, "Could not create user.")

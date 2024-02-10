@@ -4,8 +4,8 @@ from flask import flash, redirect, render_template, request, url_for
 from flask_login import current_user, login_user, logout_user
 
 from ziho.auth import bp
-from ziho.auth.actions import create_user, get_user_by_username
 from ziho.auth.forms import LoginForm, RegistrationForm
+from ziho.auth.handlers import create_user, get_user_by_username
 
 
 @bp.route("/login", methods=["GET", "POST"])
