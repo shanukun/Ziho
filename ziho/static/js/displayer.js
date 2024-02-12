@@ -3,15 +3,15 @@ class Scheduler {
         this.f = new FSRS();
     }
 
-    isGraduated(card, rating) {
+    check_graduation(card, rating) {
         const s_card = this.f.repeat(card, new Date())[rating].card;
         // console.log(s_card.due);
 
-        let queue_rating = Rating.Good;
+        let queue_rating = QueueRank.Good;
         if (s_card.due < new Date(Date.now() + 5 * 60 * 1000)) {
-            queue_rating = Rating.Again;
+            queue_rating = QueueRank.Again;
         } else if (s_card.due < new Date(Date.now() + 10 * 60 * 1000)) {
-            queue_rating = Rating.Hard;
+            queue_rating = QueueRank.Hard;
         }
 
         console.log(JSON.stringify(s_card));
@@ -29,6 +29,11 @@ class Scheduler {
         card.due = new Date(card.due);
         return card;
     }
+}
+
+function add_remove_html_class(elem, to_be_added, to_be_removed) {
+    elem.classList.remove(to_be_removed);
+    elem.classList.add(to_be_added);
 }
 
 class Displayer {
@@ -51,27 +56,33 @@ class Displayer {
 
         const cardRatingClickHandler = (e) => {
             const card_rating = e.target.dataset.rating;
-            const card_status = this.scheduler.isGraduated(
+            const card = this.scheduler.check_graduation(
                 Scheduler.toCard(this.currentCard.card_info),
                 card_rating,
             );
 
-            if (card_status.graduated) {
-                this.currentCard.card_info = card_status.card_info;
+            this.currentCard.card_info = card.card_info;
+            if (card.graduated) {
                 save_card(this.currentCard);
             } else {
-                this.currentCard.card_info = card_status.card_info;
-                this.cards.insert(this.currentCard, card_status.queue);
+                this.cards.insert(this.currentCard, card.queue);
             }
 
             this.show_card();
             return;
         };
 
-        getEl("#again-card").addEventListener("click", cardRatingClickHandler);
-        getEl("#hard-card").addEventListener("click", cardRatingClickHandler);
-        getEl("#good-card").addEventListener("click", cardRatingClickHandler);
-        getEl("#easy-card").addEventListener("click", cardRatingClickHandler);
+        (() => {
+            const el_id_list = [
+                "#again-card",
+                "#hard-card",
+                "#good-card",
+                "#easy-card",
+            ];
+            for (let i = 0; i < el_id_list.length; i++) {
+                getEl(el_id_list[i]).addEventListener("click", cardRatingClickHandler);
+            }
+        })();
 
         this._toggle_card(false);
         getEl("#show-fb-card").addEventListener("click", () => {
@@ -85,8 +96,7 @@ class Displayer {
 
     fill_queue(card_list) {
         card_list.forEach((card) => {
-            // Rating.Good for normal queue
-            this.cards.insert(card, Rating.Good);
+            this.cards.insert(card, QueueRank.Good);
         });
     }
 
@@ -102,10 +112,6 @@ class Displayer {
     }
 
     _fill_template() {
-        getEl("#show-f-text").innerHTML = this.currentCard.front;
-        getEl("#card-front").innerHTML = this.currentCard.front;
-        getEl("#card-back").innerHTML = this.currentCard.back;
-        if (this.currentCard.image_path) {
         getEl("#show-f-text").innerHTML = this.currentCard.card.front;
         getEl("#card-front").innerHTML = this.currentCard.card.front;
         getEl("#card-back").innerHTML = this.currentCard.card.back;
@@ -119,25 +125,30 @@ class Displayer {
                 this.currentCard.card.image_path,
             );
 
-            getEl("#card-back-image").classList.add("d-flex");
-            getEl("#card-back-image").classList.remove("d-none");
+            add_remove_html_class(
+                getEl("#card-back-image"),
+                "d-flex",
+                "d-none",
+            );
         } else {
-            getEl("#card-back-image").classList.remove("d-flex");
-            getEl("#card-back-image").classList.add("d-none");
+            add_remove_html_class(
+                getEl("#card-back-image"),
+                "d-none",
+                "d-flex",
+            );
         }
 
         this._toggle_card(false);
     }
 
-    _toggle_card(back) {
-        if (back) {
+    _toggle_card(show_back) {
+        if (show_back) {
             getEl("#show-fb-card").style.display = "none";
-            getEl("#fb-card").classList.remove("d-none");
-            getEl("#fb-card").classList.add("d-flex");
+
+            add_remove_html_class(getEl("#fb-card"), "d-flex", "d-none");
         } else {
             getEl("#show-fb-card").style.display = "block";
-            getEl("#fb-card").classList.remove("d-flex");
-            getEl("#fb-card").classList.add("d-none");
+            add_remove_html_class(getEl("#fb-card"), "d-none", "d-flex");
         }
     }
 }

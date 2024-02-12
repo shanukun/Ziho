@@ -1,3 +1,10 @@
+let QueueRank = {
+    Again: Rating.Again,
+    Hard: Rating.Hard,
+    Good: Rating.Good,
+    Easy: Rating.Easy,
+};
+
 class Queue {
     constructor() {
         this.items = {};
