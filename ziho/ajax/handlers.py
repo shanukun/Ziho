@@ -50,11 +50,13 @@ def create_card_handler(app, user, form_data):
 def get_cards_for_study(form_data, user_id: int):
     stmt = (
         db.select(
-            Bundle("deck", Deck.id),
-            Bundle("card", Card.id, Card.front, Card.back, Card.image_path),
+            Bundle("deck", Deck.id.label("deck_id")),
+            Bundle(
+                "card", Card.id.label("card_id"), Card.front, Card.back, Card.image_path
+            ),
             Bundle(
                 "card_info",
-                CardInfo.id,
+                CardInfo.id.label("card_info_id"),
                 CardInfo.difficulty,
                 CardInfo.due,
                 CardInfo.elapsed_days,
@@ -68,36 +70,23 @@ def get_cards_for_study(form_data, user_id: int):
         )
         .join(Card.parent_deck)
         .join(Card.card_info)
-        .where((Deck.id == form_data["deck_id"]) & (CardInfo.user_id == user_id))
+        .where((Deck.id == form_data["deck_id"]) & (Deck.creator_id == user_id))
         .where(CardInfo.due <= datetime.now())
         .order_by(CardInfo.due)
         .limit(20)
     )
 
     due_cards = []
-    for card in db.session.execute(stmt):
-        # use _mapping and loop to fill dict
-        due_cards.append(
-            {
-                "deck_id": card.deck.id,
-                "card_id": card.card.id_1,
-                "front": card.card.front,
-                "back": card.card.back,
-                "image_path": card.card.image_path,
-                "card_info": {
-                    "card_info_id": card.card_info.id_2,
-                    "difficulty": card.card_info.difficulty,
-                    "due": card.card_info.due,
-                    "elapsed_days": card.card_info.elapsed_days,
-                    "lapses": card.card_info.lapses,
-                    "last_review": card.card_info.last_review,
-                    "reps": card.card_info.reps,
-                    "scheduled_days": card.card_info.scheduled_days,
-                    "stability": card.card_info.stability,
-                    "state": card.card_info.state,
-                },
+    for study_card in db.session.execute(stmt):
+        study_card_dict = study_card._mapping
+
+        due_card = {}
+        for bundle in study_card_dict:
+            due_card[bundle] = {
+                k: v for k, v in study_card_dict[bundle]._mapping.items()
             }
-        )
+
+        due_cards.append(due_card)
 
     return due_cards
 

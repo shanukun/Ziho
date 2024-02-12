@@ -110,8 +110,8 @@ function save_card(card) {
     console.log(url);
     let form_data = new FormData();
 
-    form_data.append("deck_id", card.deck_id);
-    form_data.append("card_id", card.card_id);
+    form_data.append("deck_id", card.deck.deck_id);
+    form_data.append("card_id", card.card.card_id);
     form_data.append("csrf_token", csrf_token);
     Object.keys(card.card_info).forEach((key) => {
         form_data.append(key, card.card_info[key]);

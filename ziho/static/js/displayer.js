@@ -106,13 +106,17 @@ class Displayer {
         getEl("#card-front").innerHTML = this.currentCard.front;
         getEl("#card-back").innerHTML = this.currentCard.back;
         if (this.currentCard.image_path) {
+        getEl("#show-f-text").innerHTML = this.currentCard.card.front;
+        getEl("#card-front").innerHTML = this.currentCard.card.front;
+        getEl("#card-back").innerHTML = this.currentCard.card.back;
+        if (this.currentCard.card.image_path) {
             getEl("#card-back-image").setAttribute(
                 "src",
-                this.currentCard.image_path,
+                this.currentCard.card.image_path,
             );
             getEl("#zoomed-image").setAttribute(
                 "src",
-                this.currentCard.image_path,
+                this.currentCard.card.image_path,
             );
 
             getEl("#card-back-image").classList.add("d-flex");
