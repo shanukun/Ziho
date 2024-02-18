@@ -41,9 +41,9 @@
                                 {{ deck.name|truncate(30, True) }}
                             </h5>
                             <div class="row m-auto">
-                                {{ card_progress_badge(title="New", value=20, type="info") }}
-                                {{ card_progress_badge(title="Learn", value=3, type="danger") }}
-                                {{ card_progress_badge(title="Due", value=108, type="success") }}
+                                {{ card_progress_badge(title="New", value=deck.new, type="info") }}
+                                {{ card_progress_badge(title="Learn", value=deck.learning, type="danger") }}
+                                {{ card_progress_badge(title="Due", value=deck.due, type="success") }}
                             </div>
                             <!-- TODO 1 row for tags -->
                         </div>
