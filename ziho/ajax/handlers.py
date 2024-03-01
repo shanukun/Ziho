@@ -10,13 +10,6 @@ from ziho.core.models import Card, CardInfo, Deck
 from ziho.utils.db import try_commit
 
 
-def create_deck_handler(user, form_data):
-    print(form_data)
-    deck = Deck(name=form_data["deck_name"], creator_id=user.id)
-    db.session.add(deck)
-    try_commit(db.session, f'Could not create deck {form_data["deck_name"]}')
-
-
 # TODO temp sol, use more robust approach for saving images
 # Put in image utils
 def save_image(app, image_data):
@@ -116,23 +109,6 @@ def update_card_handler(app, user, form_data):
 
     db.session.execute(data_stmt)
     try_commit(db.session, f"Could not update the card.")
-
-
-def delete_card_handler(user, form_data):
-    card = db.session.execute(
-        db.select(Card)
-        .where(Card.deck_id == form_data["deck_id"])
-        .where(Card.id == form_data["card_id"])
-        .where(
-            user.id
-            == db.select(Deck.creator_id)
-            .where(Deck.id == form_data["deck_id"])
-            .scalar_subquery()
-        )
-    ).scalar_one_or_none()
-    if card:
-        db.session.delete(card)
-        try_commit(db.session, f"Could not delete the card {card.front}.")
 
 
 def update_card_info_handler(user, form_data):

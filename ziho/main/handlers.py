@@ -4,6 +4,14 @@ from sqlalchemy import func
 
 from ziho import db
 from ziho.core.models import Card, CardInfo, Deck
+from ziho.utils.db import try_commit
+
+
+def create_deck_handler(user, form_data):
+    print(form_data)
+    deck = Deck(name=form_data["deck_name"], creator_id=user.id)
+    db.session.add(deck)
+    try_commit(db.session, f'Could not create deck {form_data["deck_name"]}')
 
 
 def get_cards_for_deck(deck_id: int, type: str | None = None):
@@ -26,17 +34,21 @@ def get_decks_by_user(user_id: int, type: str | None = None):
 
     new_subq = subq([0])
     learning_subq = subq([1, 3])
-    due_subq = base_subq.where(CardInfo.due <= datetime.now()).subquery()
+    due_subq = (
+        base_subq.group_by(Card.deck_id)
+        .where(CardInfo.due <= datetime.now())
+        .subquery()
+    )
 
     stmt = (
         db.select(
             Deck.id,
             Deck.name,
-            db.case((new_subq.c.count==None, 0), else_=new_subq.c.count).label("new"),
+            db.case((new_subq.c.count == None, 0), else_=new_subq.c.count).label("new"),
             db.case(
-                (learning_subq.c.count==None, 0), else_=learning_subq.c.count
+                (learning_subq.c.count == None, 0), else_=learning_subq.c.count
             ).label("learning"),
-            db.case((due_subq.c.count==None, 0), else_=due_subq.c.count).label("due"),
+            db.case((due_subq.c.count == None, 0), else_=due_subq.c.count).label("due"),
         )
         .outerjoin(new_subq, Deck.id == new_subq.c.deck_id)
         .outerjoin(learning_subq, Deck.id == learning_subq.c.deck_id)
@@ -66,3 +78,20 @@ def get_deck_by_id(deck_id: int):
     return db.session.execute(
         db.select(Deck).where(Deck.id == deck_id)
     ).scalar_one_or_none()
+
+
+def delete_card_handler(user, form_data):
+    card = db.session.execute(
+        db.select(Card)
+        .where(Card.deck_id == form_data["deck_id"])
+        .where(Card.id == form_data["card_id"])
+        .where(
+            user.id
+            == db.select(Deck.creator_id)
+            .where(Deck.id == form_data["deck_id"])
+            .scalar_subquery()
+        )
+    ).scalar_one_or_none()
+    if card:
+        db.session.delete(card)
+        try_commit(db.session, f"Could not delete the card {card.front}.")

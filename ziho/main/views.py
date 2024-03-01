@@ -1,9 +1,10 @@
-from flask import abort, flash, redirect, render_template, url_for
+from flask import abort, flash, redirect, render_template, request, url_for
 from flask.views import MethodView
 from flask_login import current_user, login_required
 
 from ziho import db
 from ziho.auth.handlers import get_user_or_404
+from ziho.core.exceptions import PersistenceError
 from ziho.core.forms import (
     AddCardForm,
     CardDeleteForm,
@@ -11,7 +12,13 @@ from ziho.core.forms import (
     DeckForm,
     EditProfileForm,
 )
-from ziho.main.handlers import get_cards_for_deck, get_deck_by_id, get_decks_by_user
+from ziho.main.handlers import (
+    create_deck_handler,
+    delete_card_handler,
+    get_cards_for_deck,
+    get_deck_by_id,
+    get_decks_by_user,
+)
 
 
 class Home(MethodView):
@@ -30,6 +37,20 @@ class Home(MethodView):
             deck_form=deck_form,
             card_form=card_form,
         )
+
+
+class CreateDeck(MethodView):
+    decorators = [login_required]
+
+    def post(self):
+        form = DeckForm()
+        if form.validate_on_submit():
+            try:
+                create_deck_handler(current_user, form.get_data())
+                flash("New deck created.", "success")
+            except PersistenceError as e:
+                flash(e.message, "danger")
+        return redirect(url_for("main.home"))
 
 
 class User(MethodView):
@@ -77,6 +98,20 @@ class ViewChoosenDeck(ViewDeckTemplate):
             abort(404)
 
         return self.render(deck_id=deck_id)
+
+
+class DeleteCard(MethodView):
+    decorators = [login_required]
+
+    def post(self):
+        form = CardDeleteForm()
+        if form.validate_on_submit():
+            try:
+                delete_card_handler(current_user, form.get_data())
+                flash("Card deleted.", "success")
+            except PersistenceError as e:
+                flash(e.message, "danger")
+        return redirect(request.referrer)
 
 
 class EditProfile(MethodView):

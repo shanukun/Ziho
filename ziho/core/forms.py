@@ -118,6 +118,7 @@ class CardUpdateForm(CardCreationForm):
 class CardDeleteForm(ZihoForm):
     deck_id = IntegerField("Deck", validators=[ZihoDataRequired()])
     card_id = IntegerField("Card", validators=[ZihoDataRequired()])
+    submit = SubmitField("Delete")
 
 
 class EditProfileForm(ZihoForm):

@@ -1,12 +1,10 @@
-from flask import current_app, jsonify, redirect, send_from_directory, url_for
+from flask import current_app, jsonify, send_from_directory
 from flask.views import MethodView
 from flask_login import current_user, login_required
 
 from ziho.ajax import bp
 from ziho.ajax.handlers import (
     create_card_handler,
-    create_deck_handler,
-    delete_card_handler,
     get_cards_for_study,
     update_card_handler,
     update_card_info_handler,
@@ -14,10 +12,8 @@ from ziho.ajax.handlers import (
 from ziho.core.exceptions import PersistenceError
 from ziho.core.forms import (
     CardCreationForm,
-    CardDeleteForm,
     CardInfoForm,
     CardUpdateForm,
-    DeckForm,
     GetCardsRequestForm,
 )
 from ziho.errors.errors import AjaxError, InvalidFormData, ServerError
@@ -56,34 +52,6 @@ class GetCards(MethodView):
             return get_success_response(
                 result=get_cards_for_study(form.get_data(), current_user.id)
             )
-        raise InvalidFormData(form.errors)
-
-
-class DeleteCard(MethodView):
-    decorators = [login_required]
-
-    def post(self):
-        form = CardDeleteForm()
-        if form.validate_on_submit():
-            try:
-                delete_card_handler(current_user, form.get_data())
-            except PersistenceError as e:
-                raise ServerError(e.message)
-            return get_success_response(result="Card Deleted.")
-        raise InvalidFormData(form.errors)
-
-
-class CreateDeck(MethodView):
-    decorators = [login_required]
-
-    def post(self):
-        form = DeckForm()
-        if form.validate_on_submit():
-            try:
-                create_deck_handler(current_user, form.get_data())
-            except PersistenceError as e:
-                raise ServerError(e.message)
-            return redirect(url_for("main.home"))
         raise InvalidFormData(form.errors)
 
 
