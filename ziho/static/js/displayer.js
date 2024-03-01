@@ -80,7 +80,10 @@ class Displayer {
                 "#easy-card",
             ];
             for (let i = 0; i < el_id_list.length; i++) {
-                getEl(el_id_list[i]).addEventListener("click", cardRatingClickHandler);
+                getEl(el_id_list[i]).addEventListener(
+                    "click",
+                    cardRatingClickHandler,
+                );
             }
         })();
 

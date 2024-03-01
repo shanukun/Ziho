@@ -22,9 +22,26 @@ $("textarea")
         this.style.height = this.scrollHeight + "px";
     });
 
-function delete_card(url) {
-    let form = getEl("#delete-card-form");
-    let form_data = new FormData(form);
+function get_form_data(form_id = null) {
+    let form_data;
+    if (form_id) {
+        form_data = new FormData(getEl(form_id));
+    } else {
+        form_data = new FormData();
+        form_data.append("csrf_token", csrf_token);
+    }
+    return form_data;
+}
+
+function make_ajax_request(
+    url,
+    form_data,
+    success_fn,
+    error_fn,
+    toast = false,
+) {
+    if (!success_fn) success_fn = () => {};
+    if (!error_fn) error_fn = () => {};
 
     $.ajax({
         type: "POST",
@@ -33,10 +50,11 @@ function delete_card(url) {
         headers: {
             "X-CSRFTOKEN": csrf_token,
         },
-        // TODO handle fail case
-        success: function (resp) {
-            // location.reload();
-            console.log(resp);
+        success: (resp) => {
+            success_fn(resp);
+        },
+        error: (resp) => {
+            error_fn(resp);
         },
         contentType: false,
         processData: false,
@@ -44,8 +62,7 @@ function delete_card(url) {
 }
 
 function update_card(url) {
-    let form = getEl("#update-card-form");
-    let form_data = new FormData(form);
+    let form_data = get_form_data("#update-card-form");
 
     // Only send image if it's updated.
     if (
@@ -59,105 +76,50 @@ function update_card(url) {
         }
     }
 
-    for (const pair of form_data.entries()) {
-        console.log(`${pair[0]}, ${pair[1]}`);
-    }
-
-    $.ajax({
-        type: "POST",
-        url: url,
-        data: form_data,
-        headers: {
-            "X-CSRFTOKEN": csrf_token,
-        },
-        // TODO handle fail case
-        success: function (resp) {
-            location.reload();
-            console.log(resp);
-        },
-        contentType: false,
-        processData: false,
-    });
+    make_ajax_request(url, form_data, null, null, true);
 }
 
 function add_card(url) {
-    let form = getEl("#add-card-form");
-    let form_data = new FormData(form);
-
+    let form_data = get_form_data("#add-card-form");
     let selected = getEl("#add-card-deck-select").value;
 
-    $.ajax({
-        type: "POST",
-        url: url,
-        data: form_data,
-        headers: {
-            "X-CSRFTOKEN": csrf_token,
-        },
-        // TODO handle fail case
-        success: function (resp) {
-            form.reset();
-            getEl("#add-card-deck-select").value = selected;
-            getEl("#uploaded-image-preview").classList.toggle("d-none");
-            console.log(resp);
-        },
-        contentType: false,
-        processData: false,
-    });
+    const success_fn = (resp) => {
+        console.log(resp);
+        let form = getEl("#add-card-form");
+        form.reset();
+        getEl("#add-card-deck-select").value = selected;
+        getEl("#uploaded-image-preview").setAttribute("class", "d-none");
+    };
+    make_ajax_request(url, form_data, success_fn, null, true);
 }
 
 function save_card(card) {
     let url = getEl("#save-card-url").dataset.url;
-    console.log(url);
-    let form_data = new FormData();
+    let form_data = get_form_data();
 
     form_data.append("deck_id", card.deck.deck_id);
     form_data.append("card_id", card.card.card_id);
-    form_data.append("csrf_token", csrf_token);
     Object.keys(card.card_info).forEach((key) => {
         form_data.append(key, card.card_info[key]);
     });
-    $.ajax({
-        type: "POST",
-        url: url,
-        data: form_data,
-        headers: {
-            "X-CSRFTOKEN": csrf_token,
-        },
-        success: function (resp) {
-            console.log(resp);
-        },
-        contentType: false,
-        processData: false,
-    });
+
+    const success_fn = (resp) => {
+        console.log(resp);
+    };
+    make_ajax_request(url, form_data, success_fn, null, true);
 }
 
 function get_cards(url, deck_id, deck_name) {
     $("#study-card-title").html = deck_name;
-    let form_data = new FormData();
+    let form_data = get_form_data();
     form_data.append("deck_id", deck_id);
-    form_data.append("csrf_token", csrf_token);
 
-    $.ajax({
-        type: "POST",
-        url: url,
-        data: form_data,
-        headers: {
-            "X-CSRFTOKEN": csrf_token,
-        },
-        success: function (resp) {
-            console.log(resp);
-            if (!resp.status) {
-                console.log("Failed");
-                return;
-            }
-
-            const displayer = new Displayer(deck_name);
-            displayer.fill_queue(resp.result);
-            displayer.show_card();
-        },
-        contentType: false,
-        processData: false,
-    });
+    const success_fn = (resp) => {
+        const displayer = new Displayer(deck_name);
+        displayer.fill_queue(resp.result);
+        displayer.show_card();
+    };
+    make_ajax_request(url, form_data, success_fn, null);
 }
 
 function show_uploaded_image(el, image) {
@@ -167,9 +129,9 @@ function show_uploaded_image(el, image) {
 }
 
 function change_preview_image(input) {
-    let reader;
     let preview = getEl("#uploaded-image-preview");
 
+    let reader;
     if (input.files && input.files[0]) {
         reader = new FileReader();
 
