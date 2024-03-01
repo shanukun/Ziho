@@ -16,7 +16,7 @@ def login():
     if form.validate_on_submit():
         user = get_user_by_username(form.username.data)
         if user is None or not user.check_password(form.password.data):
-            flash("Invalid username or password")
+            flash("Invalid username or password.", "danger")
             return redirect(url_for("auth.login"))
         login_user(user, remember=form.remember_me.data)
         next = request.args.get("next")
@@ -39,7 +39,7 @@ def register():
     form = RegistrationForm()
     if form.validate_on_submit():
         create_user(form.username.data, form.email.data, form.password.data)
-        flash("Congratulations, you are now a registered user!")
+        flash("Congratulations, you are now a registered user!", "success")
         return redirect(url_for("auth.login"))
     flash(form.errors)
     return render_template("auth/register.html", title="Register", form=form)

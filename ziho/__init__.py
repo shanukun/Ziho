@@ -29,6 +29,7 @@ def create_app(config_class=Config):
     migrate.init_app(app, db, render_as_batch=True)
     login_manager.init_app(app)
     login_manager.login_view = "auth.login"
+    login_manager.login_message_category = "info"
 
     from ziho.errors import bp as errors_bp
 

@@ -35,19 +35,22 @@
                         </div>
                         {% include "_topbar.html" %}
                     </div>
-                    <div class="row py-4 content rounded">
-                        <!-- for messages use toasts -->
-                        {% with messages = get_flashed_messages() %}
-                            {% if messages %}
-                                <ul>
-                                    {% for message in messages %}
-                                        <li>
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% if messages %}
+                            {% for category, message in messages %}
+                                <div class="row my-2">
+                                    <div class="col">
+                                        <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
                                             {{ message }}
-                                        </li>
-                                    {% endfor %}
-                                </ul>
-                            {% endif %}
-                        {% endwith %}
+                                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    {% endwith %}
+                    <div class="row py-3 content rounded">
                         {% block content %}
                         {% endblock content %}
                     </div>
