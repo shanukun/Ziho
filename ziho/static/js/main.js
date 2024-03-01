@@ -22,6 +22,29 @@ $("textarea")
         this.style.height = this.scrollHeight + "px";
     });
 
+let toast_counter = 1;
+
+function show_toast(msg, success = true) {
+    const temp_html = getEl("#toast-template").content.cloneNode(true);
+    const toast_id = "toast_" + toast_counter++;
+
+    getEl(".toast-container").appendChild(temp_html);
+
+    const el = getEl("#toast_0");
+    el.setAttribute("id", toast_id);
+    getEl(`#${toast_id} .toast-body`).innerHTML = msg;
+
+    let rect_class = "rect-success";
+    if (!success) {
+        rect_class = "rect-danger";
+    }
+    getEl(`#${toast_id} rect`).setAttribute("class", rect_class);
+
+    const toastEl = document.getElementById(toast_id);
+    const toast = new bootstrap.Toast(toastEl, (options = { autohide: true }));
+    toast.show();
+}
+
 function get_form_data(form_id = null) {
     let form_data;
     if (form_id) {
@@ -52,9 +75,11 @@ function make_ajax_request(
         },
         success: (resp) => {
             success_fn(resp);
+            if (toast) show_toast(resp.message);
         },
         error: (resp) => {
             error_fn(resp);
+            if (toast) show_toast(resp.responseText);
         },
         contentType: false,
         processData: false,

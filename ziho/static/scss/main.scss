@@ -9,6 +9,14 @@ main {
     background-color: base.$primary-600;
 }
 
+.rect-danger {
+    fill: base.$danger-400;
+}
+
+.rect-success {
+    fill: base.$success-400;
+}
+
 .sidebar {
     z-index: 1;
     background: base.$white;
