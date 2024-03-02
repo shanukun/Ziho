@@ -14,5 +14,6 @@ bp.add_url_rule(
     view_func=views.ViewChoosenDeck.as_view("view_choosen_deck"),
 )
 bp.add_url_rule("/create-deck", view_func=views.CreateDeck.as_view("create_deck_route"))
+bp.add_url_rule("/delete-deck", view_func=views.DeleteDeck.as_view("delete_deck_route"))
 bp.add_url_rule("/delete-card", view_func=views.DeleteCard.as_view("delete_card_route"))
 bp.add_url_rule("/edit-profile", view_func=views.EditProfile.as_view("edit_profile"))

@@ -40,6 +40,11 @@ class DeckForm(ZihoForm):
             return field.strip()
 
 
+class DeckDeleteForm(ZihoForm):
+    deck_id = IntegerField("deck_id", validators=[ZihoDataRequired()])
+    submit = SubmitField("Delete")
+
+
 class CardInfoForm(ZihoForm):
     deck_id = IntegerField("deck_id", validators=[ZihoDataRequired()])
     card_id = IntegerField("card_id", validators=[ZihoDataRequired()])

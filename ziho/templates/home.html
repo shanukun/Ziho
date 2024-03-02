@@ -35,7 +35,15 @@
         <div class="row mt-3 row-cols-md-2 row-cols-lg-3 row-cols-xl-4">
             {% for deck in decks %}
                 <div class="col-md deck-item mb-2 border-0">
-                    <div class="card overflow-hidden">
+                    <div class="card overflow-hidden position-relative">
+                        <button type="button"
+                                class="btn btn-light position-absolute top-0 end-0 mt-2 me-2 delete-deck"
+                                data-deck_id="{{ deck.id }}"
+                                data-deck_name="{{ deck.name }}"
+                                data-bs-toggle="modal"
+                                data-bs-target="#delete-deck-modal">
+                            <i class="bi bi-trash"></i>
+                        </button>
                         <div class="card-body px-3">
                             <h5 class="card-title pb-2">
                                 {{ deck.name|truncate(30, True) }}
@@ -74,9 +82,44 @@
     {% include "modals/_create_deck_modal.html" %}
     {% include "modals/_add_card_modal.html" %}
     {% include "modals/_study_deck_modal.html" %}
+    <div class="modal" tabindex="-1" id="delete-deck-modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        Delete Deck
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <h4>
+                        <i>select a deck</i>
+                    </h4>
+                </div>
+                <div class="modal-footer">
+                    <form id="delete-deck-form" action="{{ url_for("main.delete_deck_route") }}" method="post">
+                        {{ dd_form.hidden_tag() }}
+                        {{ dd_form.deck_id(type="hidden") }}
+                        {{ dd_form.submit(class="btn btn-danger") }}
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock content %}
 {% block script %}
     <script>
+        getEl("#delete-deck-modal").addEventListener("show.bs.modal", (e) => {
+            let ds = e.relatedTarget.dataset;
+
+            let deck_id = ds.deck_id;
+            let deck_name = ds.deck_name;
+
+            getEl("#delete-deck-modal .modal-body h4").innerHTML = deck_name;
+            getEl("#delete-deck-modal .modal-footer #deck_id").value = deck_id ;
+
+        });
         getEl("#add-card-overlay").addEventListener("show.bs.modal", (e) => {
             let deck_id = e.relatedTarget.dataset.deck_id;
             getEl("#add-card-deck-select").value = deck_id;

@@ -9,12 +9,14 @@ from ziho.core.forms import (
     AddCardForm,
     CardDeleteForm,
     CardForm,
+    DeckDeleteForm,
     DeckForm,
     EditProfileForm,
 )
 from ziho.main.handlers import (
     create_deck_handler,
     delete_card_handler,
+    delete_deck_handler,
     get_cards_for_deck,
     get_deck_by_id,
     get_decks_by_user,
@@ -36,6 +38,7 @@ class Home(MethodView):
             decks=decks,
             deck_form=deck_form,
             card_form=card_form,
+            dd_form=DeckDeleteForm(),
         )
 
 
@@ -48,6 +51,20 @@ class CreateDeck(MethodView):
             try:
                 create_deck_handler(current_user, form.get_data())
                 flash("New deck created.", "success")
+            except PersistenceError as e:
+                flash(e.message, "danger")
+        return redirect(url_for("main.home"))
+
+
+class DeleteDeck(MethodView):
+    decorators = [login_required]
+
+    def post(self):
+        form = DeckDeleteForm()
+        if form.validate_on_submit():
+            try:
+                delete_deck_handler(current_user, form.get_data())
+                flash("Deck Deleted", "success")
             except PersistenceError as e:
                 flash(e.message, "danger")
         return redirect(url_for("main.home"))
