@@ -104,7 +104,9 @@ class ViewDeckTemplate(MethodView):
 class ViewDeck(ViewDeckTemplate):
     def get(self):
         decks = get_decks_by_user(current_user.id, "dict")
-        deck_id = next(iter(decks))
+        deck_id = None
+        if decks:
+            deck_id = next(iter(decks))
 
         return self.render(deck_id=deck_id, decks=decks)
 
