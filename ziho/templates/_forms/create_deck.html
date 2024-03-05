@@ -1,0 +1,19 @@
+{% from "_macros/form_modal.html" import render_create_form_modal %}
+{% call render_create_form_modal("create-deck-overlay", "Create Deck") %}
+    <form action="{{ url_for("main.create_deck_route") }}" method="post">
+        {{ deck_form.hidden_tag() }}
+        <div class="form-floating">
+            {{ deck_form.deck_name(class="form-control", placeholder="Enter Deck Name", maxlength=64) }}
+            {{ deck_form.deck_name.label(class="form-label") }}
+            <br />
+            {% for error in deck_form.deck_name.errors %}
+                <span style="color: red">[{{ error }}]</span>
+            {% endfor %}
+        </div>
+        <div class="row">
+            <div class="col-auto ms-auto">
+                {{ deck_form.submit(class="btn btn-primary") }}
+            </div>
+        </div>
+    </form>
+{% endcall %}

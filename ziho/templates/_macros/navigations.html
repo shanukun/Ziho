@@ -1,0 +1,13 @@
+{% macro is_active(endpoint) %}
+    {%- if endpoint == request.endpoint -%}
+        active
+    {%- endif -%}
+{% endmacro %}
+{% macro navlink(endpoint, name, icon='') %}
+    <li class="nav-item">
+        <a href="{{ url_for(endpoint) }}"
+           class="nav-link d-flex align-items-center gap-2 {{ is_active(endpoint) }}">
+            <i class="bi {{ icon }}"></i> {{ name }}
+        </a>
+    </li>
+{% endmacro %}

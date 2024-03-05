@@ -79,34 +79,10 @@
             {% endfor %}
         </div>
     </div>
-    {% include "modals/_create_deck_modal.html" %}
-    {% include "modals/_add_card_modal.html" %}
-    {% include "modals/_study_deck_modal.html" %}
-    <div class="modal" tabindex="-1" id="delete-deck-modal">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">
-                        Delete Deck
-                    </h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <h4>
-                        <i>select a deck</i>
-                    </h4>
-                </div>
-                <div class="modal-footer">
-                    <form id="delete-deck-form" action="{{ url_for("main.delete_deck_route") }}" method="post">
-                        {{ dd_form.hidden_tag() }}
-                        {{ dd_form.deck_id(type="hidden") }}
-                        {{ dd_form.submit(class="btn btn-danger") }}
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
+    {% include "_forms/create_deck.html" %}
+    {% include "_forms/add_card.html" %}
+    {% include "_partials/study_deck_modal.html" %}
+    {% include "_forms/delete_deck.html" %}
 {% endblock content %}
 {% block script %}
     <script>

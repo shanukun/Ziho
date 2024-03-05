@@ -1,0 +1,46 @@
+{% macro render_create_form_modal(id, title) -%}
+    <div class="modal fade px-0" id="{{ id }}" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-xl modal-fullscreen-sm-down">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        {{ title }}
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    </button>
+                </div>
+                <div class="modal-body">
+                    {{ caller() }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+    document.getElementById("{{ id }}").addEventListener("hidden.bs.modal", () => {
+        location.reload();
+    });
+    </script>
+{%- endmacro %}
+{% macro render_delete_form_modal(id, title, default_msg) -%}
+    <div class="modal" tabindex="-1" id="delete-deck-modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        Delete Deck
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <h4>
+                        <i>{{ default_msg }}</i>
+                    </h4>
+                </div>
+                <div class="modal-footer">
+                    {{ caller() }}
+                </div>
+            </div>
+        </div>
+    </div>
+{%- endmacro %}

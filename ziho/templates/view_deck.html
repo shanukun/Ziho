@@ -52,37 +52,12 @@
             {% endfor %}
         </div>
     </div>
-    {% include "modals/_update_card_modal.html" %}
-    <!-- TODO make macro of this modal -->
-    <div class="modal" tabindex="-1" id="delete-card-modal">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">
-                        Delete Card
-                    </h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <h4>
-                        <i>select a card</i>
-                    </h4>
-                </div>
-                <div class="modal-footer">
-                    <form id="delete-card-form" action="{{ url_for("main.delete_card_route") }}" method="post">
-                        {{ cd_form.hidden_tag() }}
-                        {{ cd_form.deck_id(type="hidden") }}
-                        {{ cd_form.card_id(type="hidden") }}
-                        {{ cd_form.submit(class="btn btn-danger") }}
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
+    {% include "_forms/update_card.html" %}
+    {% include "_forms/delete_card.html" %}
 {% endblock content %}
 {% block script %}
-    <script>
+    {% if deck_id %}
+        <script>
         getEl("#delete-card-modal").addEventListener("show.bs.modal", (e) => {
             let ds = e.relatedTarget.dataset;
 
@@ -134,5 +109,6 @@
         getEl("#upload-post-image").addEventListener("change", function() {
             change_preview_image(this);
         });
-    </script>
+        </script>
+    {% endif %}
 {% endblock script %}

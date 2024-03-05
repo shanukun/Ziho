@@ -46,7 +46,7 @@
             <div class="row" id="top-hero-hint">
             </div>
             <div class="row">
-                {% include "_sidebar.html" %}
+                {% include "_partials/sidebar.html" %}
                 <main class="col ms-sm-auto">
                     <div class="row d-flex align-items-center topbar">
                         <div class="col ps-3">
@@ -55,23 +55,9 @@
                                 {% endblock header %}
                             </h5>
                         </div>
-                        {% include "_topbar.html" %}
+                        {% include "_partials/topbar.html" %}
                     </div>
-                    {% with messages = get_flashed_messages(with_categories=true) %}
-                        {% if messages %}
-                            {% for category, message in messages %}
-                                <div class="row my-2">
-                                    <div class="col">
-                                        <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
-                                            {{ message }}
-                                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            {% endfor %}
-                        {% endif %}
-                    {% endwith %}
+                    {% include "_partials/flash_message.html" %}
                     <div class="row py-3 content rounded">
                         {% block content %}
                         {% endblock content %}

@@ -29,21 +29,13 @@
             <div class="h2 px-1 pb-3 ziho-logo">
                 ziho
             </div>
+            {% from "_macros/navigations.html" import is_active, navlink %}
             <ul class="nav flex-column">
                 {% if current_user.is_anonymous %}
-                    <li class="nav-item">
-                        <a href="{{ url_for("auth.login") }}"
-                           class="nav-link d-flex align-items-center gap-2 {% if active_page == 'Login' %} active{% endif %}">Login</a>
-                    </li>
+                    {{ navlink('auth.login', 'Login', 'bi-grid') }}
                 {% else %}
-                    <li class="nav-item">
-                        <a href="{{ url_for("main.home") }}"
-                           class="nav-link d-flex align-items-center gap-2 {% if active_page == 'Home' %} active{% endif %}"><i class="bi bi-grid"></i> Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="{{ url_for("main.view_deck") }}"
-                           class="nav-link d-flex align-items-center gap-2 {% if active_page == 'Deck' %} active{% endif %}"><i class="bi bi-layers"></i> View Deck</a>
-                    </li>
+                    {{ navlink('main.home', 'Home', 'bi-grid') }}
+                    {{ navlink('main.view_deck', 'View Deck', 'bi-layers') }}
                     <li class="nav-item">
                         <a href="#" class="nav-link"><i class="bi bi-compass"></i> Explore</a>
                     </li>
