@@ -1,6 +1,6 @@
 {% from "_macros/form_modal.html" import render_create_form_modal %}
 {% call render_create_form_modal("create-deck-overlay", "Create Deck") %}
-    <form action="{{ url_for("main.create_deck_route") }}" method="post">
+    <form action="{{ url_for("home.create_deck_route") }}" method="post">
         {{ deck_form.hidden_tag() }}
         <div class="form-floating">
             {{ deck_form.deck_name(class="form-control", placeholder="Enter Deck Name", maxlength=64) }}

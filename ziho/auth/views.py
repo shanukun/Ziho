@@ -11,7 +11,7 @@ from ziho.auth.handlers import create_user, get_user_by_username
 @bp.route("/login", methods=["GET", "POST"])
 def login():
     if current_user.is_authenticated:
-        return redirect(url_for("main.home"))
+        return redirect(url_for("home.home"))
     form = LoginForm()
     if form.validate_on_submit():
         user = get_user_by_username(form.username.data)
@@ -21,7 +21,7 @@ def login():
         login_user(user, remember=form.remember_me.data)
         next = request.args.get("next")
         if not next or urlparse(next).netloc != "":
-            next = url_for("main.home")
+            next = url_for("home.home")
         return redirect(next)
     return render_template("auth/login.html", title="Login", form=form)
 
@@ -29,13 +29,13 @@ def login():
 @bp.route("/logout")
 def logout():
     logout_user()
-    return redirect(url_for("main.home"))
+    return redirect(url_for("home.home"))
 
 
 @bp.route("/register", methods=["GET", "POST"])
 def register():
     if current_user.is_authenticated:
-        return redirect(url_for("main.home"))
+        return redirect(url_for("home.home"))
     form = RegistrationForm()
     if form.validate_on_submit():
         create_user(form.username.data, form.email.data, form.password.data)

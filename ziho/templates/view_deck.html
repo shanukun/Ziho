@@ -4,7 +4,7 @@
     View Deck
 {% endblock header %}
 {% block content %}
-    <input type="hidden" id="view-deck-url" data-url="{{ url_for("main.view_deck") }}" />
+    <input type="hidden" id="view-deck-url" data-url="{{ url_for("deckview.view_deck") }}" />
     <div class="col">
         <select class="form-select" id="view-deck-card-select">
             {% for _, deck in decks.items() %}

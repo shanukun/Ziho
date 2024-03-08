@@ -49,13 +49,13 @@ def create_app(config_class=Config):
 
     app.register_blueprint(auth_bp, url_prefix="/auth")
 
-    from ziho.main import bp as main_bp
+    from ziho.home import bp as home_bp
 
-    app.register_blueprint(main_bp)
+    app.register_blueprint(home_bp)
 
-    from ziho.ajax import bp as ajax_bp
+    from ziho.deckview import bp as deckview_bp
 
-    app.register_blueprint(ajax_bp, url_prefix="/ajax")
+    app.register_blueprint(deckview_bp)
 
     if not app.debug and not app.testing:
         if not os.path.exists("logs"):

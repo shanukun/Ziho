@@ -13,7 +13,7 @@ from wtforms import (
 from wtforms.validators import DataRequired, InputRequired, Length, ValidationError
 
 from ziho.auth.handlers import get_user_by_username
-from ziho.main.handlers import get_card_info_by_id, get_deck_by_id
+from ziho.core.handler import get_deck_by_id, get_card_info_by_id
 
 
 class ZihoForm(FlaskForm):

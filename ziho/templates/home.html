@@ -56,7 +56,7 @@
                             <!-- TODO 1 row for tags -->
                         </div>
                         <div class="btn-group w-100 px-3 pb-3 m-auto" role="group">
-                            <a type="button" class="btn btn-light" href="{{ url_for("main.view_choosen_deck", deck_id=deck.id) }}">
+                            <a type="button" class="btn btn-light" href="{{ url_for("deckview.view_choosen_deck", deck_id=deck.id) }}">
                                 View
                             </a>
                             <button type="button"
@@ -68,7 +68,7 @@
                             </button>
                             <button type="button"
                                     class="btn btn-light"
-                                    onclick="get_cards('{{ url_for("ajax.get_cards") }}', {{ deck.id }}, '{{ deck.name }}')"
+                                    onclick="get_cards('{{ url_for("home.get_cards") }}', {{ deck.id }}, '{{ deck.name }}')"
                                     data-bs-toggle="modal"
                                     data-bs-target="#study-deck-overlay">
                                 Study
