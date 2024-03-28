@@ -4,34 +4,37 @@ from flask_login import current_user, login_required
 
 from ziho.core.exceptions import PersistenceError
 from ziho.core.forms import CardDeleteForm, CardForm, CardUpdateForm
-from ziho.errors.errors import InvalidFormData, ServerError
-from ziho.utils.helper import get_success_response
+from ziho.core.handler import get_deck_by_id
+from ziho.core.utils import FormPost
 from ziho.deckview.handlers import (
     delete_card_handler,
     get_cards_for_deck,
     update_card_handler,
 )
+from ziho.errors.errors import InvalidFormData, ServerError
 from ziho.home.handlers import get_decks_by_user
-from ziho.core.handler import get_deck_by_id
+from ziho.utils.helper import get_handler_caller, get_response
 
-
-# @bp.errorhandler(AjaxError)
-# def invalid_api_usage(e):
-#     print(e.to_dict())
-#     return jsonify(e.to_dict()), e.status_code
 
 class UpdateCard(MethodView):
     decorators = [login_required]
+    form_template = "_forms/update_card.html"
+    form_name = "card_form"
+    success_message = "Card updated."
 
     def post(self):
         form = CardUpdateForm(meta={"csrf": False})
-        if form.validate_on_submit():
-            try:
-                update_card_handler(current_app, current_user, form.get_data())
-            except PersistenceError as e:
-                raise ServerError(e.message)
-            return get_success_response(message="Card updated.")
-        raise InvalidFormData(form.errors)
+        handler_caller = get_handler_caller(
+            update_card_handler, current_app, current_user, form.get_data()
+        )
+        form_post = FormPost(
+            handler_caller,
+            form,
+            self.form_template,
+            self.form_name,
+            self.success_message,
+        )
+        return form_post.do_post()
 
 
 class ViewDeckBase(MethodView):

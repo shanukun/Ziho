@@ -42,54 +42,6 @@ function display_toast(msg, success = true) {
     toast.show();
 }
 
-function make_ajax_request(
-    url,
-    form_data,
-    success_fn,
-    error_fn,
-    toast = false,
-) {
-    if (!success_fn) success_fn = () => {};
-    if (!error_fn) error_fn = () => {};
-
-    $.ajax({
-        type: "POST",
-        url: url,
-        data: form_data,
-        headers: {
-            "X-CSRFTOKEN": csrf_token,
-        },
-        success: (resp) => {
-            success_fn(resp);
-            if (toast) show_toast(resp.message);
-        },
-        error: (resp) => {
-            error_fn(resp);
-            if (toast) show_toast(resp.responseText);
-        },
-        contentType: false,
-        processData: false,
-    });
-}
-
-function update_card(url) {
-    let form_data = get_form_data("#update-card-form");
-
-    // Only send image if it's updated.
-    if (
-        typeof $("#upload-post-image").data("prev_image_path") !== "undefined"
-    ) {
-        if (
-            form_data.get("image") ===
-            $("#upload-post-image").data("prev_image_path")
-        ) {
-            form_data.set("image", null);
-        }
-    }
-
-    make_ajax_request(url, form_data, null, null, true);
-}
-
 function show_uploaded_image(el, image) {
     el.setAttribute("src", image);
     el.classList.add("d-flex");
@@ -117,6 +69,15 @@ const all_form_listener = [
         event: "change",
         func: (e) => {
             change_preview_image(e.target);
+        },
+    },
+    {
+        el_sel: "#view-deck-card-select",
+        event: "change",
+        func: (e) => {
+            e.preventDefault();
+            let url = getEl("#view-deck-url").dataset.url;
+            go_to_url(url + "/" + this.value);
         },
     },
 ];

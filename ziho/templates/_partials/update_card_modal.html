@@ -1,0 +1,4 @@
+{% from "_macros/modals.html" import render_create_form_modal %}
+{% call render_create_form_modal("update-card-overlay", "Update Card", "update-card-form", url_for("deckview.update_card_route")) %}
+    {% include "_forms/update_card.html" %}
+{% endcall %}

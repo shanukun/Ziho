@@ -46,6 +46,32 @@ function add_card(url, form_id) {
     ).make_request();
 }
 
+function update_card(url, form_id) {
+    let form_data = get_form_data(form_id);
+
+    // Only send image if it is updated.
+    if (
+        typeof $("#upload-post-image").data("prev_image_path") !== "undefined"
+    ) {
+        if (
+            form_data.get("image") ===
+            $("#upload-post-image").data("prev_image_path")
+        ) {
+            form_data.set("image", null);
+        }
+    }
+
+    new AjaxRequest(
+        url,
+        form_data,
+        null,
+        null,
+        form_id,
+        true,
+        true,
+    ).make_request();
+}
+
 function save_card(card) {
     let url = getEl("#save-card-url").dataset.url;
     let form_data = get_form_data();
@@ -94,6 +120,7 @@ function get_cards(url, deck_id, deck_name) {
 const form_route = {
     "#create-deck-form": create_deck,
     "#add-card-form": add_card,
+    "#update-card-form": update_card,
 };
 
 const submit_form = (e) => {

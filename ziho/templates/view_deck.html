@@ -52,10 +52,12 @@
             {% endfor %}
         </div>
     </div>
-    {% include "_forms/update_card.html" %}
+    {% include "_partials/update_card_modal.html" %}
     {% include "_partials/delete_card_modal.html" %}
 {% endblock content %}
 {% block script %}
+    {% from '_macros/forms.html' import form_submit_listener %}
+    {{ form_submit_listener("update-card-overlay") }}
     {% if deck_id %}
         <script>
         getEl("#delete-card-modal").addEventListener("show.bs.modal", (e) => {
@@ -81,9 +83,8 @@
             opt.value = {{ deck_id }};
             opt.innerHTML = "{{ decks[deck_id].name }}";
 
-            getEl("#update-card-front").innerHTML = card_front;
-            getEl("#update-card-back").innerHTML = card_back;
-            getEl("#update-card-back").innerHTML = card_back;
+            getEl("#front").innerHTML = card_front;
+            getEl("#back").innerHTML = card_back;
             getEl("#card_id").setAttribute("value", card_id);
 
             if (ds.card_image_path) {
@@ -101,14 +102,7 @@
                 });
         });
 
-        getEl("#view-deck-card-select").addEventListener("change", function(e) {
-            let url = getEl("#view-deck-url").dataset.url;
-            go_to_url(url + "/" + this.value);
-        });
-
-        getEl("#upload-post-image").addEventListener("change", function() {
-            change_preview_image(this);
-        });
+        bind_listeners();
         </script>
     {% endif %}
 {% endblock script %}
