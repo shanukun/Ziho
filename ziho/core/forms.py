@@ -26,13 +26,8 @@ class ZihoForm(FlaskForm):
         return data
 
 
-class ZihoDataRequired(DataRequired):
-    def __init__(self):
-        super().__init__(message="field is required.")
-
-
 class DeckForm(ZihoForm):
-    deck_name = TextAreaField("Deck Name", validators=[ZihoDataRequired()])
+    deck_name = TextAreaField("Deck Name", validators=[DataRequired()])
     submit = SubmitField("Create")
 
     def filter_deck_name(self, field):
@@ -41,14 +36,14 @@ class DeckForm(ZihoForm):
 
 
 class DeckDeleteForm(ZihoForm):
-    deck_id = IntegerField("deck_id", validators=[ZihoDataRequired()])
+    deck_id = IntegerField("deck_id", validators=[DataRequired()])
     submit = SubmitField("Delete")
 
 
 class CardInfoForm(ZihoForm):
-    deck_id = IntegerField("deck_id", validators=[ZihoDataRequired()])
-    card_id = IntegerField("card_id", validators=[ZihoDataRequired()])
-    card_info_id = IntegerField("card_info_id", validators=[ZihoDataRequired()])
+    deck_id = IntegerField("deck_id", validators=[DataRequired()])
+    card_id = IntegerField("card_id", validators=[DataRequired()])
+    card_info_id = IntegerField("card_info_id", validators=[DataRequired()])
 
     difficulty = FloatField("difficulty", validators=[InputRequired()])
     due = DateTimeField(
@@ -79,7 +74,7 @@ class CardInfoForm(ZihoForm):
 
 # TODO check if user is author of deck.
 class GetCardsRequestForm(ZihoForm):
-    deck_id = IntegerField("DeckId", validators=[ZihoDataRequired()])
+    deck_id = IntegerField("DeckId", validators=[DataRequired()])
 
     def validate_deck_id(self, deck_id):
         deck = get_deck_by_id(deck_id.data)
@@ -92,16 +87,18 @@ IMAGES = "jpg jpe jpeg png gif svg bmp webp".split()
 
 class CardForm(ZihoForm):
     deck_id = SelectField("Deck", coerce=int)
-    front = TextAreaField("Front", validators=[ZihoDataRequired()])
-    back = TextAreaField("Back", validators=[ZihoDataRequired()])
+    front = TextAreaField("Front", validators=[DataRequired()])
+    back = TextAreaField("Back", validators=[DataRequired()])
     card_image = FileField(
         "Card Image",
         validators=[
             FileAllowed(
-                IMAGES, message=f"Image extensions allowed are: {(', ').join(IMAGES)}"
+                IMAGES,
+                message=f"Image extensions which are allowed: {(', ').join(IMAGES)}",
             ),
         ],
     )
+    submit = SubmitField("Add Card")
 
 
 class AddCardForm(CardForm):
@@ -110,24 +107,25 @@ class AddCardForm(CardForm):
 
 
 class CardCreationForm(CardForm):
-    deck_id = IntegerField("Deck", validators=[ZihoDataRequired()])
+    deck_id = IntegerField("Deck", validators=[DataRequired()])
 
 
 class CardUpdateForm(CardCreationForm):
-    card_id = IntegerField("Card", validators=[ZihoDataRequired()])
+    card_id = IntegerField("Card", validators=[DataRequired()])
+    submit = SubmitField("Update Card")
 
     def validate_card_id(self, card_id):
         pass
 
 
 class CardDeleteForm(ZihoForm):
-    deck_id = IntegerField("Deck", validators=[ZihoDataRequired()])
-    card_id = IntegerField("Card", validators=[ZihoDataRequired()])
+    deck_id = IntegerField("Deck", validators=[DataRequired()])
+    card_id = IntegerField("Card", validators=[DataRequired()])
     submit = SubmitField("Delete")
 
 
 class EditProfileForm(ZihoForm):
-    username = StringField("Username", validators=[ZihoDataRequired()])
+    username = StringField("Username", validators=[DataRequired()])
     about_me = TextAreaField("About me", validators=[Length(min=0, max=440)])
     submit = SubmitField("Submit")
 
