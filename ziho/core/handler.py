@@ -1,5 +1,5 @@
-from ziho.core.models import Deck, Card, CardInfo
 from ziho import db
+from ziho.core.models import Card, CardInfo, Deck
 
 
 def get_deck_by_id(deck_id: int):
