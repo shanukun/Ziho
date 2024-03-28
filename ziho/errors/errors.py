@@ -17,14 +17,6 @@ class AjaxError(Exception):
 class InvalidFormData(AjaxError):
     status_code = 406
 
-    def __init__(self, errors_dict):
-        errors = []
-        for field_key in errors_dict:
-            if field_key is not None:
-                for msg in errors_dict[field_key]:
-                    errors.append(f"{field_key.replace('_', ' ').capitalize()} {msg}")
-        super().__init__(messages=errors)
-
 
 class ServerError(AjaxError):
     status_code = 500

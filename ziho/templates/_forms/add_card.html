@@ -1,37 +1,15 @@
-{% from "_macros/form_modal.html" import render_create_form_modal %}
-{% call render_create_form_modal("add-card-overlay", "Add Card") %}
-    <form id="add-card-form" method="post" enctype="multipart/form-data" onsubmit="return false;">
-        {{ card_form.hidden_tag() }}
-        <div class="row gy-3 p-2">
-            <div class="form-floating col-12 gx-1">
-                {{ card_form.deck_id(id="add-card-deck-select", class="form-control text-break;", placeholder="Choose Deck") }}
-                {{ card_form.deck_id.label(class="form-label", for="add-card-deck-select") }}
-            </div>
-            <div class="form-floating col-12 gx-1">
-                {{ card_form.front(class="form-control", placeholder="Fill front card", required=True) }}
-                {{ card_form.front.label(class="form-label") }}
-            </div>
-            <!-- TODO size of textarea is increased using js, make sure it gets reset after submitting -->
-            <div class="form-floating col-9 gx-1">
-                {{ card_form.back(class="form-control card-back", placeholder="Fill back card", required=True) }}
-                {{ card_form.back.label(class="form-label") }}
-            </div>
-            <div id="add-card-back-image" class="col-3 gx-2 rounded d-flex overflow-hidden px-0 card-back-image">
-                <img src="" class="d-none" id="uploaded-image-preview" />
-                {{ card_form.card_image(class="d-none", accept="image/*", id="upload-post-image") }}
-                <label for="upload-post-image" class="upload-image-label">
-                    <i class="bi bi-image"></i> Add Img
-                </label>
-            </div>
-            <div class="col-12 gx-1">
-                <div class="row gx-1">
-                    <div class="col-auto ms-auto">
-                        <button type="submit" class="btn btn-primary" onclick="add_card('{{ url_for("home.add_card_route") }}')">
-                            Add Card
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </form>
+{% from "_macros/forms.html" import render_form, render_field %}
+{% call render_form(card_form) %}
+    {{ render_field(card_form.deck_id, id="add-card-deck-select", class="form-control text-break") }}
+    {{ render_field(card_form.front, required=True) }}
+    <!-- TODO size of textarea is increased using js, make sure it gets reset after submitting -->
+    {{ render_field(card_form.back, div_class="form-floating has-validation col-9 gx-1", class="form-control card-back", required=True) }}
+    <div id="add-card-back-image" class="col-3 gx-2 rounded d-flex overflow-hidden px-0 card-back-image">
+        <img src="" class="d-none" id="uploaded-image-preview" />
+        {{ card_form.card_image(class="d-none", accept="image/*", id="upload-post-image") }}
+        <label for="upload-post-image" class="upload-image-label">
+            <i class="bi bi-image"></i> Add Img
+        </label>
+    </div>
+    {{ render_field(card_form.submit) }}
 {% endcall %}

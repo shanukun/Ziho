@@ -24,7 +24,7 @@ $("textarea")
 
 let toast_counter = 1;
 
-function show_toast(msg, success = true) {
+function display_toast(msg, success = true) {
     const temp_html = getEl("#toast-template").content.cloneNode(true);
     const toast_id = "toast_" + toast_counter++;
 
@@ -34,26 +34,12 @@ function show_toast(msg, success = true) {
     el.setAttribute("id", toast_id);
     getEl(`#${toast_id} .toast-body`).innerHTML = msg;
 
-    let rect_class = "rect-success";
-    if (!success) {
-        rect_class = "rect-danger";
-    }
+    let rect_class = success ? "rect-success" : "rect-danger";
     getEl(`#${toast_id} rect`).setAttribute("class", rect_class);
 
     const toastEl = document.getElementById(toast_id);
     const toast = new bootstrap.Toast(toastEl, (options = { autohide: true }));
     toast.show();
-}
-
-function get_form_data(form_id = null) {
-    let form_data;
-    if (form_id) {
-        form_data = new FormData(getEl(form_id));
-    } else {
-        form_data = new FormData();
-        form_data.append("csrf_token", csrf_token);
-    }
-    return form_data;
 }
 
 function make_ajax_request(
@@ -104,49 +90,6 @@ function update_card(url) {
     make_ajax_request(url, form_data, null, null, true);
 }
 
-function add_card(url) {
-    let form_data = get_form_data("#add-card-form");
-    let selected = getEl("#add-card-deck-select").value;
-
-    const success_fn = (resp) => {
-        console.log(resp);
-        let form = getEl("#add-card-form");
-        form.reset();
-        getEl("#add-card-deck-select").value = selected;
-        getEl("#uploaded-image-preview").setAttribute("class", "d-none");
-    };
-    make_ajax_request(url, form_data, success_fn, null, true);
-}
-
-function save_card(card) {
-    let url = getEl("#save-card-url").dataset.url;
-    let form_data = get_form_data();
-
-    form_data.append("deck_id", card.deck.deck_id);
-    form_data.append("card_id", card.card.card_id);
-    Object.keys(card.card_info).forEach((key) => {
-        form_data.append(key, card.card_info[key]);
-    });
-
-    const success_fn = (resp) => {
-        console.log(resp);
-    };
-    make_ajax_request(url, form_data, success_fn, null, true);
-}
-
-function get_cards(url, deck_id, deck_name) {
-    $("#study-card-title").html = deck_name;
-    let form_data = get_form_data();
-    form_data.append("deck_id", deck_id);
-
-    const success_fn = (resp) => {
-        const displayer = new Displayer(deck_name);
-        displayer.fill_queue(resp.result);
-        displayer.show_card();
-    };
-    make_ajax_request(url, form_data, success_fn, null);
-}
-
 function show_uploaded_image(el, image) {
     el.setAttribute("src", image);
     el.classList.add("d-flex");
@@ -167,3 +110,26 @@ function change_preview_image(input) {
         reader.readAsDataURL(input.files[0]);
     }
 }
+
+const all_form_listener = [
+    {
+        el_sel: "#upload-post-image",
+        event: "change",
+        func: (e) => {
+            change_preview_image(e.target);
+        },
+    },
+];
+
+const bind_events = (el, event, func) => {
+    el.addEventListener(event, func);
+};
+
+const bind_listeners = () => {
+    all_form_listener.forEach((o) => {
+        el = getEl(o.el_sel);
+        if (el != undefined && el != null) {
+            bind_events(el, o.event, o.func);
+        }
+    });
+};

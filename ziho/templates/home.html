@@ -56,7 +56,9 @@
                             <!-- TODO 1 row for tags -->
                         </div>
                         <div class="btn-group w-100 px-3 pb-3 m-auto" role="group">
-                            <a type="button" class="btn btn-light" href="{{ url_for("deckview.view_choosen_deck", deck_id=deck.id) }}">
+                            <a type="button"
+                               class="btn btn-light"
+                               href="{{ url_for("deckview.view_choosen_deck", deck_id=deck.id) }}">
                                 View
                             </a>
                             <button type="button"
@@ -79,12 +81,15 @@
             {% endfor %}
         </div>
     </div>
-    {% include "_forms/create_deck.html" %}
-    {% include "_forms/add_card.html" %}
+    {% include "_partials/create_deck_modal.html" %}
+    {% include "_partials/add_card_modal.html" %}
     {% include "_partials/study_deck_modal.html" %}
     {% include "_partials/delete_deck_modal.html" %}
 {% endblock content %}
 {% block script %}
+    {% from "_macros/forms.html" import form_submit_listener %}
+    {{ form_submit_listener("create-deck-overlay") }}
+    {{ form_submit_listener("add-card-overlay") }}
     <script>
         getEl("#delete-deck-modal").addEventListener("show.bs.modal", (e) => {
             let ds = e.relatedTarget.dataset;
@@ -101,9 +106,7 @@
             getEl("#add-card-deck-select").value = deck_id;
         });
 
-        getEl("#upload-post-image").addEventListener("change", function() {
-            change_preview_image(this);
-        });
+        bind_listeners();
 
         getEl("#zoomed-image-modal").addEventListener("click", function() {
             getEl("#zoomed-image-modal").style.display = "none";

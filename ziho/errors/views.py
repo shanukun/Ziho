@@ -1,4 +1,4 @@
-from flask import render_template, jsonify
+from flask import jsonify, render_template
 
 from ziho import db
 from ziho.errors import bp

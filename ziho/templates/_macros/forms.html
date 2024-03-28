@@ -1,0 +1,72 @@
+{% macro form_submit_listener(modal_id) -%}
+    <script type="text/javascript">
+    document.querySelector("#{{ modal_id }} form").addEventListener("submit", submit_form);
+    document.querySelector("#{{ modal_id }} form").parent_modal = "{{ modal_id }}";
+    </script>
+{%- endmacro %}
+{% macro render_form(form) %}
+    {{ form.hidden_tag() }}
+    <div class="row gy-3 p-2">
+        {{ caller() }}
+    </div>
+{% endmacro %}
+{%- macro field_errors(field) -%}
+    {% if field.errors %}
+        {%- for error in field.errors -%}
+            <div class="ms-2 invalid-feedback">
+                {{ error }}
+            </div>
+        {%- endfor -%}
+    {% endif %}
+{%- endmacro -%}
+{%- macro field_label(field) -%}
+    {% set css_class = kwargs['class'] if kwargs['class'] else 'form-label' %}
+    <label class="{{ css_class }}" for="{{ field.id }}">
+        {{ field.label.text }}
+    </label>
+{% endmacro %}
+{% macro render_submit_field(submit, value="") %}
+    <div class="col-12 gx-1">
+        <div class="row gx-1">
+            <div class="col-auto ms-auto">
+                {% if value %}
+                    {{ submit(class="btn btn-primary", value=value) }}
+                {% else %}
+                    {{ submit(class="btn btn-primary") }}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endmacro %}
+{%- macro render_select_field(field, div_class='') -%}
+    <div class="form-floating has-validation col-12 gx-1">
+        {% set css_error = ' is-invalid' if field.errors else '' %}
+        {% set css_class = kwargs['class'] if kwargs['class'] else 'form-control' %}
+        {% set css_class = css_class + css_error if css_error else css_class %}
+        {% set field_id = kwargs['id'] if kwargs['id'] else field.id %}
+        {{ field(class=css_class, id=field_id) }}
+        {{ field_label(field) }}
+        {{ field_errors(field) }}
+    </div>
+{%- endmacro -%}
+{% macro render_input_field(field, div_class="form-floating has-validation col-12 gx-1") %}
+    {% set div_class = kwargs["div_class"] if kwargs["div_class"] else div_class %}
+    <div class="{{ div_class }}">
+        {% set placeholder = kwargs['placeholder']|length or field.label.text %}
+        {% set css_error = ' is-invalid' if field.errors else '' %}
+        {% set css_class = kwargs['class'] if kwargs['class'] else 'form-control' %}
+        {% set css_class = css_class + css_error if css_error else css_class %}
+        {{ field(class=css_class, placeholder=div_class, **kwargs) }}
+        {{ field_label(field) }}
+        {{ field_errors(field) }}
+    </div>
+{% endmacro %}
+{%- macro render_field(field) -%}
+    {% if field.type == "SelectField" %}
+        {{ render_select_field(field, **kwargs) }}
+    {% elif field.type == "SubmitField" %}
+        {{ render_submit_field(field, **kwargs) }}
+    {% else %}
+        {{ render_input_field(field, **kwargs) }}
+    {% endif %}
+{%- endmacro -%}

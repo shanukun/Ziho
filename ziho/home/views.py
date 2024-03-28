@@ -1,29 +1,41 @@
-from flask import flash, redirect, render_template, send_from_directory, url_for, current_app
+from flask import (
+    current_app,
+    flash,
+    redirect,
+    render_template,
+    send_from_directory,
+    url_for,
+)
 from flask.views import MethodView
 from flask_login import current_user, login_required
 
 from ziho import db
 from ziho.auth.handlers import get_user_or_404
 from ziho.core.exceptions import PersistenceError
-from ziho.errors.errors import InvalidFormData, ServerError
 from ziho.core.forms import (
     AddCardForm,
-    CardCreationForm,
     CardInfoForm,
-    GetCardsRequestForm,
     DeckDeleteForm,
     DeckForm,
     EditProfileForm,
+    GetCardsRequestForm,
 )
+from ziho.core.utils import FormPost
+from ziho.errors.errors import InvalidFormData, ServerError
 from ziho.home.handlers import (
     create_card_handler,
-    get_cards_for_study,
-    update_card_info_handler,
     create_deck_handler,
     delete_deck_handler,
+    get_cards_for_study,
     get_decks_by_user,
+    update_card_info_handler,
 )
-from ziho.utils.helper import get_success_response
+from ziho.utils.helper import (
+    get_handler_caller,
+    get_rendered_form,
+    get_response,
+    get_response_form,
+)
 
 
 class Home(MethodView):
@@ -47,16 +59,49 @@ class Home(MethodView):
 
 class CreateDeck(MethodView):
     decorators = [login_required]
+    form_template = "_forms/create_deck.html"
+    form_name = "deck_form"
+    success_message = "New deck created."
 
     def post(self):
         form = DeckForm()
-        if form.validate_on_submit():
-            try:
-                create_deck_handler(current_user, form.get_data())
-                flash("New deck created.", "success")
-            except PersistenceError as e:
-                flash(e.message, "danger")
-        return redirect(url_for("home.home"))
+        handler_caller = get_handler_caller(
+            create_deck_handler, current_user, form.get_data()
+        )
+        form_post = FormPost(
+            handler_caller,
+            form,
+            self.form_template,
+            self.form_name,
+            self.success_message,
+        )
+        return form_post.do_post()
+
+
+class AddCard(MethodView):
+    decorators = [login_required]
+    form_template = "_forms/add_card.html"
+    form_name = "card_form"
+    success_message = "Card added."
+
+    def post(self):
+        form = self.form()
+        handler_caller = get_handler_caller(
+            create_card_handler, current_app, current_user, form.get_data()
+        )
+        form_post = FormPost(
+            handler_caller,
+            form,
+            self.form_template,
+            self.form_name,
+            self.success_message,
+        )
+        return form_post.do_post()
+
+    def form(self):
+        form = AddCardForm()
+        form.add_choices(get_decks_by_user(current_user.id))
+        return form
 
 
 class DeleteDeck(MethodView):
@@ -71,20 +116,6 @@ class DeleteDeck(MethodView):
             except PersistenceError as e:
                 flash(e.message, "danger")
         return redirect(url_for("home.home"))
-
-
-class AddCard(MethodView):
-    decorators = [login_required]
-
-    def post(self):
-        form = CardCreationForm()
-        if form.validate_on_submit():
-            try:
-                create_card_handler(current_app, current_user, form.get_data())
-            except PersistenceError as e:
-                raise ServerError(e.message)
-            return get_success_response(message="Card added.")
-        raise InvalidFormData(form.errors)
 
 
 class ShowImage(MethodView):
@@ -109,10 +140,11 @@ class GetCards(MethodView):
     def post(self):
         form = GetCardsRequestForm(meta={"csrf": False})
         if form.validate_on_submit():
-            return get_success_response(
+            return get_response(
                 result=get_cards_for_study(form.get_data(), current_user.id)
             )
-        raise InvalidFormData(form.errors)
+        else:
+            raise InvalidFormData("Invalid form data.")
 
 
 class UpdateCardInfo(MethodView):
@@ -125,8 +157,9 @@ class UpdateCardInfo(MethodView):
                 update_card_info_handler(current_user, form.get_data())
             except PersistenceError as e:
                 raise ServerError(e.message)
-            return get_success_response(message="Card info updated.")
-        raise InvalidFormData(form.errors)
+            return get_response(message="Card info updated.")
+        else:
+            raise InvalidFormData("Invalid form data.")
 
 
 class EditProfile(MethodView):

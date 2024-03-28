@@ -1,3 +1,28 @@
+{% macro render_create_form_modal(id, title, form_id, url) -%}
+    <div class="modal fade px-0" id="{{ id }}" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-xl modal-fullscreen-sm-down">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        {{ title }}
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="{{ form_id }}" action="{{ url }}" method="post" enctype="multipart/form-data">
+                        {{ caller() }}
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+    document.getElementById("{{ id }}").addEventListener("hidden.bs.modal", () => {
+        location.reload();
+    });
+    </script>
+{%- endmacro %}
 {% macro render_delete_form_modal(id, title, default_msg) -%}
     <div class="modal" tabindex="-1" id="{{ id }}">
         <div class="modal-dialog">
