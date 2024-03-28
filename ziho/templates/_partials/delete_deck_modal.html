@@ -1,0 +1,4 @@
+{% from "_macros/modals.html" import render_delete_form_modal %}
+{% call render_delete_form_modal("delete-deck-modal", "Delete Deck", "Select a deck.") %}
+    {% include "_forms/delete_deck.html" %}
+{% endcall %}

@@ -1,9 +1,6 @@
-{% from "_macros/form_modal.html" import render_delete_form_modal %}
-{% call render_delete_form_modal("delete-card-modal", "Delete Card", "Select a card.") %}
-    <form id="delete-card-form" action="{{ url_for("deckview.delete_card_route") }}" method="post">
-        {{ cd_form.hidden_tag() }}
-        {{ cd_form.deck_id(type="hidden") }}
-        {{ cd_form.card_id(type="hidden") }}
-        {{ cd_form.submit(class="btn btn-danger") }}
-    </form>
-{% endcall %}
+<form id="delete-card-form" action="{{ url_for("deckview.delete_card_route") }}" method="post">
+    {{ cd_form.hidden_tag() }}
+    {{ cd_form.deck_id(type="hidden") }}
+    {{ cd_form.card_id(type="hidden") }}
+    {{ cd_form.submit(class="btn btn-danger") }}
+</form>
