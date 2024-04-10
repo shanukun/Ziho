@@ -14,6 +14,7 @@ from wtforms.validators import DataRequired, InputRequired, Length, ValidationEr
 
 from ziho.auth.handlers import get_user_by_username
 from ziho.core.handler import get_card_info_by_id, get_deck_by_id
+from ziho.core.models import MAX_SIZE_BACK, MAX_SIZE_DECK_NAME, MAX_SIZE_FRONT
 
 
 class ZihoForm(FlaskForm):
@@ -27,7 +28,9 @@ class ZihoForm(FlaskForm):
 
 
 class DeckForm(ZihoForm):
-    deck_name = TextAreaField("Deck Name", validators=[DataRequired()])
+    deck_name = TextAreaField(
+        "Deck Name", validators=[DataRequired(), Length(min=1, max=MAX_SIZE_DECK_NAME)]
+    )
     submit = SubmitField("Create")
 
     def filter_deck_name(self, field):
@@ -40,19 +43,20 @@ class DeckDeleteForm(ZihoForm):
     submit = SubmitField("Delete")
 
 
+DATETIME_FORMAT = "%Y-%m-%dT%H:%M:%S.%f%z"
+
+
 class CardInfoForm(ZihoForm):
     deck_id = IntegerField("deck_id", validators=[DataRequired()])
     card_id = IntegerField("card_id", validators=[DataRequired()])
     card_info_id = IntegerField("card_info_id", validators=[DataRequired()])
 
     difficulty = FloatField("difficulty", validators=[InputRequired()])
-    due = DateTimeField(
-        "due", validators=[InputRequired()], format="%Y-%m-%dT%H:%M:%S.%f%z"
-    )
+    due = DateTimeField("due", validators=[InputRequired()], format=DATETIME_FORMAT)
     elapsed_days = FloatField("elapsed_days", validators=[InputRequired()])
     lapses = IntegerField("lapses", validators=[InputRequired()])
     last_review = DateTimeField(
-        "last_review", validators=[InputRequired()], format="%Y-%m-%dT%H:%M:%S.%f%z"
+        "last_review", validators=[InputRequired()], format=DATETIME_FORMAT
     )
     reps = IntegerField("reps", validators=[InputRequired()])
     scheduled_days = IntegerField("scheduled_days", validators=[InputRequired()])
@@ -66,7 +70,6 @@ class CardInfoForm(ZihoForm):
         card_info = get_card_info_by_id(
             self.card_info_id.data, self.card_id.data, self.deck_id.data
         )
-        print("[card info]: ", card_info)
         if card_info is None:
             raise ValidationError("Please use a valid card id.")
         return True
@@ -87,8 +90,12 @@ IMAGES = "jpg jpe jpeg png gif svg bmp webp".split()
 
 class CardForm(ZihoForm):
     deck_id = SelectField("Deck", coerce=int)
-    front = TextAreaField("Front", validators=[DataRequired()])
-    back = TextAreaField("Back", validators=[DataRequired()])
+    front = TextAreaField(
+        "Front", validators=[DataRequired(), Length(min=1, max=MAX_SIZE_FRONT)]
+    )
+    back = TextAreaField(
+        "Back", validators=[DataRequired(), Length(min=1, max=MAX_SIZE_BACK)]
+    )
     card_image = FileField(
         "Card Image",
         validators=[
