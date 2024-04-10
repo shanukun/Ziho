@@ -1,0 +1,11 @@
+#!/bin/bash
+#
+path=$(pwd)
+static_path="$(pwd)/ziho/static"
+
+isort --check $path
+black --check $path
+djlint $path --check
+prettier $static_path --check
+
+
