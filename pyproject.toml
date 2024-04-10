@@ -7,6 +7,7 @@ max_attribute_length=100
 ignore="H006,H013,H021"
 
 [tool.isort]
+profile = "black"
 group_by_package = true
 skip_gitignore = true
 
