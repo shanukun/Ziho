@@ -107,22 +107,21 @@ class CardForm(ZihoForm):
     )
     submit = SubmitField("Add Card")
 
+    def set_select_default(self, value):
+        self.deck_id.data = value
 
-class AddCardForm(CardForm):
     def add_choices(self, decks):
         self.deck_id.choices = [(deck.id, deck.name) for deck in decks]
 
 
-class CardCreationForm(CardForm):
+class CardUpdateForm(CardForm):
+    deck_name = TextAreaField("Deck Name")
     deck_id = IntegerField("Deck", validators=[DataRequired()])
-
-
-class CardUpdateForm(CardCreationForm):
     card_id = IntegerField("Card", validators=[DataRequired()])
     submit = SubmitField("Update Card")
 
-    def validate_card_id(self, card_id):
-        pass
+    def set_deck_name(self, deck_name):
+        self.deck_name.data = deck_name
 
 
 class CardDeleteForm(ZihoForm):

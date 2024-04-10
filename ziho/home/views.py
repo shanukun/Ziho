@@ -13,7 +13,7 @@ from ziho import db
 from ziho.auth.handlers import get_user_or_404
 from ziho.core.exceptions import PersistenceError
 from ziho.core.forms import (
-    AddCardForm,
+    CardForm,
     CardInfoForm,
     DeckDeleteForm,
     DeckForm,
@@ -30,12 +30,7 @@ from ziho.home.handlers import (
     get_decks_by_user,
     update_card_info_handler,
 )
-from ziho.utils.helper import (
-    get_handler_caller,
-    get_rendered_form,
-    get_response,
-    get_response_form,
-)
+from ziho.utils.helper import get_handler_caller, get_response
 
 
 class Home(MethodView):
@@ -44,7 +39,7 @@ class Home(MethodView):
     def get(self):
         decks = get_decks_by_user(current_user.id)
 
-        deck_form, card_form = DeckForm(), AddCardForm()
+        deck_form, card_form = DeckForm(), CardForm()
         card_form.add_choices(decks)
 
         return render_template(
@@ -99,7 +94,7 @@ class AddCard(MethodView):
         return form_post.do_post()
 
     def form(self):
-        form = AddCardForm()
+        form = CardForm()
         form.add_choices(get_decks_by_user(current_user.id))
         return form
 
