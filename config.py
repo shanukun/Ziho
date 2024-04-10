@@ -24,7 +24,4 @@ class TestingConfig(Config):
 
     # Disable check for csrf token
     WTF_CSRF_ENABLED = False
-    UPLOAD_FOLDER = Path("ziho_uploads")
-    UPLOAD_PATH = Path(basedir) / "tests" / UPLOAD_FOLDER
-
     TESTING = True

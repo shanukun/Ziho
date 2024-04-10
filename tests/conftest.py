@@ -10,7 +10,8 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 
 
 @pytest.fixture
-def app():
+def app(tmp_path_factory):
+    TestingConfig.UPLOAD_PATH = tmp_path_factory.mktemp("ziho_uploads")
     app = create_app(TestingConfig)
 
     setup_db(app)
