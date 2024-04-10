@@ -43,6 +43,9 @@ def load_user(id):
     return db.session.execute(db.select(User).filter_by(id=id)).scalar_one_or_none()
 
 
+MAX_SIZE_DECK_NAME = 64
+
+
 class Deck(db.Model):
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
 
@@ -50,7 +53,7 @@ class Deck(db.Model):
         DateTime, index=True, default=datetime.utcnow
     )
     name: Mapped[str] = mapped_column(
-        String(64), unique=True, nullable=False, index=True
+        String(MAX_SIZE_DECK_NAME), unique=True, nullable=False, index=True
     )
 
     creator_id: Mapped[int] = mapped_column(ForeignKey("user.id", ondelete="CASCADE"))
@@ -64,11 +67,15 @@ class Deck(db.Model):
         return "<Deck {}>".format(self.name)
 
 
+MAX_SIZE_BACK = 500
+MAX_SIZE_FRONT = 200
+
+
 class Card(db.Model):
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
 
-    back: Mapped[str] = mapped_column(String(500))
-    front: Mapped[str] = mapped_column(String(200), nullable=False)
+    back: Mapped[str] = mapped_column(String(MAX_SIZE_BACK))
+    front: Mapped[str] = mapped_column(String(MAX_SIZE_FRONT), nullable=False)
     image_path: Mapped[str] = mapped_column(String(500), nullable=True)
 
     deck_id: Mapped[int] = mapped_column(
