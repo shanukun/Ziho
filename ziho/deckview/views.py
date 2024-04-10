@@ -1,4 +1,4 @@
-from flask import abort, current_app, flash, redirect, render_template, request
+from flask import abort, current_app, flash, redirect, render_template, request, url_for
 from flask.views import MethodView
 from flask_login import current_user, login_required
 
@@ -39,18 +39,22 @@ class UpdateCard(MethodView):
 
 class ViewDeckBase(MethodView):
     decorators = [login_required]
+    template = "view_deck.html"
 
     def __init__(self):
-        self.card_form = CardForm()
+        self.card_form = CardUpdateForm()
         self.card_delete_form = CardDeleteForm()
 
-    def render(self, deck_id, decks=None):
+    def render(self, deck_id=None):
+        decks = get_decks_by_user(current_user.id, "dict")
         if not decks:
-            decks = get_decks_by_user(current_user.id, "dict")
+            return render_template(self.template)
+        deck_id = deck_id if deck_id else next(iter(decks))
+        self.card_form.set_deck_name(decks[deck_id].name)
 
         cards = get_cards_for_deck(deck_id)
         return render_template(
-            "view_deck.html",
+            self.template,
             deck_id=deck_id,
             decks=decks,
             cards=cards,
@@ -61,12 +65,7 @@ class ViewDeckBase(MethodView):
 
 class ViewDeck(ViewDeckBase):
     def get(self):
-        decks = get_decks_by_user(current_user.id, "dict")
-        deck_id = None
-        if decks:
-            deck_id = next(iter(decks))
-
-        return self.render(deck_id=deck_id, decks=decks)
+        return self.render()
 
 
 class ViewChoosenDeck(ViewDeckBase):
@@ -88,4 +87,7 @@ class DeleteCard(MethodView):
                 flash("Card deleted.", "success")
             except PersistenceError as e:
                 flash(e.message, "danger")
-        return redirect(request.referrer)
+        if request.referrer:
+            return redirect(request.referrer)
+        else:
+            return redirect(url_for("home.home"))
