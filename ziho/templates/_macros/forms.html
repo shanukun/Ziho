@@ -49,6 +49,20 @@
         {{ field_errors(field) }}
     </div>
 {%- endmacro -%}
+{% macro render_image_field_for_preview(field, id, label) %}
+    <div id="{{ id }}" class="col-3 gx-2 rounded d-flex overflow-hidden px-0 card-back-image has-validation">
+        <img src="" class="d-none" id="uploaded-image-preview" />
+        {% if field.errors %}
+            {{ field(class="d-none is-invalid", accept="image/*", id="upload-post-image") }}
+        {% else %}
+            {{ field(class="d-none", accept="image/*", id="upload-post-image") }}
+        {% endif %}
+        {{ field_errors(field) }}
+        <label for="upload-post-image" class="upload-image-label">
+            <i class="bi bi-image"></i> {{ label }}
+        </label>
+    </div>
+{% endmacro %}
 {% macro render_input_field(field, div_class="form-floating has-validation col-12 gx-1") %}
     {% set div_class = kwargs["div_class"] if kwargs["div_class"] else div_class %}
     <div class="{{ div_class }}">

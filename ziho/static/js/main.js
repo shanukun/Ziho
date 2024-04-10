@@ -43,6 +43,13 @@ function display_toast(msg, success = true) {
 }
 
 function show_uploaded_image(el, image) {
+    let invalid_feedback = getEl(
+        ".card-back-image > .is-invalid ~ .invalid-feedback",
+    );
+    if (typeof invalid_feedback != "undefined" && invalid_feedback != null) {
+        invalid_feedback.classList.add("d-none");
+    }
+
     el.setAttribute("src", image);
     el.classList.add("d-flex");
     el.classList.remove("d-none");
@@ -75,9 +82,8 @@ const all_form_listener = [
         el_sel: "#view-deck-card-select",
         event: "change",
         func: (e) => {
-            e.preventDefault();
             let url = getEl("#view-deck-url").dataset.url;
-            go_to_url(url + "/" + this.value);
+            go_to_url(url + "/" + e.target.value);
         },
     },
 ];

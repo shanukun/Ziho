@@ -79,20 +79,16 @@
             let card_front = ds.card_front;
             let card_back = ds.card_back;
 
-            let opt = document.createElement("option");
-            opt.value = {{ deck_id }};
-            opt.innerHTML = "{{ decks[deck_id].name }}";
 
             getEl("#front").innerHTML = card_front;
             getEl("#back").innerHTML = card_back;
             getEl("#card_id").setAttribute("value", card_id);
+            getEl("#deck_id").setAttribute("value", {{ deck_id }});
 
             if (ds.card_image_path) {
                 show_uploaded_image(getEl("#uploaded-image-preview"), ds.card_image_path);
                 getEl("#uploaded-image-preview").dataset.prev_image_path = ds.card_image_path;
             }
-
-            getEl("#update-card-deck-select").appendChild(opt);
         });
 
         getEl("#update-card-overlay").addEventListener("shown.bs.modal", (e) => {
