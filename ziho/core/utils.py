@@ -26,7 +26,11 @@ class FormPost:
                         rendered_form=self.rendered_form(error_message=e.message),
                     )
                 )
-            return get_response(message=self.success_message)
+            return get_response_form(
+                message=self.success_message,
+                rendered_form=self.rendered_form(),
+                success=True,
+            )
         else:
             raise InvalidFormData(
                 get_response_form(

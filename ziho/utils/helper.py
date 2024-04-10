@@ -10,8 +10,10 @@ def get_response(message=None, result=None):
     return {"message": message, "result": result}
 
 
-def get_response_form(message=None, rendered_form=None):
+def get_response_form(message=None, rendered_form=None, success=False):
     template_name = "error_template"
+    if success:
+        template_name = "success_template"
     return get_response(message, {template_name: rendered_form})
 
 

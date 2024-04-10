@@ -22,6 +22,7 @@ class AjaxRequest {
 
     _pre_response_op(resp, success = false) {
         if (success && this.update_modal_form) {
+            getEl(`${this.form_id}`).innerHTML = resp.result.success_template;
         }
     }
 
@@ -45,13 +46,11 @@ class AjaxRequest {
                 "X-CSRFTOKEN": csrf_token,
             },
             success: (resp) => {
-                console.log(resp);
                 this._pre_response_op(resp, true);
                 this.success_fn(resp);
                 this._post_request_op(resp, true);
             },
             error: (resp) => {
-                console.log(resp);
                 this._pre_response_op(resp);
                 this.error_fn(resp);
                 this._post_request_op(resp);
