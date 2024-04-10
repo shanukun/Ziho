@@ -13,6 +13,7 @@ def create_deck_handler(user, form_data):
     deck = Deck(name=form_data["deck_name"], creator_id=user.id)
     db.session.add(deck)
     try_commit(db.session, f'Could not create deck {form_data["deck_name"]}')
+    return deck.id
 
 
 def create_card_handler(app, user, form_data):
@@ -27,10 +28,10 @@ def create_card_handler(app, user, form_data):
     db.session.add(card_info)
 
     try_commit(db.session, f'Could not create the card: {form_data["front"]}.')
+    return card.id
 
 
 def delete_deck_handler(user, form_data):
-    print(form_data)
     deck = db.session.execute(
         db.select(Deck).where(
             (Deck.id == form_data["deck_id"]) & (Deck.creator_id == user.id)
@@ -72,7 +73,6 @@ def get_cards_for_study(form_data, user_id: int):
 
     due_cards = []
     for study_card in db.session.execute(stmt).all():
-        print(study_card)
         study_card_dict = study_card._mapping
 
         due_card = {}

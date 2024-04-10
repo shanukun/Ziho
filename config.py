@@ -19,10 +19,12 @@ class Config:
 
 
 class TestingConfig(Config):
-    # SQLALCHEMY_DATABASE_URI = "sqlite:///" + os.path.join(basedir, "test.db")
+    # in memory db
     SQLALCHEMY_DATABASE_URI = "sqlite:///"
 
     # Disable check for csrf token
     WTF_CSRF_ENABLED = False
+    UPLOAD_FOLDER = Path("ziho_uploads")
+    UPLOAD_PATH = Path(basedir) / "tests" / UPLOAD_FOLDER
 
     TESTING = True

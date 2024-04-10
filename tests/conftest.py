@@ -3,59 +3,34 @@ import os
 import pytest
 
 from config import TestingConfig
-from ziho import create_app, db
-from ziho.auth.actions import create_user
-from ziho.main.actions import create_card, create_deck
+from tests import *
+from ziho import create_app
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 
-test_user_yumi = {
-    "username": "yumi",
-    "email": "yumi@email.com",
-    "password": "pass",
-}
-
-test_deck = {"name": "Test Deck 1"}
-test_card = {"deck": 1, "front": "Front", "back": "back"}
-
-
-@pytest.fixture()
+@pytest.fixture
 def app():
     app = create_app(TestingConfig)
 
-    with app.app_context():
-        db.create_all()
-        user_id = create_user(
-            test_user_yumi["username"],
-            test_user_yumi["email"],
-            test_user_yumi["password"],
-        )
-        create_deck(test_deck["name"], user_id)
-        create_card(test_card["deck"], test_card["front"], test_card["back"], user_id)
+    setup_db(app)
 
     yield app
 
-    with app.app_context():
-        db.session.remove()
-        db.drop_all()
+    teardown_db(app)
 
 
-@pytest.fixture()
+@pytest.fixture(scope="function")
 def client(app):
-    return app.test_client()
+    yield app.test_client()
 
 
 class AuthActions(object):
     def __init__(self, client):
         self._client = client
 
-    def login(
-        self, username=test_user_yumi["username"], password=test_user_yumi["password"]
-    ):
-        return self._client.post(
-            "/auth/login", data={"username": username, "password": password}
-        )
+    def login(self, example_user):
+        return self._client.post("/auth/login", data=example_user)
 
     def logout(self):
         return self._client.get("/auth/logout")
