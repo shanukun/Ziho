@@ -80,5 +80,7 @@
         {{ render_submit_field(field, **kwargs) }}
     {% elif field.type == "TextAreaField" %}
         {{ render_input_field(field, **kwargs) }}
+    {% elif field.type == "ZihoTextAreaField" %}
+        {{ render_input_field(field, **kwargs) }}
     {% endif %}
 {%- endmacro -%}

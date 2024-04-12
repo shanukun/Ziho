@@ -18,6 +18,10 @@ from ziho.core.models import MAX_SIZE_BACK, MAX_SIZE_DECK_NAME, MAX_SIZE_FRONT
 
 
 class ZihoForm(FlaskForm):
+    def __init__(self, **kwargs):
+        super(ZihoForm, self).__init__(**kwargs)
+        self.text_fields = []
+
     def get_data(self, **kwargs):
         data = self.data
         data.pop("csrf_token", None)
@@ -26,9 +30,31 @@ class ZihoForm(FlaskForm):
             data.update(kwargs)
         return data
 
+    def _clear_text_field(self):
+        for tfields in self.text_fields:
+            tfields.data = ""
+
+    def validate(self, extra_validators=None):
+        is_valid = super().validate(extra_validators)
+        if is_valid:
+            self._clear_text_field()
+        return is_valid
+
+
+class ZihoTextAreaField(TextAreaField):
+    """
+    Custom TextAreaField to clear field after successful validation.
+    """
+
+    def __init__(self, label=None, validators=None, **kwargs):
+        super(ZihoTextAreaField, self).__init__(label, validators, **kwargs)
+
+    def post_validate(self, form, validation_stopped):
+        form.text_fields.append(self)
+
 
 class DeckForm(ZihoForm):
-    deck_name = TextAreaField(
+    deck_name = ZihoTextAreaField(
         "Deck Name", validators=[DataRequired(), Length(min=1, max=MAX_SIZE_DECK_NAME)]
     )
     submit = SubmitField("Create")
@@ -90,10 +116,10 @@ IMAGES = "jpg jpe jpeg png gif svg bmp webp".split()
 
 class CardForm(ZihoForm):
     deck_id = SelectField("Deck", coerce=int)
-    front = TextAreaField(
+    front = ZihoTextAreaField(
         "Front", validators=[DataRequired(), Length(min=1, max=MAX_SIZE_FRONT)]
     )
-    back = TextAreaField(
+    back = ZihoTextAreaField(
         "Back", validators=[DataRequired(), Length(min=1, max=MAX_SIZE_BACK)]
     )
     card_image = FileField(
@@ -118,6 +144,12 @@ class CardUpdateForm(CardForm):
     deck_name = TextAreaField("Deck Name")
     deck_id = IntegerField("Deck", validators=[DataRequired()])
     card_id = IntegerField("Card", validators=[DataRequired()])
+    front = TextAreaField(
+        "Front", validators=[DataRequired(), Length(min=1, max=MAX_SIZE_FRONT)]
+    )
+    back = TextAreaField(
+        "Back", validators=[DataRequired(), Length(min=1, max=MAX_SIZE_BACK)]
+    )
     submit = SubmitField("Update Card")
 
     def set_deck_name(self, deck_name):

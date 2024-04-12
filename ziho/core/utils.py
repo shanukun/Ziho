@@ -20,12 +20,7 @@ class FormPost:
             try:
                 self.handler()
             except PersistenceError as e:
-                raise ServerError(
-                    get_response_form(
-                        message=e.message,
-                        rendered_form=self.rendered_form(error_message=e.message),
-                    )
-                )
+                raise ServerError(get_response(message=e.message))
             return get_response_form(
                 message=self.success_message,
                 rendered_form=self.rendered_form(),

@@ -11,9 +11,7 @@ function get_form_data(form_id = null) {
 
 const create_deck = (url, form_id) => {
     let form_data = get_form_data(form_id);
-    const success_fn = () => {
-        console.log("Calling create_deck success fn.");
-    };
+    const success_fn = (resp) => {};
     new AjaxRequest(
         url,
         form_data,
@@ -28,13 +26,7 @@ const create_deck = (url, form_id) => {
 function add_card(url, form_id) {
     let form_data = get_form_data(form_id);
 
-    const success_fn = (resp) => {
-        // store selected deck to reset on form update
-        let selected = getEl("#add-card-deck-select").value;
-        getEl("#add-card-form").reset();
-        getEl("#add-card-deck-select").value = selected;
-        getEl("#uploaded-image-preview").setAttribute("class", "d-none");
-    };
+    const success_fn = (resp) => {};
     new AjaxRequest(
         url,
         form_data,

@@ -14,10 +14,14 @@ class AjaxRequest {
         this.show_toast = show_toast;
         this.update_modal_form = update_modal_form;
 
-        this.success_fn = () => {};
-        if (success_fn) this.success_fn = success_fn;
-        this.error_fn = () => {};
-        if (error_fn) this.error_fn = error_fn;
+        this.success_fn = (resp) => {};
+        if (success_fn != null) {
+            this.success_fn = success_fn;
+        }
+        this.error_fn = (resp) => {};
+        if (error_fn) {
+            this.error_fn = error_fn;
+        }
     }
 
     _pre_response_op(resp, success = false) {
@@ -27,11 +31,14 @@ class AjaxRequest {
     }
 
     _post_request_op(resp, success = false) {
-        if (!success && this.update_modal_form) {
+        // Update form only when there's a validation error.
+        if (this.update_modal_form && resp.status == 406) {
             getEl(`${this.form_id}`).innerHTML =
                 resp.responseJSON.message.result.error_template;
         } else if (this.show_toast) {
-            display_toast(resp.message, success);
+            let message = resp.message;
+            if (!success) message = resp.responseJSON.message.message;
+            display_toast(message, success);
         }
 
         bind_listeners();
