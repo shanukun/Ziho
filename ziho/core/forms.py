@@ -1,6 +1,7 @@
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileAllowed
 from wtforms import (
+    BooleanField,
     DateTimeField,
     FileField,
     FloatField,
@@ -150,6 +151,7 @@ class CardUpdateForm(CardForm):
     back = TextAreaField(
         "Back", validators=[DataRequired(), Length(min=1, max=MAX_SIZE_BACK)]
     )
+    update_image = BooleanField(default=True)
     submit = SubmitField("Update Card")
 
     def set_deck_name(self, deck_name):

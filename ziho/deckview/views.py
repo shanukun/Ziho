@@ -23,7 +23,7 @@ class UpdateCard(MethodView):
     success_message = "Card updated."
 
     def post(self):
-        form = CardUpdateForm(meta={"csrf": False})
+        form = CardUpdateForm()
         handler_caller = get_handler_caller(
             update_card_handler, current_app, current_user, form.get_data()
         )

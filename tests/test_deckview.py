@@ -1,5 +1,7 @@
 from urllib.parse import urlparse
 
+import pytest
+
 from tests.lib.base import ZihoTest
 
 
@@ -54,7 +56,8 @@ class TestDeckView(ZihoTest):
             assert card["front"] in html
             assert card["back"] in html
 
-    def test_update_card(self, client, app, auth):
+    @pytest.mark.parametrize(("update_image"), ((False), (True)))
+    def test_update_card(self, client, app, auth, update_image):
         navani = self.example_user(app, "navani")
 
         with client:
@@ -62,6 +65,7 @@ class TestDeckView(ZihoTest):
             card = self.get_posted_card(app, image=True)
             card["front"] = "test front"
             card["card_image"] = None
+            card["update_image"] = update_image
             resp = client.post("/update-card", data=card)
             assert resp.status_code == 200
             assert "message" in resp.json

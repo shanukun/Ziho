@@ -40,23 +40,26 @@ function add_card(url, form_id) {
 
 function update_card(url, form_id) {
     let form_data = get_form_data(form_id);
+    let uip_id = "#uploaded-image-preview";
 
-    // Only send image if it is updated.
-    if (
-        typeof $("#upload-post-image").data("prev_image_path") !== "undefined"
-    ) {
-        if (
-            form_data.get("image") ===
-            $("#upload-post-image").data("prev_image_path")
-        ) {
-            form_data.set("image", null);
-        }
+    let image_url = getEl(uip_id).getAttribute("src");
+    let update_image = true;
+    let new_image = getEl("#upload-post-image").files;
+
+    if (new_image.length <= 0) {
+        update_image = false;
     }
+    form_data.set("update_image", update_image);
+    const success_fn = () => {
+        if (image_url !== null && image_url.length !== 0) {
+            show_uploaded_image(getEl(uip_id), image_url);
+        }
+    };
 
     new AjaxRequest(
         url,
         form_data,
-        null,
+        success_fn,
         null,
         form_id,
         true,

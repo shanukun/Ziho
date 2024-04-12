@@ -31,7 +31,7 @@ def update_card_handler(app, user, form_data):
     )
 
     image_path = get_image_path(app, form_data["card_image"])
-    if image_path:
+    if form_data["update_image"]:
         image_stmt = base_stmt.values(image_path=image_path)
         db.session.execute(image_stmt)
 

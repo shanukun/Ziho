@@ -1,3 +1,6 @@
+import random
+import string
+
 from flask import render_template
 
 
@@ -22,3 +25,8 @@ def get_handler_caller(func, *args, **kwargs):
         return func(*args, **kwargs)
 
     return handler_caller
+
+
+def generate_random_string(length=20):
+    res = "".join(random.choices(string.ascii_letters + string.digits, k=length))
+    return res

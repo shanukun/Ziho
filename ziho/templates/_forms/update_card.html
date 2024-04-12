@@ -1,5 +1,6 @@
 {% from "_macros/forms.html" import render_form, render_field, render_image_field_for_preview %}
 {% call render_form(card_form) %}
+    {{ card_form.update_image(type="hidden") }}
     {{ card_form.card_id(type="hidden") }}
     {{ card_form.deck_id(type="hidden") }}
     {{ render_field(card_form.deck_name, readonly=True) }}
