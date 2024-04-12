@@ -52,11 +52,9 @@
 {% macro render_image_field_for_preview(field, id, label) %}
     <div id="{{ id }}" class="col-3 gx-2 rounded d-flex overflow-hidden px-0 card-back-image has-validation">
         <img src="" class="d-none" id="uploaded-image-preview" />
-        {% if field.errors %}
-            {{ field(class="d-none is-invalid", accept="image/*", id="upload-post-image") }}
-        {% else %}
-            {{ field(class="d-none", accept="image/*", id="upload-post-image") }}
-        {% endif %}
+        {% set css_class = "d-none" %}
+        {% set css_class = css_class ~ " is-invalid" if field.errors else css_class %}
+        {{ field(class=css_class, accept="image/*", id="upload-post-image", autocomplete="off") }}
         {{ field_errors(field) }}
         <label for="upload-post-image" class="upload-image-label">
             <i class="bi bi-image"></i> {{ label }}
@@ -70,7 +68,7 @@
         {% set css_error = " is-invalid" if field.errors else '' %}
         {% set css_class = css_class ~ css_error if css_error else css_class %}
         {% set readonly = kwargs['readonly'] if kwargs['readonly'] else False %}
-        {{ field(class=css_class, readonly=readonly) }}
+        {{ field(class=css_class, readonly=readonly, placeholder="Fill text.", autocomplete="off") }}
         {{ field_label(field) }}
         {{ field_errors(field) }}
     </div>
