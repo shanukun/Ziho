@@ -1,6 +1,19 @@
 let cookie = document.cookie;
 let csrf_token = cookie.substring(cookie.indexOf("=") + 1);
 
+let RELOAD_PAGE = false;
+const do_reload = () => {
+    RELOAD_PAGE = true;
+};
+const may_reload = () => {
+    let reload = false;
+    if (RELOAD_PAGE) {
+        reload = true;
+        RELOAD_PAGE = false;
+    }
+    return reload;
+};
+
 function getEl(selector) {
     return document.querySelector(selector);
 }

@@ -56,6 +56,7 @@ class AjaxRequest {
                 this._pre_response_op(resp, true);
                 this.success_fn(resp);
                 this._post_request_op(resp, true);
+                do_reload();
             },
             error: (resp) => {
                 this._pre_response_op(resp);

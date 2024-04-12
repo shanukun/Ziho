@@ -19,7 +19,8 @@
     </div>
     <script>
     document.getElementById("{{ id }}").addEventListener("hidden.bs.modal", () => {
-        location.reload();
+        if (may_reload())
+            location.reload();
     });
     </script>
 {%- endmacro %}
