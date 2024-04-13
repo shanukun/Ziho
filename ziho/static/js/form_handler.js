@@ -109,6 +109,7 @@ function get_cards(url, deck_id, deck_name) {
         null,
         false,
         false,
+        false,
     ).make_request();
 }
 

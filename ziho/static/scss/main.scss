@@ -143,6 +143,13 @@ main {
             transition: 0.3s;
         }
     }
+    #show-fb-card {
+        cursor: pointer;
+        #show-answer-text {
+            opacity: 0.1;
+            font-size: 64px;
+        }
+    }
 }
 
 #zoomed-image-modal {

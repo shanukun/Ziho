@@ -1,3 +1,4 @@
+{% from "_macros/modals.html" import modal_hide_reload %}
 <!-- Modal -->
 <div class="modal fade px-0"
      id="study-deck-overlay"
@@ -22,12 +23,25 @@
 <div id="zoomed-image-modal" class="modal">
     <img src="" id="zoomed-image" class="mx-auto my-auto pt-5" />
 </div>
+{{ modal_hide_reload("study-deck-overlay") }}
+{% macro rating_button(id, class_type, rating, text) %}
+    <button id="{{ id }}" class="btn btn-outline-{{ class_type }} fw-bold" data-rating="{{ rating }}">
+        {{ text }}
+    </button>
+{% endmacro %}
 <!-- template for the modal -->
 <template id="study-deck-template">
     <div class="d-flex rounded mx-2 mx-md-5 overflow-auto">
         <div id="show-fb-card" class="flex-fill">
             <div class="d-block">
-                <span id="show-f-text" class="fw-bold fs-2 overflow-y-auto text-break"></span>
+                <span id="show-f-text" class="fw-bold fs-1 overflow-y-auto text-break"></span>
+            </div>
+            <div class="d-block">
+                <div class="d-flex m-auto mt-2 flex-grow-1 justify-content-center">
+                    <span id="show-answer-text" class="fw-bold text-center">
+                        Show Answer
+                    </span>
+                </div>
             </div>
         </div>
         <div id="fb-card" class="d-flex flex-column w-100">
@@ -41,21 +55,11 @@
                 <img id="card-back-image" class="d-flex pb-4 mx-auto" src="" />
                 <span id="card-back" class="fs-4 text-break"></span>
             </div>
-            <div class="d-block p-0 pt-3">
-                <div id="record-resp-table" class="btn-group w-100 p-0 m-auto" role="group" aria-label="Action Group">
-                    <button id="again-card" class="btn btn-outline-danger bg-danger-subtle" data-rating="1">
-                        Again
-                    </button>
-                    <button id="hard-card" class="btn btn-outline-dark bg-dark-subtle" data-rating="2">
-                        Hard
-                    </button>
-                    <button id="good-card" class="btn btn-outline-primary bg-primary-subtle" data-rating="3">
-                        Good
-                    </button>
-                    <button id="easy-card" class="btn btn-outline-success bg-success-subtle" data-rating="4">
-                        Easy
-                    </button>
-                </div>
+            <div class="d-block p-0 pt-3 m-auto">
+                {{ rating_button('again-card', 'danger', '1', 'Again') }}
+                {{ rating_button('hard-card', 'warning', '2', 'Hard') }}
+                {{ rating_button('good-card', 'primary', '3', 'Good') }}
+                {{ rating_button('easy-card', 'success', '4', 'Easy') }}
             </div>
         </div>
     </div>

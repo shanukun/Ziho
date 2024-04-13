@@ -7,12 +7,14 @@ class AjaxRequest {
         form_id,
         show_toast = false,
         update_modal_form = false,
+        post_reload = true,
     ) {
         this.url = url;
         this.form_data = form_data;
         this.form_id = form_id;
         this.show_toast = show_toast;
         this.update_modal_form = update_modal_form;
+        this.post_reload = post_reload;
 
         this.success_fn = (resp) => {};
         if (success_fn != null) {
@@ -42,6 +44,7 @@ class AjaxRequest {
         }
 
         bind_listeners();
+        if (this.post_reload) do_reload();
     }
 
     make_request() {
@@ -56,7 +59,6 @@ class AjaxRequest {
                 this._pre_response_op(resp, true);
                 this.success_fn(resp);
                 this._post_request_op(resp, true);
-                do_reload();
             },
             error: (resp) => {
                 this._pre_response_op(resp);
