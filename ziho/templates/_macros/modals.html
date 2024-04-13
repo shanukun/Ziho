@@ -1,5 +1,13 @@
-{% macro render_create_form_modal(id, title, form_id, url) -%}
-    <div class="modal fade px-0" id="{{ id }}" tabindex="-1" aria-hidden="true">
+{% macro modal_hide_reload(id) %}
+    <script type="text/javascript">
+    document.getElementById("{{ id }}").addEventListener("hidden.bs.modal", () => {
+        if (may_reload())
+            location.reload();
+    });
+    </script>
+{% endmacro %}
+{% macro render_create_form_modal(modal_id, title, form_id, url) -%}
+    <div class="modal fade px-0" id="{{ modal_id }}" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-xl modal-fullscreen-sm-down">
             <div class="modal-content">
                 <div class="modal-header">
@@ -17,12 +25,7 @@
             </div>
         </div>
     </div>
-    <script>
-    document.getElementById("{{ id }}").addEventListener("hidden.bs.modal", () => {
-        if (may_reload())
-            location.reload();
-    });
-    </script>
+    {{ modal_hide_reload(modal_id) }}
 {%- endmacro %}
 {% macro render_delete_form_modal(id, title, default_msg) -%}
     <div class="modal" tabindex="-1" id="{{ id }}">
