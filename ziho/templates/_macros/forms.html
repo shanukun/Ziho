@@ -28,7 +28,7 @@
 {% macro render_submit_field(submit, value="") %}
     <div class="col-12 gx-1">
         <div class="row gx-1">
-            <div class="col-auto ms-auto">
+            <div class="col-auto {% if kwargs['align'] != 'left' %}ms-auto{% endif %}">
                 {% if value %}
                     {{ submit(class="btn btn-primary", value=value) }}
                 {% else %}
@@ -78,7 +78,11 @@
         {{ render_select_field(field, **kwargs) }}
     {% elif field.type == "SubmitField" %}
         {{ render_submit_field(field, **kwargs) }}
+    {% elif field.type == "StringField" %}
+        {{ render_input_field(field, **kwargs) }}
     {% elif field.type == "TextAreaField" %}
+        {{ render_input_field(field, **kwargs) }}
+    {% elif field.type == "PasswordField" %}
         {{ render_input_field(field, **kwargs) }}
     {% elif field.type == "ZihoTextAreaField" %}
         {{ render_input_field(field, **kwargs) }}

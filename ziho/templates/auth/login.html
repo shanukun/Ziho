@@ -1,36 +1,25 @@
 {% extends "base.html" %}
+{% set active_page = "Login" %}
+{% block header %}
+    Login
+{% endblock header %}
+{% from "_macros/forms.html" import render_form, render_field, field_errors, render_image_field_for_preview %}
 {% block content %}
-    <h1>
-        Sign In
-    </h1>
-    <form action="" method="post" novalidate>
-        {{ form.hidden_tag() }}
-        <p>
-            {{ form.username.label }}
-            <br>
-            {{ form.username(size=32) }}
-            <br>
-            {% for error in form.username.errors %}
-                <span style="color: red">[{{ error }}]</span>
-            {% endfor %}
-        </p>
-        <p>
-            {{ form.password.label }}
-            <br>
-            {{ form.password(size=32) }}
-            <br>
-            {% for error in form.password.errors %}
-                <span style="color: red">[{{ error }}]</span>
-            {% endfor %}
-        </p>
-        <p>
-            {{ form.remember_me() }} {{ form.remember_me.label }}
-        </p>
-        <p>
-            {{ form.submit() }}
-        </p>
-        <p>
-            New User? <a href="{{ url_for("auth.register") }}">Click to Register!</a>
-        </p>
-    </form>
+    <div class="row">
+        {% set div_class = "form-floating has-validation d-flex flex-column align-items-start gx-1" %}
+        <form action="" method="post">
+            {% call render_form(form) %}
+                {{ render_field(form.username, div_class=div_class) }}
+                {{ render_field(form.password, div_class=div_class) }}
+                <div class="form-check gx-1 ms-2">
+                    {{ form.remember_me(class="form-check-input", id="remember_me_check") }}
+                    {{ form.remember_me.label(class="form-check-label", for="remember_me_check") }}
+                </div>
+                {{ render_field(form.submit, align="left") }}
+                <p class="text-body-tertiary">
+                    New User? <a href="{{ url_for("auth.register") }}">Click to Register!</a>
+                </p>
+            {% endcall %}
+        </form>
+    </div>
 {% endblock content %}

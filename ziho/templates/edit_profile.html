@@ -1,30 +1,18 @@
 {% extends "base.html" %}
+{% set active_page = "Profile" %}
+{% block header %}
+    Edit Profile
+{% endblock header %}
+{% from "_macros/forms.html" import render_form, render_field, field_errors, render_image_field_for_preview %}
 {% block content %}
-    <h1>
-        Edit Profile
-    </h1>
-    <form action="" method="post">
-        {{ form.hidden_tag() }}
-        <p>
-            {{ form.username.label }}
-            <br />
-            {{ form.username(size=32) }}
-            <br />
-            {% for error in form.username.errors %}
-                <span style="color: red">[{{ error }}]</span>
-            {% endfor %}
-        </p>
-        <p>
-            {{ form.about_me.label }}
-            <br />
-            {{ form.about_me(cols=50, rows=4) }}
-            <br />
-            {% for error in form.about_me.errors %}
-                <span style="color: red">[{{ error }}]</span>
-            {% endfor %}
-        </p>
-        <p>
-            {{ form.submit() }}
-        </p>
-    </form>
+    {% set div_class = "form-floating has-validation d-flex flex-column align-items-start gx-1" %}
+    <div class="row edit-profile">
+        <form action="" method="post">
+            {% call render_form(form) %}
+                {{ render_field(form.username, div_class=div_class) }}
+                {{ render_field(form.about_me, div_class=div_class) }}
+                {{ render_field(form.submit, align="left") }}
+            {% endcall %}
+        </form>
+    </div>
 {% endblock content %}

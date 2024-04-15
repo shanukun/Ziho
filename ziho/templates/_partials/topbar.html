@@ -5,8 +5,7 @@
     </h3>
 </div>
 {% if current_user.is_anonymous %}
-    <div class="col-auto p-2">
-        <a href="{{ url_for("auth.login") }}" class="active">Login</a>
+    <div class="col-auto p-4">
     </div>
 {% else %}
     <div class="col-auto p-2 m-auto">
