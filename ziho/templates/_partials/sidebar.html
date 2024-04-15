@@ -32,7 +32,8 @@
             {% from "_macros/navigations.html" import is_active, navlink %}
             <ul class="nav flex-column">
                 {% if current_user.is_anonymous %}
-                    {{ navlink('auth.login', 'Login', 'bi-grid') }}
+                    {{ navlink('auth.login', 'Login', 'bi-person-circle') }}
+                    {{ navlink('auth.register', 'Register', 'bi-clipboard') }}
                 {% else %}
                     {{ navlink('home.home', 'Home', 'bi-grid') }}
                     {{ navlink('deckview.view_deck', 'View Deck', 'bi-layers') }}
