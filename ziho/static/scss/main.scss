@@ -17,6 +17,13 @@ main {
     fill: base.$success-400;
 }
 
+.profile-image {
+    border: 1px solid black;
+    border-radius: 100%;
+    max-height: 128px;
+    max-width: 128px;
+}
+
 .sidebar {
     z-index: 1;
     background: base.$white;
@@ -88,6 +95,17 @@ main {
                 background-color: base.$greys-400;
                 color: base.$greys-150;
             }
+        }
+
+.user-profile {
+    .btn-light {
+        font-weight: 500;
+        background-color: base.$greys-100;
+        color: base.$greys-600;
+
+        &:hover {
+            background-color: base.$greys-400;
+            color: base.$greys-150;
         }
     }
 }

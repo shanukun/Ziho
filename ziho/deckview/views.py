@@ -56,6 +56,7 @@ class ViewDeckBase(MethodView):
         return render_template(
             self.template,
             deck_id=deck_id,
+            current_deck=decks[deck_id],
             decks=decks,
             cards=cards,
             card_form=self.card_form,

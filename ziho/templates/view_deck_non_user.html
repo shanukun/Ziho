@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% set active_page = "Deck" %}
+{% block header %}
+    View Deck
+{% endblock header %}
+{% block content %}
+    <div class="col">
+        <div class="mt-2">
+            {% for card in cards %}
+                {% include "_partials/card_view.html" %}
+            {% endfor %}
+        </div>
+    </div>
+{% endblock content %}

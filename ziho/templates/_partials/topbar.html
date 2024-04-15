@@ -14,11 +14,9 @@
         </button>
     </div>
     <div class="col-auto p-2">
-        <!-- image -->
-        <!-- name -->
-        <!-- dropdown -->
         <div class="dropdown">
             <button class="btn btn-light dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <img class="profile-image" src="{{ current_user.avatar(16) }}" />
                 {{ current_user.username }}
             </button>
             <ul class="dropdown-menu">
