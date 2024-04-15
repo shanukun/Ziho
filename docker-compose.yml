@@ -1,0 +1,10 @@
+services:
+  app:
+    build: ./
+    environment: 
+      - FLASK_ENV=development
+      - FLASK_APP=ziho.py
+    ports: 
+      - "5000:5000"
+    volumes:
+      - ./ziho/ziho_uploads:/app/ziho/ziho_uploads

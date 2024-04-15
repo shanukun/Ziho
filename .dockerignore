@@ -1,0 +1,13 @@
+app.db
+*/__pycache__*
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.env
+*/*.log
+.git
+*/logs*
+logs/
+ziho/ziho_uploads/*
+migrations/*
