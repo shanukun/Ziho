@@ -4,36 +4,59 @@
     Profile
 {% endblock header %}
 {% block content %}
-    <table>
-        <tr valign="top">
-            <td>
-                <img src="{{ user.avatar(128) }}">
-            </td>
-            <td>
-                <h1>
-                    User: {{ user.username }}
-                </h1>
-                {% if user.about_me %}
-                    <p>
-                        {{ user.about_me }}
-                    </p>
-                {% endif %}
-                {% if user == current_user %}
-                    <p>
-                        <a href="{{ url_for("home.edit_profile") }}">Edit your profile</a>
-                    </p>
-                {% endif %}
-            </td>
-        </tr>
-    </table>
-    <hr />
-    <table>
-        {% for deck in decks %}
-            <tr>
-                <td>
-                    {{ deck.name }}
-                </td>
-            </tr>
-        {% endfor %}
-    </table>
+    {% set view_deck_url = "deckview.view_choosen_deck" %}
+    {% if current_user.id != user.id %}
+        {% set view_deck_url = "explore.view_deck" %}
+    {% endif %}
+    <div class="row ms-2 user-profile">
+        <div class="row">
+            <div class="card border-0">
+                <div class="card-body">
+                    <div class="row ps-3">
+                        <div class="row">
+                            <div class="col-auto">
+                                <img class="profile-image" src="{{ user.avatar(128) }}" />
+                            </div>
+                            <div class="col">
+                                <div class="row">
+                                    <p class="fw-bold fs-3" style="margin-bottom: 0">
+                                        {{ user.username }}
+                                    </p>
+                                    <span class="text-body-tertiary">{{ user.email }}</span>
+                                </div>
+                                {% if user.about_me %}
+                                    <div class="row">
+                                        <p>
+                                            {{ user.about_me }}
+                                        </p>
+                                    </div>
+                                {% endif %}
+                                {% if user == current_user %}
+                                    <div class="row">
+                                        <p>
+                                            <a href="{{ url_for("home.edit_profile") }}">Edit profile</a>
+                                        </p>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-3">
+            {% for deck in decks %}
+                <div class="col-auto mb-2">
+                    <div class="card border-0">
+                        <div class="card-body">
+                            {{ deck.name | truncate(30, True) }}
+                            <a type="button"
+                               class="btn btn-light btn-sm m-0 ms-2 border-1"
+                               href="{{ url_for(view_deck_url, deck_id=deck.id) }}">View</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
 {% endblock content %}
