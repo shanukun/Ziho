@@ -28,6 +28,7 @@ from ziho.home.handlers import (
     delete_deck_handler,
     get_cards_for_study,
     get_decks_by_user,
+    get_decks_by_user_with_stats,
     update_card_info_handler,
     update_profile,
 )
@@ -38,7 +39,7 @@ class Home(MethodView):
     decorators = [login_required]
 
     def get(self):
-        decks = get_decks_by_user(current_user.id)
+        decks = get_decks_by_user_with_stats(current_user.id)
 
         deck_form, card_form = DeckForm(), CardForm()
         card_form.add_choices(decks)
