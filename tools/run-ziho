@@ -1,4 +1,8 @@
-#!/bin/sh
+#!/bin/bash
 
 export FLASK_APP=ziho.py
-flask run
+if [[ -z "$DOCKER_ENV" ]]; then
+    flask run
+else
+    flask run --host=0.0.0.0
+fi

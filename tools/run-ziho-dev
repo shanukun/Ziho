@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 sass --watch ziho/static/scss/main.scss ziho/static/css/main.css &
 export FLASK_ENV=development
