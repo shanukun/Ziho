@@ -29,6 +29,7 @@ from ziho.home.handlers import (
     get_cards_for_study,
     get_decks_by_user,
     update_card_info_handler,
+    update_profile,
 )
 from ziho.utils.helper import get_handler_caller, get_response
 
@@ -169,11 +170,14 @@ class EditProfile(MethodView):
     def post(self):
         form = self.form()
         if form.validate_on_submit():
-            current_user.username = form.username.data
-            current_user.about_me = form.about_me.data
-            db.session.commit()
-            flash("Your changes have been saved.")
+            try:
+                update_profile(current_user, form.get_data())
+                flash("Your changes have been saved.", "success")
+            except PersistenceError as e:
+                flash(e.message, "danger")
             return redirect(url_for("home.edit_profile"))
+        else:
+            return render_template("edit_profile.html", title="Edit Profile", form=form)
 
     def form(self):
         return EditProfileForm(current_user.username)
