@@ -99,6 +99,16 @@ def get_cards_for_study(form_data, user_id: int):
 
 
 def get_decks_by_user(user_id: int, type: str | None = None):
+    decks = db.session.execute(
+        db.select(Deck).where(Deck.creator_id == user_id)
+    ).scalars()
+    if type == "dict":
+        return {deck.id: deck for deck in decks}
+    return [deck for deck in decks]
+
+
+# TODO use different function for deck id and name
+def get_decks_by_user_with_stats(user_id: int):
     base_subq = db.select(Card.deck_id, func.count().label("count")).join(
         CardInfo, CardInfo.card_id == Card.id
     )
@@ -134,8 +144,6 @@ def get_decks_by_user(user_id: int, type: str | None = None):
 
     deck_rows = db.session.execute(stmt).all()
 
-    if type == "dict":
-        return {deck.id: deck for deck in deck_rows}
     return [deck for deck in deck_rows]
 
 
