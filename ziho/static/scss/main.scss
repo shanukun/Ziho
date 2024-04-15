@@ -86,7 +86,7 @@ main {
         white-space: nowrap;
     }
     .btn-group {
-        .btn {
+        .btn-light {
             font-weight: 500;
             background-color: base.$greys-100;
             color: base.$greys-600;
@@ -96,6 +96,19 @@ main {
                 color: base.$greys-150;
             }
         }
+        .btn-primary {
+            border: none;
+            font-weight: 500;
+            background-color: base.$primary-100;
+            color: base.$primary-500;
+
+            &:hover {
+                background-color: base.$primary-500;
+                color: base.$white;
+            }
+        }
+    }
+}
 
 .user-profile {
     .btn-light {

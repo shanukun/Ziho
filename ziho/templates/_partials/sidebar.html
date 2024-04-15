@@ -37,9 +37,7 @@
                 {% else %}
                     {{ navlink('home.home', 'Home', 'bi-grid') }}
                     {{ navlink('deckview.view_deck', 'View Deck', 'bi-layers') }}
-                    <li class="nav-item">
-                        <a href="#" class="nav-link"><i class="bi bi-compass"></i> Explore</a>
-                    </li>
+                    {{ navlink('explore.explore', 'Explore', 'bi-compass') }}
                     <li class="nav-item">
                         <a href="{{ url_for('home.user', username=current_user.username) }}"
                            class="nav-link d-flex align-items-center gap-2 {% if active_page == 'Profile' %} active{% endif %}"><i class="bi bi-person"></i> Profile</a>

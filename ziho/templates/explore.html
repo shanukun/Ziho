@@ -1,0 +1,68 @@
+{% from "_macros/navigations.html" import render_pagination %}
+{% extends "base.html" %}
+{% block header %}
+    Explore
+{% endblock header %}
+{% block content %}
+    <div class="row">
+        {% if decks.total > 0 %}
+            <div class="row mt-3 row-cols-md-2 row-cols-lg-3 row-cols-xl-4">
+                {% for deck in decks %}
+                    <div class="col-md deck-item mb-2 border-0">
+                        <div class="card overflow-hidden position-relative">
+                            <div class="card-body px-3">
+                                <h4 class="card-title pb-3">
+                                    {{ deck.name|truncate(30, True) }}
+                                </h4>
+                                <p>
+                                    ~
+                                    <a class="link-underline link-underline-opacity-0"
+                                       href="{{ url_for("home.user", username=deck.username) }}">
+                                        {{ deck.username }}
+                                    </a>
+                                </p>
+                            </div>
+                            <div class="btn-group w-100 px-3 pb-3 m-auto" role="group">
+                                <a type="button" class="btn btn-light" href="{{ url_for("explore.view_deck", deck_id=deck.id) }}">
+                                    View
+                                </a>
+                                {% if current_user.id != deck.creator_id %}
+                                    <button type="button"
+                                            class="btn btn-primary border-0"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#clone-deck-modal"
+                                            data-deck_id="{{ deck.id }}"
+                                            data-deck_name="{{ deck.name }}">
+                                        Clone
+                                    </button>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+                <div class="row mt-3 ms-2">
+                    {{ render_pagination(decks, "explore.explore") }}
+                </div>
+            </div>
+        {% else %}
+            <p>
+                Empty
+            </p>
+        {% endif %}
+        {% include "_partials/clone_deck_modal.html" %}
+    </div>
+{% endblock content %}
+{% block script %}
+    <script>
+        getEl("#clone-deck-modal").addEventListener("show.bs.modal", (e) => {
+            let ds = e.relatedTarget.dataset;
+
+            let deck_id = ds.deck_id;
+            let deck_name = ds.deck_name;
+
+            getEl("#clone-deck-modal .modal-body h4").innerHTML = deck_name;
+            getEl("#clone-deck-modal .modal-footer #deck_id").value =  deck_id;
+
+        });
+    </script>
+{% endblock script %}

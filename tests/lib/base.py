@@ -95,6 +95,13 @@ class ZihoTest:
         deck |= {"id": deck_id}
         return deck
 
+    def get_posted_decks(self, app, count=5):
+        decks = []
+        for _ in range(count):
+            decks.append(self.get_posted_deck(app))
+
+        return decks
+
     def get_card(self, id, image=False, valid_ext=True):
         card_image = None
         image_file = TEST_IMAGE

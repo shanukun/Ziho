@@ -65,9 +65,13 @@ class DeckForm(ZihoForm):
             return field.strip()
 
 
-class DeckDeleteForm(ZihoForm):
+class DeckIdForm(ZihoForm):
     deck_id = IntegerField("deck_id", validators=[DataRequired()])
-    submit = SubmitField("Delete")
+    submit = SubmitField("Confirm")
+
+
+class DeckDeleteForm(DeckIdForm):
+    pass
 
 
 DATETIME_FORMAT = "%Y-%m-%dT%H:%M:%S.%f%z"

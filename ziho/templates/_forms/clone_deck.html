@@ -1,0 +1,5 @@
+<form id="clone-deck-form" action="{{ url_for("explore.clone_deck") }}" method="post">
+    {{ did_form.hidden_tag() }}
+    {{ did_form.deck_id(type="hidden") }}
+    {{ did_form.submit(class="btn btn-success") }}
+</form>

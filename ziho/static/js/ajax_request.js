@@ -70,3 +70,7 @@ class AjaxRequest {
         });
     }
 }
+
+const clone_deck = (deck_id) => {
+    console.log(deck_id);
+};

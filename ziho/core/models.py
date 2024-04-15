@@ -53,7 +53,7 @@ class Deck(db.Model):
         DateTime, index=True, default=datetime.utcnow
     )
     name: Mapped[str] = mapped_column(
-        String(MAX_SIZE_DECK_NAME), unique=True, nullable=False, index=True
+        String(MAX_SIZE_DECK_NAME), nullable=False, index=True
     )
 
     creator_id: Mapped[int] = mapped_column(ForeignKey("user.id", ondelete="CASCADE"))

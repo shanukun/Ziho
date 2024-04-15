@@ -58,6 +58,10 @@ def create_app(config_class=Config):
 
     app.register_blueprint(deckview_bp)
 
+    from ziho.explore import bp as explore_bp
+
+    app.register_blueprint(explore_bp)
+
     if not app.debug and not app.testing:
         if not os.path.exists("logs"):
             os.mkdir("logs")
