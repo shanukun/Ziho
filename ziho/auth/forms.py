@@ -8,7 +8,7 @@ from ziho.auth.handlers import get_user_by_email, get_user_by_username
 class LoginForm(FlaskForm):
     username = StringField("Username", validators=[DataRequired()])
     password = PasswordField("Password", validators=[DataRequired()])
-    remember_me = BooleanField("Remeber Me")
+    remember_me = BooleanField("Remember Me")
     submit = SubmitField("Sign in")
 
 

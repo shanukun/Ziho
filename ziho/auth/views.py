@@ -41,5 +41,5 @@ def register():
         create_user(form.username.data, form.email.data, form.password.data)
         flash("Congratulations, you are now a registered user!", "success")
         return redirect(url_for("auth.login"))
-    flash(form.errors)
-    return render_template("auth/register.html", title="Register", form=form)
+    else:
+        return render_template("auth/register.html", title="Register", form=form)

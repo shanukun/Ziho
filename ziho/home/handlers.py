@@ -4,9 +4,21 @@ from sqlalchemy import func
 from sqlalchemy.orm import Bundle
 
 from ziho import db
-from ziho.core.models import Card, CardInfo, Deck
+from ziho.core.models import Card, CardInfo, Deck, User
 from ziho.utils.db import try_commit
 from ziho.utils.image import get_image_path
+
+
+def update_profile(user, form_data):
+    stmt = (
+        db.update(User)
+        .where(User.id == user.id)
+        .values(username=form_data["username"], about_me=form_data["about_me"])
+    )
+
+    db.session.execute(stmt)
+
+    try_commit(db.session, "Could not update profile.")
 
 
 def create_deck_handler(user, form_data):
