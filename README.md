@@ -12,8 +12,20 @@ Ziho is an online programme for flashcards. It helps the user memorise informati
 - [SQLite](https://sqlite.org/)
 - [Docker](https://www.docker.com/)
 
-## Getting Started 
+## Screenshots
 
+<p float="left">
+<img src="./screenshots/home.png" width="400">
+<img src="./screenshots/create-deck.png" width="400">
+<img src="./screenshots/view-deck.png" width="400">
+<img src="./screenshots/study.png" width="400">
+<img src="./screenshots/updatecard.png" width="400">
+<img src="./screenshots/profile.png" width="400">
+<img src="./screenshots/explore.png" width="400">
+</p>
+
+
+## Getting Started 
 
 ### Install & Run
 
