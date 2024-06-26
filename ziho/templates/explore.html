@@ -3,6 +3,8 @@
 {% block header %}
     Explore
 {% endblock header %}
+{% from "_macros/misc.html" import show_empty, show_tags %}
+{% from "_macros/forms.html" import render_field %}
 {% block content %}
     <div class="row">
         {% if decks.total > 0 %}
@@ -11,28 +13,37 @@
                     <div class="col-md deck-item mb-2 border-0">
                         <div class="card overflow-hidden position-relative">
                             <div class="card-body px-3">
-                                <h4 class="card-title pb-3">
-                                    {{ deck.name|truncate(30, True) }}
+                                <h4 class="card-title">
+                                    {{ deck.Deck.name|truncate(30, True) }}
                                 </h4>
-                                <p>
-                                    ~
-                                    <a class="link-underline link-underline-opacity-0"
-                                       href="{{ url_for("home.user", username=deck.username) }}">
-                                        {{ deck.username }}
+                                <div class="row pb-2">
+                                    <div class="col">
+                                        {{ show_tags(deck.Deck.tags) }}
+                                    </div>
+                                </div>
+                                <p class="mb-1">
+                                    <img class="profile-image my-auto" src="{{ deck.User.avatar(16) }}" />
+                                    <a class="link-underline link-underline-opacity-0 my-auto"
+                                       href="{{ url_for("profile.user", username=deck.User.username) }}">
+                                        {{ deck.User.username }}
                                     </a>
                                 </p>
                             </div>
                             <div class="btn-group w-100 px-3 pb-3 m-auto" role="group">
-                                <a type="button" class="btn btn-light" href="{{ url_for("explore.view_deck", deck_id=deck.id) }}">
+                                {% set view_deck_url = url_for("deckview.view_choosen_deck", deck_id=deck.Deck.id) %}
+                                {% if current_user.id != deck.Deck.creator_id %}
+                                    {% set view_deck_url = url_for("explore.view_deck", deck_id=deck.Deck.id) %}
+                                {% endif %}
+                                <a type="button" class="btn btn-light" href="{{ view_deck_url }}">
                                     View
                                 </a>
-                                {% if current_user.id != deck.creator_id %}
+                                {% if current_user.id != deck.Deck.creator_id %}
                                     <button type="button"
                                             class="btn btn-primary border-0"
                                             data-bs-toggle="modal"
                                             data-bs-target="#clone-deck-modal"
-                                            data-deck_id="{{ deck.id }}"
-                                            data-deck_name="{{ deck.name }}">
+                                            data-deck_id="{{ deck.Deck.id }}"
+                                            data-deck_name="{{ deck.Deck.name }}">
                                         Clone
                                     </button>
                                 {% endif %}
@@ -40,9 +51,9 @@
                         </div>
                     </div>
                 {% endfor %}
-                <div class="row mt-3 ms-2">
-                    {{ render_pagination(decks, "explore.explore") }}
-                </div>
+            </div>
+            <div class="row mt-3">
+                {{ render_pagination(decks, "explore.explore") }}
             </div>
         {% else %}
             <p>

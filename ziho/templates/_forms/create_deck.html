@@ -1,5 +1,7 @@
 {% from "_macros/forms.html" import render_form, render_field %}
 {% call render_form(deck_form) %}
     {{ render_field(deck_form.deck_name, maxlength=64, required=True) }}
+    {{ render_field(deck_form.tags) }}
+    <span class="text-body-tertiary mt-1 fs-6">(use comma for separating tags)</span>
     {{ render_field(deck_form.submit) }}
 {% endcall %}

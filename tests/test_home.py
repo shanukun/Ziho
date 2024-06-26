@@ -45,15 +45,24 @@ class TestHome(ZihoTest):
         deck = self.get_deck()
 
         resp = client.post("/create-deck", data=deck)
-
         assert resp.status_code == 302
 
-        auth.login(szeth)
-        resp = client.post("/create-deck", data=deck, follow_redirects=True)
+        with client:
 
-        assert resp.status_code == 200
-        assert "message" in resp.json
-        assert "New deck created" in resp.json["message"]
+            auth.login(szeth)
+            resp = client.post("/create-deck", data=deck, follow_redirects=True)
+
+            assert resp.status_code == 200
+            assert "message" in resp.json
+            assert "New deck created" in resp.json["message"]
+
+            with app.app_context():
+                user_deck = get_decks_by_user(current_user.id)
+                assert deck["deck_name"] == user_deck[0].name
+
+                user_deck_tags = [tag.name for tag in user_deck[0].tags]
+
+                assert set(deck["tag_list"]) == set(user_deck_tags)
 
     def test_add_card(self, client, app, auth):
         moash = self.example_user(app, "szeth")

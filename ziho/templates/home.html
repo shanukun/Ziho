@@ -1,19 +1,9 @@
 {% extends "base.html" %}
 {% set active_page = "Home" %}
-<!-- macro for card progress count badges -->
-{% macro card_progress_badge(title='New', value='-', type='primary', size=20) -%}
-    <div class="col-auto me-2 mt-md-1 text-{{ type }}-emphasis bg-{{ type }}-subtle rounded-1 px-3 py-1">
-        <p class="mb-0">
-            {{ value }}
-        </p>
-        <p class="mb-0 fw-bold" style="font-size: 12px">
-            {{ title }}
-        </p>
-    </div>
-{%- endmacro %}
 {% block header %}
     Home
 {% endblock header %}
+{% from "_macros/misc.html" import show_tags, card_progress_badge %}
 {% block content %}
     <div class="col">
         <div class="row">
@@ -38,15 +28,15 @@
                     <div class="card overflow-hidden position-relative">
                         <button type="button"
                                 class="btn btn-light position-absolute top-0 end-0 mt-2 me-2 delete-deck"
-                                data-deck_id="{{ deck.id }}"
-                                data-deck_name="{{ deck.name }}"
+                                data-deck_id="{{ deck.Deck.id }}"
+                                data-deck_name="{{ deck.Deck.name }}"
                                 data-bs-toggle="modal"
                                 data-bs-target="#delete-deck-modal">
                             <i class="bi bi-trash"></i>
                         </button>
                         <div class="card-body px-3">
                             <h5 class="card-title pb-2">
-                                {{ deck.name|truncate(30, True) }}
+                                {{ deck.Deck.name|truncate(30, True) }}
                             </h5>
                             <div class="row m-auto">
                                 {{ card_progress_badge(title="New", value=deck.new, type="info") }}
@@ -58,19 +48,19 @@
                         <div class="btn-group w-100 px-3 pb-3 m-auto" role="group">
                             <a type="button"
                                class="btn btn-light"
-                               href="{{ url_for("deckview.view_choosen_deck", deck_id=deck.id) }}">
+                               href="{{ url_for("deckview.view_choosen_deck", deck_id=deck.Deck.id) }}">
                                 View
                             </a>
                             <button type="button"
                                     class="btn btn-light"
-                                    data-deck_id="{{ deck.id }}"
+                                    data-deck_id="{{ deck.Deck.id }}"
                                     data-bs-toggle="modal"
                                     data-bs-target="#add-card-overlay">
                                 Add Card
                             </button>
                             <button type="button"
                                     class="btn btn-light"
-                                    onclick="get_cards('{{ url_for("home.get_cards") }}', {{ deck.id }}, '{{ deck.name }}')"
+                                    onclick="get_cards('{{ url_for("home.get_cards") }}', {{ deck.Deck.id }}, '{{ deck.Deck.name }}')"
                                     data-bs-toggle="modal"
                                     data-bs-target="#study-deck-overlay">
                                 Study

@@ -1,5 +1,9 @@
 from ziho import db
-from ziho.core.models import Card, CardInfo, Deck
+from ziho.core.models import Card, CardInfo, Deck, Tag
+
+
+def get_tags():
+    return db.session.execute(db.select(Tag)).scalars()
 
 
 def get_deck_by_id(deck_id: int):

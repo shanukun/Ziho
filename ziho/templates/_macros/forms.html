@@ -25,10 +25,11 @@
         {{ field.label.text }}
     </label>
 {% endmacro %}
-{% macro render_submit_field(submit, value="") %}
-    <div class="col-12 gx-1">
+{% macro render_submit_field(submit, value="",div_class='col-12 gx-1') %}
+    {% set div_class = kwargs["div_class"] if kwargs["div_class"] else div_class %}
+    <div class="{{ div_class }}">
         <div class="row gx-1">
-            <div class="col-auto {% if kwargs['align'] != 'left' %}ms-auto{% endif %}">
+            <div class="col-auto d-flex align-items-stretch d-flex align-items-stretch {% if kwargs['align'] != 'left' %}ms-auto{% endif %}">
                 {% if value %}
                     {{ submit(class="btn btn-primary", value=value) }}
                 {% else %}
@@ -85,6 +86,8 @@
     {% elif field.type == "PasswordField" %}
         {{ render_input_field(field, **kwargs) }}
     {% elif field.type == "ZihoTextAreaField" %}
+        {{ render_input_field(field, **kwargs) }}
+    {% elif field.type == "BetterTagListField" %}
         {{ render_input_field(field, **kwargs) }}
     {% endif %}
 {%- endmacro -%}

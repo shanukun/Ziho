@@ -4,7 +4,7 @@ from sqlalchemy import func
 from sqlalchemy.orm import Bundle
 
 from ziho import db
-from ziho.core.models import Card, CardInfo, Deck, User
+from ziho.core.models import Card, CardInfo, Deck, Tag
 from ziho.utils.db import try_commit
 from ziho.utils.image import get_image_path
 
@@ -19,10 +19,15 @@ def update_profile(user, form_data):
     db.session.execute(stmt)
 
     try_commit(db.session, "Could not update profile.")
+def _associate_tags(deck, tags):
+    for tag_name in tags:
+        tag = Tag.do_create_tag(tag_name)
+        tag.decks.append(deck)
 
 
 def create_deck_handler(user, form_data):
     deck = Deck(name=form_data["deck_name"], creator_id=user.id)
+    _associate_tags(deck, form_data["tags"] if "tags" in form_data else [])
     db.session.add(deck)
     try_commit(db.session, f'Could not create deck {form_data["deck_name"]}')
     return deck.id
@@ -107,7 +112,6 @@ def get_decks_by_user(user_id: int, type: str | None = None):
     return [deck for deck in decks]
 
 
-# TODO use different function for deck id and name
 def get_decks_by_user_with_stats(user_id: int):
     base_subq = db.select(Card.deck_id, func.count().label("count")).join(
         CardInfo, CardInfo.card_id == Card.id
@@ -128,8 +132,7 @@ def get_decks_by_user_with_stats(user_id: int):
 
     stmt = (
         db.select(
-            Deck.id,
-            Deck.name,
+            Deck,
             db.case((new_subq.c.count == None, 0), else_=new_subq.c.count).label("new"),
             db.case(
                 (learning_subq.c.count == None, 0), else_=learning_subq.c.count

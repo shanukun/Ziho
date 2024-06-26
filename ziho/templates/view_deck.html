@@ -3,6 +3,7 @@
 {% block header %}
     View Deck
 {% endblock header %}
+{% from "_macros/misc.html" import show_empty, show_tags %}
 {% block content %}
     {% if deck_id %}
         <input type="hidden" id="view-deck-url" data-url="{{ url_for("deckview.view_deck") }}" />
@@ -14,6 +15,11 @@
                     </option>
                 {% endfor %}
             </select>
+            <div class="row pt-2">
+                <div class="col">
+                    {{ show_tags(decks[deck_id].tags) }}
+                </div>
+            </div>
             <div class="mt-2">
                 {% if cards %}
                     {% for card in cards %}

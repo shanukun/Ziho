@@ -1,7 +1,6 @@
 from urllib.parse import urlparse
 
 from flask_login import current_user
-from flask_migrate import current
 
 from tests.lib.base import ZihoTest
 from ziho.home.handlers import get_decks_by_user
@@ -36,7 +35,6 @@ class TestExploreView(ZihoTest):
             assert resp.status_code == 200
 
             html = resp.get_data(as_text=True)
-            print(html)
             assert 'action="/clone-deck"' in html
 
             for deck in decks:

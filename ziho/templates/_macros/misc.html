@@ -1,0 +1,25 @@
+<!-- macro for card progress count badges -->
+{% macro card_progress_badge(title='New', value='-', type='primary', size=20) -%}
+    <div class="col-auto me-2 mt-md-1 text-{{ type }}-emphasis bg-{{ type }}-subtle rounded-1 px-3 py-1">
+        <p class="mb-0">
+            {{ value }}
+        </p>
+        <p class="mb-0 fw-bold" style="font-size: 12px">
+            {{ title }}
+        </p>
+    </div>
+{%- endmacro %}
+{% macro show_empty(string) %}
+    <div class="d-block">
+        <div class="d-flex m-auto mt-2 flex-grow-1 justify-content-center">
+            <span id="empty-page-text" class="fw-bold text-center">
+                {{ string }}
+            </span>
+        </div>
+    </div>
+{% endmacro %}
+{% macro show_tags(tags) %}
+    {% for tag in tags %}
+        <span class="badge">{{ tag.name }}</span>
+    {% endfor %}
+{% endmacro %}

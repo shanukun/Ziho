@@ -7,57 +7,21 @@ from wtforms import (
     FloatField,
     IntegerField,
     SelectField,
-    StringField,
     SubmitField,
     TextAreaField,
 )
 from wtforms.validators import DataRequired, InputRequired, Length, ValidationError
 
-from ziho.auth.handlers import get_user_by_username
 from ziho.core.handler import get_card_info_by_id, get_deck_by_id
 from ziho.core.models import MAX_SIZE_BACK, MAX_SIZE_DECK_NAME, MAX_SIZE_FRONT
-
-
-class ZihoForm(FlaskForm):
-    def __init__(self, **kwargs):
-        super(ZihoForm, self).__init__(**kwargs)
-        self.text_fields = []
-
-    def get_data(self, **kwargs):
-        data = self.data
-        data.pop("csrf_token", None)
-        data.pop("submit", None)
-        if kwargs:
-            data.update(kwargs)
-        return data
-
-    def _clear_text_field(self):
-        for tfields in self.text_fields:
-            tfields.data = ""
-
-    def validate(self, extra_validators=None):
-        is_valid = super().validate(extra_validators)
-        if is_valid:
-            self._clear_text_field()
-        return is_valid
-
-
-class ZihoTextAreaField(TextAreaField):
-    """
-    Custom TextAreaField to clear field after successful validation.
-    """
-
-    def __init__(self, label=None, validators=None, **kwargs):
-        super(ZihoTextAreaField, self).__init__(label, validators, **kwargs)
-
-    def post_validate(self, form, validation_stopped):
-        form.text_fields.append(self)
+from ziho.utils.forms import BetterTagListField, ZihoForm, ZihoTextAreaField
 
 
 class DeckForm(ZihoForm):
     deck_name = ZihoTextAreaField(
         "Deck Name", validators=[DataRequired(), Length(min=1, max=MAX_SIZE_DECK_NAME)]
     )
+    tags = BetterTagListField("Tags")
     submit = SubmitField("Create")
 
     def filter_deck_name(self, field):
@@ -142,7 +106,14 @@ class CardForm(ZihoForm):
         self.deck_id.data = value
 
     def add_choices(self, decks):
-        self.deck_id.choices = [(deck.id, deck.name) for deck in decks]
+        self.deck_id.choices = [
+            (
+                (deck.Deck.id, deck.Deck.name)
+                if hasattr(deck, "Deck")
+                else (deck.id, deck.name)
+            )
+            for deck in decks
+        ]
 
 
 class CardUpdateForm(CardForm):

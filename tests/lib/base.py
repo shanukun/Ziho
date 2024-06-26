@@ -32,6 +32,8 @@ def generate_string(min, max):
 
 
 class ZihoTest:
+    tags = ["abc", "xyz"]
+    tags_str = ",".join(tags)
     password = "secret@123"
     example_user_map = dict(
         kaladin="kaladin@ziho.com",
@@ -86,19 +88,30 @@ class ZihoTest:
     def get_deck(self):
         return {
             "deck_name": generate_string(5, 30),
+            "tags": self.tags_str,
+            "tag_list": self.tags,
         }
 
     @push_app_context
     def get_posted_deck(self, app):
         deck = self.get_deck()
-        deck_id = create_deck_handler(current_user, {"deck_name": deck["deck_name"]})
+
+        deck["tags"] = deck["tag_list"]
+        del deck["tag_list"]
+
+        deck_id = create_deck_handler(current_user, deck)
         deck |= {"id": deck_id}
         return deck
 
-    def get_posted_decks(self, app, count=5):
+    @push_app_context
+    def get_posted_decks(self, app, count=2):
         decks = []
         for _ in range(count):
-            decks.append(self.get_posted_deck(app))
+            deck = self.get_posted_deck(app)
+            create_card_handler(
+                app, current_user, self.get_card(deck["id"], False, True)
+            )
+            decks.append(deck)
 
         return decks
 
