@@ -19,7 +19,7 @@ class TestDeckView(ZihoTest):
         assert resp.status_code == 200
 
         html = resp.get_data(as_text=True)
-        assert "Empty" in html
+        assert "No decks to show." in html
 
     def test_deckview_invalid_deck(self, client, app, auth):
         shallan = self.example_user(app, "shallan")

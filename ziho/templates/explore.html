@@ -56,9 +56,7 @@
                 {{ render_pagination(decks, "explore.explore") }}
             </div>
         {% else %}
-            <p>
-                Empty
-            </p>
+            {{ show_empty("No decks to show.") }}
         {% endif %}
         {% include "_partials/clone_deck_modal.html" %}
     </div>

@@ -36,6 +36,17 @@ function add_remove_html_class(elem, to_be_added, to_be_removed) {
     elem.classList.add(to_be_added);
 }
 
+const NO_MORE_CARD = `
+    <div class="d-block">
+        <div class="d-flex m-auto mt-2 flex-grow-1 justify-content-center">
+            <span id="empty-page-text" class="fw-bold text-center">
+                No more cards to show.
+            </span>
+        </div>
+    </div>
+
+`;
+
 class Displayer {
     constructor(deck_name) {
         this.cards = new CardQueue();
@@ -109,7 +120,7 @@ class Displayer {
             this.currentCard = card;
             this._fill_template();
         } else {
-            getEl("#study-deck-modal-content").innerHTML = "<p>Empty</p>";
+            getEl("#study-deck-modal-content").innerHTML = NO_MORE_CARD;
         }
         return;
     }

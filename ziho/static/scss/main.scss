@@ -9,6 +9,11 @@ main {
     background-color: base.$primary-600;
 }
 
+#empty-page-text {
+    color: base.$primary-400;
+    font-size: 32px;
+}
+
 .rect-danger {
     fill: base.$danger-400;
 }

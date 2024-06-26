@@ -43,7 +43,11 @@
                                 {{ card_progress_badge(title="Learn", value=deck.learning, type="danger") }}
                                 {{ card_progress_badge(title="Due", value=deck.due, type="success") }}
                             </div>
-                            <!-- TODO 1 row for tags -->
+                            <div class="row pt-2">
+                                <div class="col">
+                                    {{ show_tags(deck.Deck.tags) }}
+                                </div>
+                            </div>
                         </div>
                         <div class="btn-group w-100 px-3 pb-3 m-auto" role="group">
                             <a type="button"

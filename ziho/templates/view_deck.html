@@ -26,19 +26,14 @@
                         {% include "_partials/card_view.html" %}
                     {% endfor %}
                 {% else %}
-                    <!-- TODO make ui for the image consistent with website -->
-                    <p>
-                        Empty
-                    </p>
+                    {{ show_empty("No cards to show.") }}
                 {% endif %}
             </div>
         </div>
         {% include "_partials/update_card_modal.html" %}
         {% include "_partials/delete_card_modal.html" %}
     {% else %}
-        <p>
-            Empty
-        </p>
+        {{ show_empty("No decks to show.") }}
     {% endif %}
 {% endblock content %}
 {% block script %}
