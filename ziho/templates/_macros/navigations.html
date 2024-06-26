@@ -14,23 +14,19 @@
 {% macro render_pagination(pagination, endpoint) %}
     <nav>
         <ul class="pagination pagination-sm">
+            {% set disabled = true %}
+            {% set href = "#" %}
             {% if pagination.has_prev %}
-                <li class="page-item">
-                    <a class="page-link" href="{{ url_for(endpoint, page=pagination.prev_num) }}" aria-label="Previous">
-                        <span aria-hidden="true">
-                            <i class="bi bi-chevron-double-left"></i>
-                        </span>
-                    </a>
-                </li>
-            {% else %}
-                <li class="page-item disabled">
-                    <a class="page-link" href="#" aria-label="Previous">
-                        <span aria-hidden="true">
-                            <i class="bi bi-chevron-double-left"></i>
-                        </span>
-                    </a>
-                </li>
+                {% set disabled = false %}
+                {% set href = url_for(endpoint, page=pagination.prev_num) %}
             {% endif %}
+            <li class="page-item {% if disabled %}disabled{% endif %}">
+                <a class="page-link my-auto" href="{{ href }}" aria-label="Previous">
+                    <span aria-hidden="true">
+                        prev
+                    </span>
+                </a>
+            </li>
             {% for page in pagination.iter_pages() %}
                 {% if page %}
                     {% if page != pagination.page %}
@@ -48,23 +44,19 @@
                     </li>
                 {% endif %}
             {% endfor %}
+            {% set disabled = true %}
+            {% set href = "#" %}
             {% if pagination.has_next %}
-                <li class="page-item">
-                    <a class="page-link" href="{{ url_for(endpoint, page=pagination.next_num) }}" aria-label="Previous">
-                        <span aria-hidden="true">
-                            <i class="bi bi-chevron-double-right"></i>
-                        </span>
-                    </a>
-                </li>
-            {% else %}
-                <li class="page-item disabled">
-                    <a class="page-link" href="#" aria-label="Previous">
-                        <span aria-hidden="true">
-                            <i class="bi bi-chevron-double-right"></i>
-                        </span>
-                    </a>
-                </li>
+                {% set disabled = false %}
+                {% set href = url_for(endpoint, page=pagination.next_num) %}
             {% endif %}
+            <li class="page-item {% if disabled %}disabled{% endif %}">
+                <a class="page-link my-auto" href="{{ href }}" aria-label="Next">
+                    <span aria-hidden="true">
+                        next
+                    </span>
+                </a>
+            </li>
         </ul>
     </nav>
 {% endmacro %}
