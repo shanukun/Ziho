@@ -8,6 +8,15 @@
 {% block content %}
     <div class="row">
         {% if decks.total > 0 %}
+            <!-- search form -->
+            <form action="{{ url_for("explore.explore") }}" method="get">
+                {% set div_class = "form-floating has-validation col gx-1" %}
+                <div class="row mx-2">
+                    {{ render_field(search_form.search_query, div_class=div_class) }}
+                    {{ render_field(search_form.tag, div_class="form-floating col-auto gx-1") }}
+                    {{ render_field(search_form.submit, div_class="col-auto d-flex align-item-stretch py-1") }}
+                </div>
+            </form>
             <div class="row mt-3 row-cols-md-2 row-cols-lg-3 row-cols-xl-4">
                 {% for deck in decks %}
                     <div class="col-md deck-item mb-2 border-0">

@@ -5,7 +5,7 @@ from ziho.core.pagination import paginate
 from ziho.utils.db import try_commit
 
 
-def get_decks(page_no=1):
+def get_decks(search_query, tag, page_no=1):
     stmt = (
         db.select(Deck, User)
         .join(Deck.creator)
@@ -13,6 +13,11 @@ def get_decks(page_no=1):
         .group_by(Deck.id)
         .order_by(Deck.name)
     )
+    if search_query != "":
+        search_query = f"%{search_query}%"
+        stmt = stmt.where(Deck.name.ilike(search_query))
+    if tag != 0:
+        stmt = stmt.join(Deck.tags).where(Tag.id == tag)
 
     pages = paginate(db, stmt, page=page_no, per_page=16)
     return pages

@@ -39,8 +39,9 @@
         </div>
     </div>
 {% endmacro %}
-{%- macro render_select_field(field, div_class='') -%}
-    <div class="form-floating has-validation col-12 gx-1">
+{%- macro render_select_field(field, div_class='form-floating has-validation col-12 gx-1') -%}
+    {% set div_class = kwargs["div_class"] if kwargs["div_class"] else div_class %}
+    <div class="{{ div_class }}">
         {% set css_error = ' is-invalid' if field.errors else '' %}
         {% set css_class = kwargs['class'] if kwargs['class'] else 'form-control' %}
         {% set css_class = css_class ~ css_error if css_error else css_class %}

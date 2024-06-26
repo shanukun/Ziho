@@ -56,3 +56,25 @@ class TestExploreView(ZihoTest):
             with app.app_context():
                 user_decks = get_decks_by_user(current_user.id)
                 assert decks[0]["deck_name"] == user_decks[0].name
+
+    def test_explore_search_deck(self, client, app, auth):
+        adolin = self.example_user(app, "adolin")
+
+        with client:
+            auth.login(adolin)
+            decks = self.get_posted_decks(app)
+
+            resp = client.get(f"/explore?search_query={decks[0]['deck_name']}")
+            assert resp.status_code == 200
+            html = resp.get_data(as_text=True)
+
+            assert decks[0]["deck_name"] in html
+            assert decks[1]["deck_name"] not in html
+
+            resp = client.get(f"/explore?tag={decks[0]['tags'][0]}")
+            assert resp.status_code == 200
+
+            html = resp.get_data(as_text=True)
+
+            for deck in decks:
+                assert deck["deck_name"] in html
