@@ -3,14 +3,15 @@
 {% block header %}
     Profile
 {% endblock header %}
+{% from "_macros/misc.html" import show_tags %}
 {% block content %}
     {% set view_deck_url = "deckview.view_choosen_deck" %}
     {% if current_user.id != user.id %}
         {% set view_deck_url = "explore.view_deck" %}
     {% endif %}
-    <div class="row ms-2 user-profile">
+    <div class="row ms-1 user-profile">
         <div class="row">
-            <div class="card border-0">
+            <div class="card border-1">
                 <div class="card-body">
                     <div class="row ps-3">
                         <div class="row">
@@ -33,9 +34,16 @@
                                 {% endif %}
                                 {% if user == current_user %}
                                     <div class="row">
-                                        <p>
-                                            <a href="{{ url_for("home.edit_profile") }}">Edit profile</a>
-                                        </p>
+                                        <div class="col-auto">
+                                            <p>
+                                                <a href="{{ url_for("profile.edit_profile") }}">Edit profile</a>
+                                            </p>
+                                        </div>
+                                        <div class="col-auto">
+                                            <p>
+                                                <a href="{{ url_for("profile.change_password") }}">Change Password</a>
+                                            </p>
+                                        </div>
                                     </div>
                                 {% endif %}
                             </div>
@@ -44,15 +52,28 @@
                 </div>
             </div>
         </div>
-        <div class="row mt-3">
+        <div class="row mt-3 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 px-0">
             {% for deck in decks %}
-                <div class="col-auto mb-2">
-                    <div class="card border-0">
+                <div class="col-md deck-item mb-2 border-0">
+                    <div class="card overflow-hidden position-relative">
                         <div class="card-body">
-                            {{ deck.name | truncate(30, True) }}
-                            <a type="button"
-                               class="btn btn-light btn-sm m-0 ms-2 border-1"
-                               href="{{ url_for(view_deck_url, deck_id=deck.id) }}">View</a>
+                            <h4 class="card-title">
+                                {{ deck.name|truncate(30, True) }}
+                            </h4>
+                            <div class="row pb-2">
+                                <div class="col">
+                                    {{ show_tags(deck.tags) }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="btn-group w-100 px-3 pb-3 m-auto" role="group">
+                            {% set view_deck_url = url_for("deckview.view_choosen_deck", deck_id=deck.id) %}
+                            {% if current_user.id != deck.creator_id %}
+                                {% set view_deck_url = url_for("explore.view_deck", deck_id=deck.id) %}
+                            {% endif %}
+                            <a type="button" class="btn btn-light" href="{{ view_deck_url }}">
+                                View
+                            </a>
                         </div>
                     </div>
                 </div>

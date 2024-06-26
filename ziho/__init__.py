@@ -62,6 +62,10 @@ def create_app(config_class=Config):
 
     app.register_blueprint(explore_bp)
 
+    from ziho.profile import bp as profile_bp
+
+    app.register_blueprint(profile_bp)
+
     if not app.debug and not app.testing:
         if not os.path.exists("logs"):
             os.mkdir("logs")

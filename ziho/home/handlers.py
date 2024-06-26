@@ -9,16 +9,6 @@ from ziho.utils.db import try_commit
 from ziho.utils.image import get_image_path
 
 
-def update_profile(user, form_data):
-    stmt = (
-        db.update(User)
-        .where(User.id == user.id)
-        .values(username=form_data["username"], about_me=form_data["about_me"])
-    )
-
-    db.session.execute(stmt)
-
-    try_commit(db.session, "Could not update profile.")
 def _associate_tags(deck, tags):
     for tag_name in tags:
         tag = Tag.do_create_tag(tag_name)
@@ -101,15 +91,6 @@ def get_cards_for_study(form_data, user_id: int):
         due_cards.append(due_card)
 
     return due_cards
-
-
-def get_decks_by_user(user_id: int, type: str | None = None):
-    decks = db.session.execute(
-        db.select(Deck).where(Deck.creator_id == user_id)
-    ).scalars()
-    if type == "dict":
-        return {deck.id: deck for deck in decks}
-    return [deck for deck in decks]
 
 
 def get_decks_by_user_with_stats(user_id: int):

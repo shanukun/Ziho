@@ -5,7 +5,7 @@ from flask_login import current_user
 
 from tests.lib.base import ZihoTest
 from ziho.core.forms import DATETIME_FORMAT
-from ziho.home.handlers import get_decks_by_user
+from ziho.profile.handlers import get_decks_by_user
 
 
 class TestHome(ZihoTest):
@@ -25,7 +25,7 @@ class TestHome(ZihoTest):
         assert 'href="/auth/logout"' in html
         assert 'href="/home"' in html
         assert 'href="/view-deck"' in html
-        assert f'href="/user/{adolin["username"]}"' in html
+        assert f'href="/profile/{adolin["username"]}"' in html
 
         # deck form
         assert 'action="/create-deck"' in html

@@ -16,7 +16,7 @@ class User(UserMixin, db.Model):
         String(64), unique=True, nullable=False, index=True
     )
     email: Mapped[str] = mapped_column(String(120), unique=True, index=True)
-    password_hash: Mapped[str] = mapped_column(String(128))
+    password_hash: Mapped[str] = mapped_column(String(256))
     about_me: Mapped[str] = mapped_column(String(140), nullable=True)
     decks: Mapped[List["Deck"]] = relationship(
         back_populates="creator", cascade="all, delete", passive_deletes=True

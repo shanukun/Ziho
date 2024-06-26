@@ -7,7 +7,7 @@
 {% block content %}
     {% set div_class = "form-floating has-validation d-flex flex-column align-items-start gx-1" %}
     <div class="row edit-profile">
-        <form action="" method="post">
+        <form action="{{ url_for("profile.edit_profile") }}" method="post">
             {% call render_form(form) %}
                 {{ render_field(form.username, div_class=div_class) }}
                 {{ render_field(form.about_me, div_class=div_class) }}

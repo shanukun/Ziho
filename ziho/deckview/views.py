@@ -12,7 +12,7 @@ from ziho.deckview.handlers import (
     update_card_handler,
 )
 from ziho.errors.errors import InvalidFormData, ServerError
-from ziho.home.handlers import get_decks_by_user
+from ziho.profile.handlers import get_decks_by_user
 from ziho.utils.helper import get_handler_caller, get_response
 
 

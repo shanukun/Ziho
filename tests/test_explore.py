@@ -3,7 +3,7 @@ from urllib.parse import urlparse
 from flask_login import current_user
 
 from tests.lib.base import ZihoTest
-from ziho.home.handlers import get_decks_by_user
+from ziho.profile.handlers import get_decks_by_user
 
 
 class TestExploreView(ZihoTest):

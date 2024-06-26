@@ -39,7 +39,7 @@
                     {{ navlink('deckview.view_deck', 'View Deck', 'bi-layers') }}
                     {{ navlink('explore.explore', 'Explore', 'bi-compass') }}
                     <li class="nav-item">
-                        <a href="{{ url_for('home.user', username=current_user.username) }}"
+                        <a href="{{ url_for('profile.user', username=current_user.username) }}"
                            class="nav-link d-flex align-items-center gap-2 {% if active_page == 'Profile' %} active{% endif %}"><i class="bi bi-person"></i> Profile</a>
                     </li>
                 {% endif %}

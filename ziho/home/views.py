@@ -9,15 +9,12 @@ from flask import (
 from flask.views import MethodView
 from flask_login import current_user, login_required
 
-from ziho import db
-from ziho.auth.handlers import get_user_or_404
 from ziho.core.exceptions import PersistenceError
 from ziho.core.forms import (
     CardForm,
     CardInfoForm,
     DeckDeleteForm,
     DeckForm,
-    EditProfileForm,
     GetCardsRequestForm,
 )
 from ziho.core.utils import FormPost
@@ -27,11 +24,10 @@ from ziho.home.handlers import (
     create_deck_handler,
     delete_deck_handler,
     get_cards_for_study,
-    get_decks_by_user,
     get_decks_by_user_with_stats,
     update_card_info_handler,
-    update_profile,
 )
+from ziho.profile.handlers import get_decks_by_user
 from ziho.utils.helper import get_handler_caller, get_response
 
 
@@ -122,15 +118,6 @@ class ShowImage(MethodView):
         return send_from_directory(current_app.config["UPLOAD_FOLDER"], image_name)
 
 
-class User(MethodView):
-    decorators = [login_required]
-
-    def get(self, username):
-        user = get_user_or_404(username)
-        decks = get_decks_by_user(user.id)
-        return render_template("profile.html", user=user, decks=decks)
-
-
 class GetCards(MethodView):
     decorators = [login_required]
 
@@ -157,28 +144,3 @@ class UpdateCardInfo(MethodView):
             return get_response(message="Card info updated.")
         else:
             raise InvalidFormData("Invalid form data.")
-
-
-class EditProfile(MethodView):
-    decorators = [login_required]
-
-    def get(self):
-        form = self.form()
-        form.username.data = current_user.username
-        form.about_me.data = current_user.about_me
-        return render_template("edit_profile.html", title="Edit Profile", form=form)
-
-    def post(self):
-        form = self.form()
-        if form.validate_on_submit():
-            try:
-                update_profile(current_user, form.get_data())
-                flash("Your changes have been saved.", "success")
-            except PersistenceError as e:
-                flash(e.message, "danger")
-            return redirect(url_for("home.edit_profile"))
-        else:
-            return render_template("edit_profile.html", title="Edit Profile", form=form)
-
-    def form(self):
-        return EditProfileForm(current_user.username)
