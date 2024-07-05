@@ -1,10 +1,17 @@
 services:
   app:
-    build: ./
+    build:
+      context: .
+      args:
+        DOCKER_ENV: "docker"
+        LOCAL_ENV: ${LOCAL_ENV}
+        FLASK_APP: ziho.py
     environment: 
-      - FLASK_ENV=development
-      - FLASK_APP=ziho.py
+      DOCKER_ENV: "docker"
+      LOCAL_ENV: ${LOCAL_ENV}
+      FLASK_APP: ziho.py
     ports: 
       - "5000:5000"
     volumes:
       - ./ziho/ziho_uploads:/app/ziho/ziho_uploads
+      - ./app.db:/app/app.db

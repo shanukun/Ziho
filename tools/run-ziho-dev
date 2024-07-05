@@ -1,6 +1,0 @@
-#!/bin/bash
-
-sass --watch ziho/static/scss/main.scss ziho/static/css/main.css &
-export FLASK_ENV=development
-export FLASK_APP=ziho.py
-flask run --debug

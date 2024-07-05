@@ -1,8 +1,31 @@
 #!/bin/bash
 
-export FLASK_APP=ziho.py
-if [[ -z "$DOCKER_ENV" ]]; then
-    flask run
-else
-    flask run --host=0.0.0.0
+set -e
+if [[ -e .env ]]; then
+    source .env
 fi
+
+export FLASK_APP=ziho.py
+
+HOST="--host=0.0.0.0"
+DEBUG="--debug"
+
+run() {
+    local debug="$DEBUG"
+    local host=""
+    if [ -n "$LOCAL_ENV" ] && [ "$LOCAL_ENV" = "prod" ]; then
+        debug=""
+    fi
+    if [[ -n "$DOCKER_ENV" ]]; then
+        host="$HOST"
+    fi
+    flask run ${host:+"$host"} ${debug:+"$debug"}
+}
+
+if [ "$LOCAL_ENV" = "prod" ] && [ -z "$DOCKER_ENV" ]; then
+    sass ziho/static/scss/main.scss ziho/static/css/main.css 2>/dev/null
+elif [ -z "$DOCKER_ENV" ]; then
+    sass --watch ziho/static/scss/main.scss ziho/static/css/main.css &
+fi
+
+run

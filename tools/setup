@@ -1,7 +1,22 @@
 #!/bin/bash
 
-pip install -r requirements.txt
+set -e
+if [[ -e .env ]]; then
+    source .env
+fi
+
 export FLASK_APP=ziho.py
-flask db init
-flask db migrate
-flask db upgrade
+
+setup_db() {
+    flask db init 2>/dev/null
+    flask db migrate
+    flask db upgrade
+}
+
+if [[ -z "$DOCKER_ENV" ]]; then
+    pip install -r requirements.txt
+    setup_db
+else
+    setup_db
+fi
+
