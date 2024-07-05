@@ -1,8 +1,37 @@
 #!/bin/bash
 
-export FLASK_APP=ziho.py
-if [[ -z "$DOCKER_ENV" ]]; then
-    flask run
-else
-    flask run --host=0.0.0.0
+if [[ -e .env ]]; then
+    source .env
 fi
+
+export FLASK_APP=ziho_app.py
+
+HOST="--host=0.0.0.0"
+DEBUG="--debug"
+
+run() {
+    local debug="$DEBUG"
+    local host=""
+
+    if [[ -n "$DOCKER_ENV" ]]; then
+        debug=""
+        host="$HOST"
+    elif [ "$DEBUG_MODE" = "off" ]; then
+        debug=""
+    fi
+    flask run ${host:+"$host"} ${debug:+"$debug"}
+}
+
+main_scss="ziho/static/scss/main.scss"
+main_css="ziho/static/css/main.css"
+
+if [[ -n "$DOCKER_ENV" ]] || [ "$DEBUG_MODE" = "off" ]; then
+    bin/sass/sass --no-source-map --style compressed "$main_scss" "$main_css" 2>/dev/null
+else
+    bin/sass/sass --no-source-map --style compressed --watch "$main_scss" "$main_css" & spid=$!
+    trap "kill $spid 2>/dev/null" EXIT
+fi
+
+run
+
+

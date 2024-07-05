@@ -1,7 +1,9 @@
 __pycache__/
 logs/
 
-/ziho/static/css/*
+app.db
+/bin/
+
 /ziho/ziho_uploads/
 
 node_modules/
