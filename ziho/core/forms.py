@@ -102,6 +102,10 @@ class CardForm(ZihoForm):
     )
     submit = SubmitField("Add Card")
 
+    def filter_back(self, field):
+        if field:
+            return field.strip()
+
     def set_select_default(self, value):
         self.deck_id.data = value
 
