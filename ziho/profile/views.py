@@ -1,4 +1,4 @@
-from flask import flash, redirect, render_template, url_for
+from flask import flash, render_template
 from flask.views import MethodView
 from flask_login import current_user, login_required
 

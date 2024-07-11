@@ -1,9 +1,7 @@
 from urllib.parse import urlparse
 
 from flask import flash, redirect, render_template, request, url_for
-from flask.views import MethodView
 from flask_login import current_user, login_user, logout_user
-from flask_migrate import current
 from sqlalchemy.exc import SQLAlchemyError
 
 from ziho.auth import bp
