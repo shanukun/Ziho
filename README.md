@@ -23,13 +23,18 @@
 
 ## About
 
-Ziho is a prototype for a better online interface for Anki than [Anki Web](https://ankiweb.net/decks).
+Ziho is a provides a better online interface for Anki than [Anki Web](https://ankiweb.net/decks).
 Ziho allows you to create, study and easily share and clone decks, as well as edit them online. 
 
 The backend is built with **Flask**, and the [fsrs](https://github.com/open-spaced-repetition) algorithm is used for spaced repetition.
+Following were also used:
+- Bootstrap
+- SQLAlchemy
+- Docker
 
-<span><img src="https://shanukun.github.io/static/images/ziho/home.png"  width="30%"></span>
-<span><img src="https://shanukun.github.io/static/images/ziho/study-deck.png" width="25%"></span>
+
+<span><img src="https://shanukun.github.io/static/images/ziho/home.png"  width="40%"></span>
+<span><img src="https://shanukun.github.io/static/images/ziho/study-deck.png" width="35%"></span>
 
 You can find more screenshots [here](https://shanukun.github.io/ziho-ss/).
 
@@ -58,7 +63,30 @@ You can find more screenshots [here](https://shanukun.github.io/ziho-ss/).
     ./tools/setup
     ```
 3. **Set up your environment variables in a `.env` file: To run without debug mode, set `DEBUG_MODE=off`.** 
+    - Set following for using MySQL
+        - MYSQL_USER
+        - MYSQL_PASS
+        - MYSQL_HOST
+        - MYSQL_PORT
+        - MYSQL_DB
 4. **Start the webapp:**
     ```bash
     ./tools/run-ziho
     ```
+
+## Contributing
+
+1. Follow the code style. Run the following to test the format.
+    ```bash
+    ./tools/test_lint
+    ```
+2. Format the code using:
+    ```bash
+    ./tools/lint_and_format
+    ```
+3. Make sure to add the tests for new routes
+    ```bash
+    pytest ./tests
+    ```
+
+ 

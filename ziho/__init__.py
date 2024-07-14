@@ -28,13 +28,14 @@ def create_app(config_class=Config):
 
     db.init_app(app)
 
-    with app.app_context():
+    if config_class.DATABASE != "mysql":
+        with app.app_context():
 
-        @event.listens_for(db.engine, "connect")
-        def set_sqlite_pragma(dbapi_connection, connection_record):
-            cursor = dbapi_connection.cursor()
-            cursor.execute("PRAGMA foreign_keys=ON")
-            cursor.close()
+            @event.listens_for(db.engine, "connect")
+            def set_sqlite_pragma(dbapi_connection, connection_record):
+                cursor = dbapi_connection.cursor()
+                cursor.execute("PRAGMA foreign_keys=ON")
+                cursor.close()
 
     migrate.init_app(app, db, render_as_batch=True)
     login_manager.init_app(app)

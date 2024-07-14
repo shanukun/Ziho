@@ -32,4 +32,3 @@ curl -fLO --retry 3 "https://github.com/sass/dart-sass/releases/download/$versio
 tar -xf "$tarball" --strip-components=1 -C "$CWD/bin/sass"
 
 "$CWD"/bin/sass/sass --no-source-map --style compressed "$CWD"/ziho/static/scss/main.scss "$CWD"/ziho/static/css/main.css
-
